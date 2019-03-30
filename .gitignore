@@ -1,0 +1,5 @@
+# Dev toolkit removed
+
+.vagrant/
+data/
+nbproject/

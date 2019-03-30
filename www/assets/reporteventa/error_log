@@ -1,0 +1,2 @@
+[01-Feb-2019 20:46:44 Etc/GMT] PHP Notice:  Undefined variable: q in /home/burtoncloud/public_html/dev/assets/reporteventa/reporteventa_controller.php on line 12
+[01-Feb-2019 20:46:44 Etc/GMT] PHP Warning:  mysqli::query(): Empty query in /home/burtoncloud/public_html/dev/assets/reporteventa/reporteventa_controller.php on line 12

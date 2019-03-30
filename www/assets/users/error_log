@@ -1,0 +1,4 @@
+[28-Jan-2019 15:24:16 Etc/GMT] PHP Notice:  Undefined index: nombreUsuario in /home/burtoncloud/public_html/dev/assets/users/control.php on line 143
+[28-Jan-2019 15:24:16 Etc/GMT] PHP Notice:  Undefined variable: msg_logo in /home/burtoncloud/public_html/dev/assets/users/control.php on line 143
+[28-Jan-2019 15:24:25 Etc/GMT] PHP Notice:  Undefined index: nombreUsuario in /home/burtoncloud/public_html/dev/assets/users/control.php on line 143
+[28-Jan-2019 15:24:25 Etc/GMT] PHP Notice:  Undefined variable: msg_logo in /home/burtoncloud/public_html/dev/assets/users/control.php on line 143

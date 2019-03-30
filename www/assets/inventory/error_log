@@ -1,0 +1,5 @@
+[30-May-2018 18:01:53 Etc/GMT] PHP Notice:  Undefined index: msg in /home/burto5yf/public_html/naty/assets/inventory/control.php on line 226
+[30-May-2018 18:01:53 Etc/GMT] PHP Stack trace:
+[30-May-2018 18:01:53 Etc/GMT] PHP   1. {main}() /home/burto5yf/public_html/naty/assets/inventory/control.php:0
+[27-Jan-2019 17:02:09 Etc/GMT] PHP Notice:  Undefined variable: progbar_color in /home/burtoncloud/public_html/dev/assets/inventory/control.php on line 148
+[28-Jan-2019 15:33:27 Etc/GMT] PHP Notice:  Undefined variable: progbar_color in /home/burtoncloud/public_html/dev/assets/inventory/control.php on line 148

@@ -1,0 +1,4 @@
+[29-Jan-2019 23:24:19 Etc/GMT] PHP Notice:  Undefined index: subtotal in /home/burtoncloud/public_html/dev/assets/dashboard/dashboard_controller.php on line 17
+[29-Jan-2019 23:24:19 Etc/GMT] PHP Notice:  Undefined index: descuento in /home/burtoncloud/public_html/dev/assets/dashboard/dashboard_controller.php on line 18
+[29-Jan-2019 23:24:19 Etc/GMT] PHP Notice:  Undefined index: iva in /home/burtoncloud/public_html/dev/assets/dashboard/dashboard_controller.php on line 19
+[29-Jan-2019 23:24:19 Etc/GMT] PHP Notice:  Undefined index: total in /home/burtoncloud/public_html/dev/assets/dashboard/dashboard_controller.php on line 20
