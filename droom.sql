@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 100023
 File Encoding         : 65001
 
-Date: 2019-03-30 09:43:57
+Date: 2019-03-30 10:27:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -2598,6 +2598,7 @@ CREATE TABLE `usuario` (
   `idEstablecimiento` varchar(255) DEFAULT NULL,
   `statusUsuario` varchar(255) DEFAULT NULL,
   `temaUsuario` varchar(255) DEFAULT NULL,
+  `lastLogin` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idUsuario`) USING BTREE,
   KEY `idPerfil` (`idPerfil`) USING BTREE,
   CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`idPerfil`) REFERENCES `perfil` (`idPerfil`)
@@ -2606,32 +2607,32 @@ CREATE TABLE `usuario` (
 -- ----------------------------
 -- Records of usuario
 -- ----------------------------
-INSERT INTO `usuario` VALUES ('1', 'burton', 'Burton', '7', '154789', '2017-02-01', 'Frank', 'Cargua', '2', '1', 'green');
-INSERT INTO `usuario` VALUES ('2', 'Frank1234@', 'frank', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('3', 'burton', 'burton', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '3', '1', 'red');
-INSERT INTO `usuario` VALUES ('4', 'Luist1234@', 'luist', '1', '1547896548', '2017-02-01', 'Burton', 'Burton', '2', '1', 'dark');
-INSERT INTO `usuario` VALUES ('6', 'Suschi1234@', 'suschi', '3', '1312855537', '2017-02-01', 'SUSANA ROCIO', 'CHINGA PONCE', '1', '1', 'dark');
-INSERT INTO `usuario` VALUES ('7', 'Joscor1234@', 'joscor', '5', '0705670123', '2015-01-19', 'JOSE LUIS', 'CORDOVA CALERO', '1', '1', 'dark');
-INSERT INTO `usuario` VALUES ('8', 'Marflo1234@', 'marflo', '3', '0502799356', '2017-01-30', 'MARINA VERONICA', 'FLORES PUCUJI', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('9', 'Adrher1234@', 'adrher', '2', '6102426159', '2016-07-18', 'ADRIANA MARIA ', 'HERNANDEZ GOZALES', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('10', 'Jefgao1234@', 'jefgao', '2', '1104107592', '2016-09-01', 'JEFFERSON DAVID', 'GAONA ALVAREZ', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('11', 'Oscgri1234@', 'oscgri', '2', '6102425870', '2016-07-18', 'OSCAR JULIAN  ', 'GRISALES SANCHEZ ', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('13', 'Pathor1234@', 'pathor', '3', '1727011940', '2011-11-01', 'PATRICIA VIVIANA', 'HORTA SANGACHA', '1', '1', 'dark');
-INSERT INTO `usuario` VALUES ('14', 'Luzmar1234@', 'luzmar', '6', '1709472102', '2007-02-01', 'LUZ MERY', 'MARTINEZ RODRIGUEZ', '1', '1', 'dark');
-INSERT INTO `usuario` VALUES ('15', 'Milpuc1234@', 'milpuc', '4', '1720722576', '2017-04-01', 'MILTON IVAN', 'PUCHA DIAZ', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('17', 'Marsan1234@', 'marsan', '2', '1725848913', '2011-04-11', 'MARIA ALTAGRACIA', 'SANTANA PIO', '2', '1', 'dark');
-INSERT INTO `usuario` VALUES ('18', 'Cartor1234@', 'cartor', '1', '1712918406', '2009-02-1', 'CARLOS ALBERTO', 'TORRES MARTINEZ', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('19', 'Luitor1234@', 'luitor', '1', '1714444013', '2011-07-01', 'LUIS ALFONSO', 'TORRES MARTINEZ', '1', '1', 'dark');
-INSERT INTO `usuario` VALUES ('20', 'Martor1234@', 'martor', '1', '1716855901', '2009-02-01', 'MARCELA LILIANA', 'TORRES MARTINEZ ', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('22', 'Martub1234@', 'martub', '2', '1721183968', '2009-01-30', 'MARIA CATALINA', 'TUBAY BRAVO', '2', '1', 'dark');
-INSERT INTO `usuario` VALUES ('23', 'Leiver1234@', 'leiver', '3', '1315673788', '2016-05-05', 'LEIDY IRENE', 'VERA LUZARDO', '2', '1', 'dark');
-INSERT INTO `usuario` VALUES ('24', 'Sulvin1234@', 'sulvin', '2', '1709042616', '2012-04-12', 'SULMIRA FLORIDALBA', 'VINUEZA ALCIVAR', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('25', 'Andzuñ1234@', 'andzuñ', '2', '0925236770', '2016-06-01', 'ANDREA CAROLINA ', 'ZUÑIGA SANCHEZ ', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('26', 'Galzam1234@', 'galzam', '4', '0705422517', '2013-05-01', 'GALO JULIAN', 'ZAMORA CARDONA', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('27', 'Floavi1234@', 'floavi', '2', '2017', '2017-02-13', 'FLORA ANGELICA', 'AVILA JIMENEZ ', '2', '1', 'dark');
-INSERT INTO `usuario` VALUES ('28', 'Pauqui1234@', 'pauqui', '4', '2017', '2017-02-01', 'PAUL MAXIMILIANO', 'QUIJIJE QUINTANA', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('29', 'Ronrey1234@', 'ronrey', '2', '2017', '2017-05-17', 'RONNY SEBASTIAN', 'REYES SANTAMARIA', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('30', 'Danriv1234@', 'danriv', '2', '2017', '2017-02-17', 'DANNY JAVIER', 'RIVERA LOOR ', null, '1', 'dark');
-INSERT INTO `usuario` VALUES ('32', 'Blaale1234@', 'blaale', '2', '1757157977', '2015-03-16', 'BLANDON HENAO', 'NUBIA ALEXANDRA', '1', '1', 'dark');
-INSERT INTO `usuario` VALUES ('33', 'dirulo1234', 'maular', '7', '12333', '2019-01-28', 'Miguel ', 'Aular', '3', '1', 'dark');
-INSERT INTO `usuario` VALUES ('34', '123456789', 'gerardo', '7', '1846833425', '2019-01-29', 'Gerardo', 'Rovero', '1', '1', 'dark');
+INSERT INTO `usuario` VALUES ('1', 'burton', 'Burton', '7', '154789', '2017-02-01', 'Frank', 'Cargua', '2', '1', 'green', null);
+INSERT INTO `usuario` VALUES ('2', 'Frank1234@', 'frank', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('3', 'burton', 'burton', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '3', '1', 'red', null);
+INSERT INTO `usuario` VALUES ('4', 'Luist1234@', 'luist', '1', '1547896548', '2017-02-01', 'Burton', 'Burton', '2', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('6', 'Suschi1234@', 'suschi', '3', '1312855537', '2017-02-01', 'SUSANA ROCIO', 'CHINGA PONCE', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('7', 'Joscor1234@', 'joscor', '5', '0705670123', '2015-01-19', 'JOSE LUIS', 'CORDOVA CALERO', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('8', 'Marflo1234@', 'marflo', '3', '0502799356', '2017-01-30', 'MARINA VERONICA', 'FLORES PUCUJI', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('9', 'Adrher1234@', 'adrher', '2', '6102426159', '2016-07-18', 'ADRIANA MARIA ', 'HERNANDEZ GOZALES', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('10', 'Jefgao1234@', 'jefgao', '2', '1104107592', '2016-09-01', 'JEFFERSON DAVID', 'GAONA ALVAREZ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('11', 'Oscgri1234@', 'oscgri', '2', '6102425870', '2016-07-18', 'OSCAR JULIAN  ', 'GRISALES SANCHEZ ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('13', 'Pathor1234@', 'pathor', '3', '1727011940', '2011-11-01', 'PATRICIA VIVIANA', 'HORTA SANGACHA', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('14', 'Luzmar1234@', 'luzmar', '6', '1709472102', '2007-02-01', 'LUZ MERY', 'MARTINEZ RODRIGUEZ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('15', 'Milpuc1234@', 'milpuc', '4', '1720722576', '2017-04-01', 'MILTON IVAN', 'PUCHA DIAZ', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('17', 'Marsan1234@', 'marsan', '2', '1725848913', '2011-04-11', 'MARIA ALTAGRACIA', 'SANTANA PIO', '2', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('18', 'Cartor1234@', 'cartor', '1', '1712918406', '2009-02-1', 'CARLOS ALBERTO', 'TORRES MARTINEZ', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('19', 'Luitor1234@', 'luitor', '1', '1714444013', '2011-07-01', 'LUIS ALFONSO', 'TORRES MARTINEZ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('20', 'Martor1234@', 'martor', '1', '1716855901', '2009-02-01', 'MARCELA LILIANA', 'TORRES MARTINEZ ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('22', 'Martub1234@', 'martub', '2', '1721183968', '2009-01-30', 'MARIA CATALINA', 'TUBAY BRAVO', '2', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('23', 'Leiver1234@', 'leiver', '3', '1315673788', '2016-05-05', 'LEIDY IRENE', 'VERA LUZARDO', '2', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('24', 'Sulvin1234@', 'sulvin', '2', '1709042616', '2012-04-12', 'SULMIRA FLORIDALBA', 'VINUEZA ALCIVAR', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('25', 'Andzuñ1234@', 'andzuñ', '2', '0925236770', '2016-06-01', 'ANDREA CAROLINA ', 'ZUÑIGA SANCHEZ ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('26', 'Galzam1234@', 'galzam', '4', '0705422517', '2013-05-01', 'GALO JULIAN', 'ZAMORA CARDONA', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('27', 'Floavi1234@', 'floavi', '2', '2017', '2017-02-13', 'FLORA ANGELICA', 'AVILA JIMENEZ ', '2', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('28', 'Pauqui1234@', 'pauqui', '4', '2017', '2017-02-01', 'PAUL MAXIMILIANO', 'QUIJIJE QUINTANA', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('29', 'Ronrey1234@', 'ronrey', '2', '2017', '2017-05-17', 'RONNY SEBASTIAN', 'REYES SANTAMARIA', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('30', 'Danriv1234@', 'danriv', '2', '2017', '2017-02-17', 'DANNY JAVIER', 'RIVERA LOOR ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('32', 'Blaale1234@', 'blaale', '2', '1757157977', '2015-03-16', 'BLANDON HENAO', 'NUBIA ALEXANDRA', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('33', 'dirulo1234', 'maular', '7', '12333', '2019-01-28', 'Miguel ', 'Aular', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('34', '123456789', 'gerardo', '7', '1846833425', '2019-01-29', 'Gerardo', 'Rovero', '1', '1', 'dark', null);

@@ -5,10 +5,10 @@
  *          *******************||  DROOM SOFTWARE   ||*****************
  *          ***********************************************************
  * 
- *          @date              2019-03-22
- *          @author          Bayman Burton <bayman@burtonservers.com>
- *          @copyright      2015-2019 Burton Tech
- *          @license          https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
+ *          @date               2019-03-22
+ *          @author             Bayman Burton <bayman@burtonservers.com>
+ *          @copyright          2015-2019 Burton Tech
+ *          @license            https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
  *          International Registered Trademark & Property of Burton Technology  https://burtonservers.com
  * 
  *          This source file is subject to the GNU General Public License (GPL v3)
@@ -72,18 +72,21 @@ $json = array();
 if ($_POST) {
     $method = broom('reg', $_POST['meth']);
 
+    //          USUARIO INICIA SESION           //
     if ($method == 'login') {
 
 
-        $username = $_POST["username"];
+        $username = broom('reg', $_POST["username"]);
         $password = $_POST["password"];
 
 //        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
 //        $password = hash('sha512', $_POST['password']);
-
-        $query = " SELECT * FROM usuario us WHERE nombreUsuario like '$username' "
+//        
+        ////            CONSULTAMOS EL USUARIO EN LA BASE DE DATOS A VER SI EXISTE              ////
+        $query = " SELECT * FROM usuario us "
                 . " INNER JOIN perfil p ON (us.idPerfil = p.idPerfil ) "
-                . " INNER JOIN establecimiento e ON (us.idEstablecimiento = e.idEstablecimiento ) ";
+                . " INNER JOIN establecimiento e ON (us.idEstablecimiento = e.idEstablecimiento ) "
+                . " WHERE nombreUsuario like '$username' ";
         $result = $conn->query($query);
         if (!$result) {
             $json['scriptResp'] = "userqueryFail";
@@ -96,14 +99,13 @@ if ($_POST) {
         }
         $rows = $result->num_rows;
         $row = $result->fetch_array(MYSQLI_ASSOC);
-        $json['userIntel'] = $row;
 
-        session_start();
-        $_SESSION["usuario"] = $row;
+        ////          RETORNAMOS UN JSON AL AJAX PARA ALIMENTAR EL JAVASCRIPT          ////
+        $json['userIntel'] = $row;
 
         if (($rows != 0) && (strcmp($row["nombreUsuario"], $username) == 0) && ($row['passwordUsuario'] === $password)) {
 
-            /////////////////////////////////////////VEMOS SI TIENE IMAGEN CARGADA
+            //   VERIFICAMOS SI TIENE IMAGEN CARGADA || CARGAMOS IMAGEN PREDETERMINADA        //
             $isavatar = "assets/img/users/" . $row["idUsuario"] . ".jpg";
             if (file_exists($isavatar)) {
                 $json['userIntel']['userImg'] = "api/" . $isavatar;
@@ -116,30 +118,20 @@ if ($_POST) {
                 }
             }
 
-            $val_update = "UPDATE usuarios SET lastLogin = '" . date('Y-m-d H:i:s') . "' WHERE emailUsuario = '" . $username . "';";
-            $val_result = $dblink->query($val_update) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_update . "'}");
+            ////             ENVIAMOS DATOS POR $_SESSION;          /////
+            session_start();
+            $_SESSION["usuario"] = $json['userIntel'];
 
-            ///////////////////////////////////////////////////////////////////////////////////////////// CIUDADES PARA EL AUTOCOMPLETAR
-            $val_select = "SELECT * FROM city LEFT JOIN deps ON city.deps_city_id = deps.deps_id ";
-            $select_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-            $options = array();
-            $i = 0;
-            while ($rowcity = $select_result->fetch_array(MYSQLI_ASSOC)) {
-                $options['data'][$i] = array();
-                $options['data'][$i]['city'] = $rowcity['city_name'];
-                $options['data'][$i]['dep'] = $rowcity['deps_name'];
-                $i++;
-            }
-            $options['getValue'] = 'city';
-            $options['template'] = array();
-            $options['template']['type'] = 'description';
-            $options['template']['fields'] = array();
-            $options['template']['fields']['description'] = 'dep';
-            $options['list'] = array();
-            $options['list']['match'] = array();
-            $options['list']['match']['enabled'] = true;
+            //              DATOS PARA CONSTRUIR LOS MODULOS            //
+            $_SESSION["usuario"]["nombreEstablecimiento"] = $json['userIntel']["nombreEstablecimiento"];
+            $_SESSION["usuario"]["ciudadEstablecimiento"] = $json['userIntel']["ciudadEstablecimiento"];
+            $_SESSION["usuario"]["telefonoEstablecimiento"] = $json['userIntel']["telefonoEstablecimiento"];
+            $_SESSION["usuario"]["sectorEstablecimiento"] = $json['userIntel']["sectorEstablecimiento"];
 
-            $json['autocomp'] = $options;
+            $val_update = "UPDATE usuario SET lastLogin = '" . date('Y-m-d H:i:s') . "' WHERE idUsuario = '" . $row["idUsuario"] . "';";
+            $val_result = $conn->query($val_update) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_update . "'}");
+
+            $json['userIntel'] = $_SESSION["usuario"];
             $json['scriptResp'] = "match";
             $output = ob_get_contents();
             ob_end_clean();
@@ -160,120 +152,30 @@ if ($_POST) {
         }
     }
 
-    if ($method == 'reg') {
-        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
-        $password = hash('sha512', $_POST['password']);
-        $token = hash('sha512', $username . $password);
+    //          ASIGNAMOS LAS MESAS AL NUEVO EPDIDO             //
+    if ($method == 'asignaMesa') {
 
-        $select = "SELECT emailUsuario FROM usuarios WHERE emailUsuario = '" . $username . "';";
-        $result = $dblink->query($select) or die("{'scriptResp' : 'queryFailedd'}");
-        $row_cnt = $result->num_rows;
-        if ($row_cnt > 0) {
-            $json['scriptResp'] = "userAlreadyInDB";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
+        $idMesa = $_POST["idmesa"];
+        $numeroMesa = $_POST["numeromesa"];
+        $idPedido;
 
-            $val_select = "INSERT INTO usuarios (`emailUsuario`, `passUsuario`, `ingresoUsuario`, `statusUsuario`, `panelUsuario`, `lastLogin`, `tokenUsuario`)  VALUES  ('" .
-                    $username . "','" . $password . "','" . date('Y-m-d H:i:s') . "','new','home','" . date('Y-m-d H:i:s') . "','" . $token . "')";
-            $val_result = $dblink->query($val_select) or die($val_select);
-
-            if ($val_result) {
-                $json['scriptResp'] = "regsuccess";
-                $json['user']['username'] = $username;
-
-                $emailBody = '<table id="Tabla_01" width="1000" height="1414" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="api/assets/mails/welcome/img/index_01.png" width="63" height="231" alt=""></td><td><img src="api/assets/mails/welcome/img/index_02.png" width="880" height="231" alt=""></td><td><img src="api/assets/mails/welcome/img/index_03.png" width="57" height="231" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_04.png" width="63" height="289" alt=""></td><td><img src="api/assets/mails/welcome/img/index_05.png" width="880" height="289" alt=""></td><td><img src="api/assets/mails/welcome/img/index_06.png" width="57" height="289" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_07.png" width="63" height="81" alt=""></td><td><img src="api/assets/mails/welcome/img/index_08.png" width="880" height="81" alt=""></td><td><img src="api/assets/mails/welcome/img/index_09.png" width="57" height="81" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_10.png" width="63" height="200" alt=""></td><td style="font-size: 30px;border: 0px;width: 880px; height: 200px;">';
-                $emailBody .= '<p>Ya casi todo esta listo para que puedas ingresar en nuestra plataforma <br />Solo hace falta validar tu cuenta haciendo clic <a href="api/api.php?meth=validate&token=' . $token . '" >AQU&Iacute;</a> <br />Tambi&eacute;n puedes validar tu cuenta copiando y pegando el siguiente enlace en tu navegador <br /> <div style="font-size: 12px;">api/api.php?meth=validate&token=' . $token . '</div></p>';
-                $emailBody .= '</td><td><img src="api/assets/mails/welcome/img/index_12.png" width="57" height="200" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_13.png" width="63" height="672" alt=""></td><td><img src="api/assets/mails/welcome/img/index_14.png" width="880" height="672" alt=""></td><td><img src="api/assets/mails/welcome/img/index_15.png" width="57" height="672" alt=""></td></tr></table>';
-                $mail = new PHPMailer(true);
-                try {
-                    $mail->SMTPDebug = 2;
-                    $mail->isSMTP();
-                    $mail->Host = 'mail.miinfo.co';
-                    $mail->SMTPAuth = true;
-                    $mail->Username = 'app@miinfo.co';
-                    $mail->Password = 'PLATAFORMADECORREO';
-                    $mail->SMTPSecure = 'tls';
-                    $mail->Port = 587;
-                    $mail->setFrom('app@miinfo.co', 'Miinfo - Sistema Automatizado');
-                    $mail->addAddress($username);
-                    $mail->addReplyTo('app@miinfo.co', 'No Responder');
-                    $mail->isHTML(true);
-                    $mail->Subject = 'Bienvenido a Miinfo';
-                    $mail->Body = $emailBody;
-                    $mail->AltBody = 'Ya casi todo esta listo para que puedas ingresar en nuestra plataforma, Solo hace falta validar tu cuenta, puedes validar tu cuenta copiando y pegando el siguiente enlace en tu navegador api/api.php?meth=validate&token=' . $token . '';
-
-                    $mail->send();
-                    echo 'Message has been sent';
-                } catch (Exception $e) {
-                    echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-                }
-
-                $output = ob_get_contents();
-                ob_end_clean();
-                $json['output'] = $output;
-                echo json_encode($json);
-                return;
-            } else {
-
-                $json['scriptResp'] = "failuserReg";
-                $output = ob_get_contents();
-                ob_end_clean();
-                $json['output'] = $output;
-                echo json_encode($json);
-            }
+        if (isset($_POST["idpedido"])) {
+            $idPedido = $_POST["idpedido"];
         }
-    }
+        session_start();
+        $_SESSION["idmesa"] = $idMesa;
+        $_SESSION["numeromesa"] = $numeroMesa;
+        if (isset($idPedido)) {
+            $_SESSION["idpedido"] = $idPedido;
 
-    if ($method == 'fp') {
-        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
-
-        $select = "SELECT emailUsuario FROM usuarios WHERE emailUsuario = '" . $username . "';";
-        $result = $dblink->query($select) or die("{'scriptResp' : 'queryFailedd'}");
-        $row_cnt = $result->num_rows;
-        if ($row_cnt > 0) {
-
-            $token = hash('sha512', $username . date('Y-m-d H:i:s'));
-            $val_select = "UPDATE usuarios SET tokenUsuario = '" . $token . "' WHERE  emailUsuario = '" . $username . "';";
-            $val_result = $dblink->query($val_select) or die($val_select);
-
-            $emailBody = '<table id="Tabla_01" width="1000" height="1414" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="api/assets/mails/resetpw/img/index_01.png" width="63" height="231" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_02.png" width="880" height="231" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_03.png" width="57" height="231" alt=""></td></tr><tr><td><img src="api/assets/mails/resetpw/img/index_04.png" width="63" height="289" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_05.png" width="880" height="289" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_06.png" width="57" height="289" alt=""></td></tr><tr><td><img src="api/assets/mails/resetpw/img/index_07.png" width="63" height="81" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_08.png" width="880" height="81" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_09.png" width="57" height="81" alt=""></td></tr><tr><td><img src="api/assets/mails/resetpw/img/index_10.png" width="63" height="200" alt=""></td><td style="font-size: 30px;border: 0px;width: 880px; height: 200px;">';
-            $emailBody .= '<p>Para resetear su contrase&ntilde;a, por favor haga clic <a href="api/api.php?meth=resetPass&token=' . $token . '" >AQU&Iacute;</a> <br /> Tambi&eacute;n puedes acceder copiando y pegando el siguiente enlace <br /> <div style="font-size: 12px;">api/api.php?meth=resetPass&token=' . $token . '</div></p>';
-            $emailBody .= '</td><td><img src="api/assets/mails/resetpw/img/index_12.png" width="57" height="200" alt=""></td></tr><tr><td><img src="api/assets/mails/resetpw/img/index_13.png" width="63" height="672" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_14.png" width="880" height="672" alt=""></td><td><img src="api/assets/mails/resetpw/img/index_15.png" width="57" height="672" alt=""></td></tr></table>';
-            $mail = new PHPMailer(true);
-            try {
-                $mail->SMTPDebug = 2;
-                $mail->isSMTP();
-                $mail->Host = 'mail.miinfo.co';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'app@miinfo.co';
-                $mail->Password = 'PLATAFORMADECORREO';
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 587;
-                $mail->setFrom('app@miinfo.co', 'Miinfo - Sistema Automatizado');
-                $mail->addAddress($username);
-                $mail->addReplyTo('app@miinfo.co', 'No Responder');
-                $mail->isHTML(true);
-                $mail->Subject = 'Restaurar clave Miinfo';
-                $mail->Body = $emailBody;
-                $mail->AltBody = 'Para resetear su contrase&ntilde;a  puedes acceder copiando y pegando el siguiente enlace api/api.php?meth=resetPass&token=' . $token . '';
-
-                $mail->send();
-                echo 'Message has been sent';
-            } catch (Exception $e) {
-                echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-            }
-            $json['scriptResp'] = "msgSent";
+            $json['scriptResp'] = "done";
             $output = ob_get_contents();
             ob_end_clean();
             $json['output'] = $output;
             echo json_encode($json);
             return;
         } else {
-            $json['scriptResp'] = "userNotMatch";
+            $json['scriptResp'] = "unDone";
             $output = ob_get_contents();
             ob_end_clean();
             $json['output'] = $output;
@@ -282,735 +184,75 @@ if ($_POST) {
         }
     }
 
-    if ($method == 'setNewPass') {
-        $password = hash('sha512', $_POST['password']);
-        $token = broom('reg', $_POST['token']);
+    //          CONSULTAMOS LOS PEDIDOS EXISTENTES            //
+    if ($method == 'consultaPedidos') {
 
-        $select = "SELECT tokenUsuario, emailUsuario FROM usuarios WHERE tokenUsuario = '" . $token . "';";
-        $result = $dblink->query($select) or die("{'scriptResp' : 'queryFailedd'}");
-        $row_cnt = $result->num_rows;
-        $row = $result->fetch_array(MYSQLI_ASSOC);
+        session_start();
+        $idEstablecimiento = $_SESSION['usuario']['idEstablecimiento'];
 
-        if ($row_cnt > 0) {
-            $newtoken = hash('sha512', $row['emailUsuario'] . date('Y-m-d H:i:s'));
-            $val_select = "UPDATE usuarios SET passUsuario = '" . $password . "', tokenUsuario = '" . $newtoken . "' WHERE emailUsuario = '" . $row['emailUsuario'] . "'";
-            $val_result = $dblink->query($val_select) or die($val_select);
-            $json['scriptResp'] = "resetOk";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['scriptResp'] = "badToken";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-    }
+        $query = "SELECT * FROM pedido pe "
+                . "INNER JOIN mesa m on(m.idMesa=pe.idMesa) "
+                . "INNER JOIN pedidoproducto pp ON(pe.idPedido = pp.idPedido) "
+                . "INNER JOIN producto p on(p.idProducto = pp.idProducto) "
+                . "INNER JOIN submenu sm on(p.idSubMenu = sm.idSubMenu) "
+                . "INNER JOIN menu me on (sm.idMenu = me.idMenu) "
+                . "GROUP BY(pe.idPedido) "
+                . "HAVING m.estadoMesa = 'OCUPADA' AND pe.estadopagoPedido != 'PAGADO' AND m.idEstablecimiento = '$idEstablecimiento' "
+                . "ORDER BY pe.idPedido ASC";
 
-    if ($method == 'completeUser') {
-        $idUsuario = broom('reg', $_POST['idUsuario']);
-        $emailUsuario = filter_var($_POST['emailUsuario'], FILTER_VALIDATE_EMAIL);
-        $tipoUsuario = broom('reg', $_POST['tipoUsuario']);
-        $dniUsuario = broom('reg', $_POST['dniUsuario']);
-        $nombresUsuario = broom('text', $_POST['nombresUsuario']);
-        $apellidosUsuario = broom('text', $_POST['apellidosUsuario']);
-        $telUsuario = $_POST['telUsuario'];
-        $dirUsuario = broom('text', $_POST['dirUsuario']);
-        $twitterUsuario = $_POST['twitterUsuario'];
-        $linkUsuario = $_POST['linkUsuario'];
-        $fbUsuario = $_POST['fbUsuario'];
-        $igUsuario = $_POST['igUsuario'];
-        $bioUsuario = broom('text', $_POST['bioUsuario']);
-        $visiUsuario = broom('reg', $_POST['visiUsuario']);
-        $cityUsuario = broom('text', $_POST['cityUsuario']);
+        $result = $conn->query($query);
+        if (!$result)
+            die($conn->error);
 
-        $select = "SELECT idUsuario FROM detalleUsuarios WHERE idUsuario = '" . $idUsuario . "';";
-        $result = $dblink->query($select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $select . "'}");
-        $row_cnt = $result->num_rows;
-        if ($row_cnt > 0) {
-            $json['scriptResp'] = "userAlreadyCompleted";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-
-        /////////////////////////////////////////////////// SI HAY IMAGEN LA GUARDAMOS EN EL SERVER
-        if ($_FILES["avatarUsuario"]) {
-            $target_dir = "assets/img/users/";
-            $ext = strtolower(end(explode('.', $_FILES["avatarUsuario"]["name"])));
-            $filename = $idUsuario . '.' . $ext;
-
-            ///////////////////////////// BORRAMOS LA IMG ANTERIOR
-            unlink($target_dir . $idUsuario . '.jpg');
-            unlink($target_dir . $idUsuario . '.png');
-
-            // VALIDAMOS CON PHP QUE SEA REALMENTE UNA IMAGEN (MEDIDAS DE SEGURIDAD)
-            $check = getimagesize($_FILES["avatarUsuario"]["tmp_name"]);
-            if ($check === false) {
-                $output = ob_get_contents();
-                $json['scriptResp'] = 'badImg';
-                $json['output'] = $output;
-                ob_end_clean();
-                echo json_encode($json);
-                return;
-            }
-
-            ////////////////////////////////////////////////////  SUBIMOS EL ARCHIVO
-            switch ($ext) {
-                case 'jpg':
-                    $image = imagecreatefromjpeg($_FILES["avatarUsuario"]["tmp_name"]);
-                    break;
-                case 'png':
-                    $image = imagecreatefrompng($_FILES["avatarUsuario"]["tmp_name"]);
-                    break;
-                default:
-                    $output = ob_get_contents();
-                    $json['scriptResp'] = 'imageFormatNotSupported';
-                    $json['ext'] = $ext;
-                    $json['output'] = $output;
-                    ob_end_clean();
-                    echo json_encode($json);
-                    return;
-            }
-            list($w, $h) = getimagesize($_FILES["avatarUsuario"]["tmp_name"]);
-            if ($w < $h) {
-                $image = imagecrop($image, array(
-                    "x" => 0,
-                    "y" => ($w - $h) / 2,
-                    "width" => $w,
-                    "height" => $w
-                ));
-            } else if ($h < $w) {
-                $image = imagecrop($image, array(
-                    "x" => ($w - $h) / 2,
-                    "y" => 0,
-                    "width" => $h,
-                    "height" => $h
-                ));
-            }
-            $target_file = $target_dir . $filename;
-            switch ($ext) {
-                case 'jpg':
-                    if (imagejpeg($image, $target_file)) {
-                        chmod($target_file, 0666);
-                        $json['msg'] = 'imageUploaded';
-                    } else {
-                        $output = ob_get_contents();
-                        $json['scriptResp'] = 'imageNotUploaded';
-                        $json['output'] = $output;
-                        ob_end_clean();
-                        echo json_encode($json);
-                        return;
-                    }
-                case 'png':
-                    if (imagepng($image, $target_file)) {
-                        chmod($target_file, 0666);
-                        $json['msg'] = 'imageUploaded';
-                    } else {
-                        $output = ob_get_contents();
-                        $json['scriptResp'] = 'imageNotUploaded';
-                        $json['output'] = $output;
-                        ob_end_clean();
-                        echo json_encode($json);
-                        return;
-                    }
-            }
-            $avatarUsuario = 'yes';
-        } else {
-            $avatarUsuario = '';
-        }
-
-        //////////////////////////////////////////////////////////////////////////// GUARDAMOS LOS DETALLES DEL USUARIO
-        $val_select = "INSERT INTO detalleUsuarios 
-            (`idUsuario`,`tipoUsuario`,`dniUsuario`,`nombresUsuario`,`apellidosUsuario`,`telUsuario`,`dirUsuario`,`twitterUsuario`,`linkUsuario`,`fbUsuario`,`igUsuario`,`bioUsuario`,`avatarUsuario`,`visiUsuario`,`cityUsuario`)  
-            VALUES ('" . $idUsuario . "', '" . $tipoUsuario . "', '" . $dniUsuario . "', '" . $nombresUsuario . "', '" . $apellidosUsuario . "', '" . $telUsuario . "', '" . $dirUsuario . "', '" . $twitterUsuario . "', '" . $linkUsuario . "', '" . $fbUsuario . "', '" . $igUsuario . "', '" . $bioUsuario . "', '" . $avatarUsuario . "', '" . $visiUsuario . "', '" . $cityUsuario . "')";
-        $val_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-
-        ///////////////////////////////////////////////////////////////////////////// ACTUALIZAMOS EL ESTATUS DEL USUARIO
-        $val_update = "UPDATE usuarios SET statusUsuario = 'complete' WHERE idUsuario = '" . $idUsuario . "';";
-        $val_result = $dblink->query($val_update) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_update . "'}");
-
-        $query = "SELECT us.idUsuario idUsuario, cityUsuario, visiUsuario, emailUsuario, passUsuario, ingresoUsuario, dus.nombresUsuario nombresUsuario, statusUsuario, panelUsuario, lastLogin, msgUsuario, tokenUsuario, tipoUsuario, dniUsuario, apellidosUsuario, telUsuario, dirUsuario, twitterUsuario, linkUsuario, fbUsuario, igUsuario, bioUsuario, avatarUsuario FROM usuarios us LEFT JOIN detalleUsuarios dus ON (us.idUsuario = dus.idUsuario) WHERE us.idUsuario = '" . $idUsuario . "'";
-        $result = $dblink->query($query);
-        $rowUser = $result->fetch_array(MYSQLI_ASSOC);
-        $json['userIntel'] = $rowUser;
-        unset($json['userIntel']['passUsuario']);
-        unset($json['userIntel']['tokenUsuario']);
-
-        /////////////////////////////////////////VEMOS SI TIENE IMAGEN CARGADA
-        $isavatar = "assets/img/users/" . $rowUser["idUsuario"] . ".jpg";
-        if (file_exists($isavatar)) {
-            $json['userIntel']['userImg'] = "api/" . $isavatar;
-        } else {
-            $isavatar2 = "assets/img/users/" . $row["idUsuario"] . ".png";
-            if (file_exists($isavatar2)) {
-                $json['userIntel']['userImg'] = "api/" . $isavatar2;
-            } else {
-                $json['userIntel']['userImg'] = "api/assets/img/users/default.jpg";
-            }
-        }
-
-        $output = ob_get_contents();
-        $json['scriptResp'] = 'UserComplete';
-        $json['output'] = $output;
-        ob_end_clean();
-        echo json_encode($json);
-        return;
-    }
-
-    if ($method == 'resendEmail') {
-        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
-
-        $select = "SELECT emailUsuario, passUsuario FROM usuarios WHERE emailUsuario = '" . $username . "';";
-        $result = $dblink->query($select) or die("{'scriptResp' : 'queryFailedd'}");
-        $row_cnt = $result->num_rows;
-        $row = $result->fetch_array(MYSQLI_ASSOC);
-        if ($row_cnt > 0) {
-
-            $token = hash('sha512', $username . $row['passUsuario']);
-            $val_select = "UPDATE usuarios SET tokenUsuario = '" . $token . "' WHERE  emailUsuario = '" . $username . "';";
-            $val_result = $dblink->query($val_select) or die($val_select);
-
-            $emailBody = '<table id="Tabla_01" width="1000" height="1414" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="api/assets/mails/welcome/img/index_01.png" width="63" height="231" alt=""></td><td><img src="api/assets/mails/welcome/img/index_02.png" width="880" height="231" alt=""></td><td><img src="api/assets/mails/welcome/img/index_03.png" width="57" height="231" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_04.png" width="63" height="289" alt=""></td><td><img src="api/assets/mails/welcome/img/index_05.png" width="880" height="289" alt=""></td><td><img src="api/assets/mails/welcome/img/index_06.png" width="57" height="289" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_07.png" width="63" height="81" alt=""></td><td><img src="api/assets/mails/welcome/img/index_08.png" width="880" height="81" alt=""></td><td><img src="api/assets/mails/welcome/img/index_09.png" width="57" height="81" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_10.png" width="63" height="200" alt=""></td><td style="font-size: 30px;border: 0px;width: 880px; height: 200px;">';
-            $emailBody .= '<p>Ya casi todo est&aacute; listo para que puedas ingresar en nuestra plataforma <br />Solo hace falta validar tu cuenta haciendo clic <a href="api/api.php?meth=validate&token=' . $token . '" >AQU&Iacute;</a> <br />Tambi&eacute;n puedes validar tu cuenta copiando y pegando el siguiente enlace en tu navegador <br /> <div style="font-size: 12px;">api/api.php?meth=validate&token=' . $token . '</div></p>';
-            $emailBody .= '</td><td><img src="api/assets/mails/welcome/img/index_12.png" width="57" height="200" alt=""></td></tr><tr><td><img src="api/assets/mails/welcome/img/index_13.png" width="63" height="672" alt=""></td><td><img src="api/assets/mails/welcome/img/index_14.png" width="880" height="672" alt=""></td><td><img src="api/assets/mails/welcome/img/index_15.png" width="57" height="672" alt=""></td></tr></table>';
-            $mail = new PHPMailer(true);
-            try {
-                $mail->SMTPDebug = 2;
-                $mail->isSMTP();
-                $mail->Host = 'mail.miinfo.co';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'app@miinfo.co';
-                $mail->Password = 'PLATAFORMADECORREO';
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 587;
-                $mail->setFrom('app@miinfo.co', 'Miinfo - Sistema Automatizado');
-                $mail->addAddress($username);
-                $mail->addReplyTo('app@miinfo.co', 'No Responder');
-                $mail->isHTML(true);
-                $mail->Subject = 'Reenviando email de Validar Cuenta';
-                $mail->Body = $emailBody;
-                $mail->AltBody = 'Ya casi todo esta listo para que puedas ingresar en nuestra plataforma, Solo hace falta validar tu cuenta, puedes validar tu cuenta copiando y pegando el siguiente enlace en tu navegador api/api.php?meth=validate&token=' . $token . '';
-
-                $mail->send();
-                echo 'Message has been sent';
-            } catch (Exception $e) {
-                echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-            }
-
-            $json['scriptResp'] = "msgSent";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['scriptResp'] = "userNotMatch";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-    }
-
-    if ($method == 'GLogin') {
-        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
-        $password = broom('reg', $_POST['password']);
-
-        $query = "SELECT us.idUsuario idUsuario, cityUsuario, visiUsuario, emailUsuario, passUsuario, ingresoUsuario, dus.nombresUsuario nombresUsuario, statusUsuario, panelUsuario, lastLogin, msgUsuario, tokenUsuario, tipoUsuario, dniUsuario, apellidosUsuario, telUsuario, dirUsuario, twitterUsuario, linkUsuario, fbUsuario, igUsuario, bioUsuario, avatarUsuario FROM usuarios us LEFT JOIN detalleUsuarios dus ON (us.idUsuario = dus.idUsuario) WHERE emailUsuario = '$username'";
-        $result = $dblink->query($query);
-        if (!$result) {
-            $json['scriptResp'] = "userqueryFail";
-            $json['q'] = $query;
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
         $rows = $result->num_rows;
-        $result->data_seek(0);
-        $row = $result->fetch_array(MYSQLI_ASSOC);
-        $json['userIntel'] = $row;
-        unset($json['userIntel']['passUsuario']);
-        unset($json['userIntel']['tokenUsuario']);
+        $pedidos = array();
 
-        if (($rows != 0) && (strcmp($row["emailUsuario"], $username) == 0) && ($row['passUsuario'] == $password)) {
-
-
-            $val_update = "UPDATE usuarios SET lastLogin = '" . date('Y-m-d H:i:s') . "' WHERE emailUsuario = '" . $username . "';";
-            $val_result = $dblink->query($val_update) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_update . "'}");
-            $newImg = "assets/img/users/" . $row['idUsuario'] . ".jpg";
-            file_put_contents($newImg, fopen($_POST['usrimG'], 'r'));
-            chmod($newImg, 0666);
-            $json['userIntel']['userImg'] = $_POST['usrimG'];
-            $json['scriptResp'] = "match";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-
-            $val_select = "INSERT INTO usuarios (`emailUsuario`, `passUsuario`, `ingresoUsuario`, `statusUsuario`, `panelUsuario`, `lastLogin`, `origenUsuario`)  VALUES  ('" .
-                    $username . "','" . $password . "','" . date('Y-m-d H:i:s') . "','valid','home','" . date('Y-m-d H:i:s') . "', '" . $_POST['origin'] . "')";
-            $val_result = $dblink->query($val_select) or die($val_select);
-
-            $newImg = "assets/img/users/" . $dblink->insert_id . ".jpg";
-            file_put_contents($newImg, fopen($_POST['usrimG'], 'r'));
-            chmod($newImg, 0666);
-            if ($val_result) {
-
-                $json['userIntel']['idUsuario'] = $dblink->insert_id;
-                $json['userIntel']['emailUsuario'] = $username;
-                $json['userIntel']['statusUsuario'] = 'valid';
-                $json['userIntel']['userImg'] = $_POST['usrimG'];
-                $json['scriptResp'] = "match";
-                $output = ob_get_contents();
-                ob_end_clean();
-                $json['output'] = $output;
-                echo json_encode($json);
-                return;
-            } else {
-
-                $json['scriptResp'] = "failuserReg";
-                $output = ob_get_contents();
-                ob_end_clean();
-                $json['output'] = $output;
-                echo json_encode($json);
-            }
-        }
-    }
-
-    if ($method == 'updateUser') {
-        $idUsuario = $_POST['idUsuario'];
-        $emailUsuario = filter_var($_POST['emailUsuario'], FILTER_VALIDATE_EMAIL);
-        $dniUsuario = $_POST['dniUsuario'];
-        $nombresUsuario = $_POST['nombresUsuario'];
-        $apellidosUsuario = $_POST['apellidosUsuario'];
-        $telUsuario = $_POST['telUsuario'];
-        $dirUsuario = $_POST['dirUsuario'];
-        $twitterUsuario = $_POST['twitterUsuario'];
-        $linkUsuario = $_POST['linkUsuario'];
-        $fbUsuario = $_POST['fbUsuario'];
-        $igUsuario = $_POST['igUsuario'];
-        $bioUsuario = $_POST['bioUsuario'];
-        $cityUsuario = $_POST['cityUsuario'];
-        $visiUsuario = $_POST['visiUsuario'];
-
-        /////////////////////////////////////////////////// SI HAY IMAGEN LA GUARDAMOS EN EL SERVER
-        if ($_FILES["avatarUsuario"]) {
-            $target_dir = "assets/img/users/";
-            $ext = strtolower(end(explode('.', $_FILES["avatarUsuario"]["name"])));
-            $filename = $idUsuario . '.' . $ext;
-
-            ///////////////////////////// BORRAMOS LA IMG ANTERIOR
-            unlink($target_dir . $idUsuario . '.jpg');
-            unlink($target_dir . $idUsuario . '.png');
-
-            // VALIDAMOS CON PHP QUE SEA REALMENTE UNA IMAGEN (MEDIDAS DE SEGURIDAD)
-            $check = getimagesize($_FILES["avatarUsuario"]["tmp_name"]);
-            if ($check === false) {
-                $output = ob_get_contents();
-                $json['scriptResp'] = 'badImg';
-                $json['output'] = $output;
-                ob_end_clean();
-                echo json_encode($json);
-                return;
-            }
-
-            ////////////////////////////////////////////////////  SUBIMOS EL ARCHIVO
-            switch ($ext) {
-                case 'jpg':
-                    $image = imagecreatefromjpeg($_FILES["avatarUsuario"]["tmp_name"]);
-                    break;
-                case 'png':
-                    $image = imagecreatefrompng($_FILES["avatarUsuario"]["tmp_name"]);
-                    break;
-                default:
-                    $output = ob_get_contents();
-                    $json['scriptResp'] = 'imageFormatNotSupported';
-                    $json['ext'] = $ext;
-                    $json['output'] = $output;
-                    ob_end_clean();
-                    echo json_encode($json);
-                    return;
-            }
-            list($w, $h) = getimagesize($_FILES["avatarUsuario"]["tmp_name"]);
-            if ($w < $h) {
-                $image = imagecrop($image, array(
-                    "x" => 0,
-                    "y" => ($w - $h) / 2,
-                    "width" => $w,
-                    "height" => $w
-                ));
-            } else if ($h < $w) {
-                $image = imagecrop($image, array(
-                    "x" => ($w - $h) / 2,
-                    "y" => 0,
-                    "width" => $h,
-                    "height" => $h
-                ));
-            }
-            $target_file = $target_dir . $filename;
-            switch ($ext) {
-                case 'jpg':
-                    if (imagejpeg($image, $target_file)) {
-                        chmod($target_file, 0666);
-                        $json['msg'] = 'imageUploaded';
-                    } else {
-                        $output = ob_get_contents();
-                        $json['scriptResp'] = 'imageNotUploaded';
-                        $json['output'] = $output;
-                        ob_end_clean();
-                        echo json_encode($json);
-                        return;
-                    }
-                case 'png':
-                    if (imagepng($image, $target_file)) {
-                        chmod($target_file, 0666);
-                        $json['msg'] = 'imageUploaded';
-                    } else {
-                        $output = ob_get_contents();
-                        $json['scriptResp'] = 'imageNotUploaded';
-                        $json['output'] = $output;
-                        ob_end_clean();
-                        echo json_encode($json);
-                        return;
-                    }
-            }
-            $avatarUsuario = 'yes';
-        } else {
-            $avatarUsuario = '';
+        for ($i = 0; $i < $rows; $i++) {
+            $result->data_seek($i);
+            $pedidos[] = $result->fetch_array(MYSQLI_ASSOC);
         }
 
-        //////////////////////////////////////////////////////////////////////////// GUARDAMOS LOS DETALLES DEL USUARIO
-        $val_select = "UPDATE detalleUsuarios  SET
-            `dniUsuario` = '" . $dniUsuario . "',
-            `nombresUsuario` = '" . $nombresUsuario . "',
-            `apellidosUsuario` = '" . $apellidosUsuario . "',
-            `telUsuario` = '" . $telUsuario . "',
-            `dirUsuario` = '" . $dirUsuario . "',
-            `twitterUsuario` = '" . $twitterUsuario . "',
-            `linkUsuario` = '" . $linkUsuario . "',
-            `fbUsuario` = '" . $fbUsuario . "',
-            `igUsuario` = '" . $igUsuario . "',
-            `bioUsuario` = '" . $bioUsuario . "',
-            `avatarUsuario` = '" . $avatarUsuario . " ',
-            `visiUsuario` = '" . $visiUsuario . " ',
-            `cityUsuario` = '" . $cityUsuario . " '
-            WHERE `idUsuario` = '" . $idUsuario . "' ";
-        $val_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-
-        $json['userIntel'] = $_POST;
+        $json['pedidos'] = $pedidos;
         $output = ob_get_contents();
-        $json['scriptResp'] = 'UserUpdated';
-        $json['output'] = $output;
         ob_end_clean();
+        $json['output'] = $output;
         echo json_encode($json);
         return;
     }
 
-    if ($method == 'searchUsers') {
-        $term = $_POST['term'];
-        if ($_POST['city'] != '') {
-            $isCity = " AND (cityUsuario = '" . $_POST['city'] . "')";
-        }
-        if ($term != '') {
-            $isTerm = " AND (emailUsuario LIKE '%" . $term . "%' OR  dus.nombresUsuario LIKE '%" . $term . "%' OR  apellidosUsuario LIKE '%" . $term . "%' OR  telUsuario LIKE '%" . $term . "%' OR  dirUsuario LIKE '%" . $term . "%' OR  bioUsuario LIKE '%" . $term . "%')";
-        }
-        $query = "SELECT 
-        us.idUsuario idUsuario, emailUsuario,  dus.nombresUsuario nombresUsuario, tipoUsuario, cityUsuario, visiUsuario,
-        apellidosUsuario, telUsuario,  dirUsuario,  twitterUsuario, statusUsuario, 
-        linkUsuario,  fbUsuario,  igUsuario,  bioUsuario 
-        FROM usuarios us LEFT JOIN detalleUsuarios dus ON (us.idUsuario = dus.idUsuario)
-        WHERE (statusUsuario = 'complete') " . $isTerm . $isCity . ";";
-        $result = $dblink->query($query);
-        if (!$result) {
-            $json['scriptResp'] = "userqueryFail";
-            $json['q'] = $query;
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
+    //          VERIFICAMOS LAS MESAS DISPONIBLES           //
+    if ($method == 'mesas') {
+
+        session_start();
+        $idEstablecimiento = $_SESSION['usuario']['idEstablecimiento'];
+
+        //          LLAMAMOS TODAS LAS MESAS DISPONIBLES PARA ESE ESTABLECIMIENTO           //
+        $query = "SELECT * FROM mesa WHERE idEstablecimiento = '$idEstablecimiento' AND estadoMesa = 'HABILITADA' ORDER BY CAST(numeroMesa as SIGNED INTEGER) ASC";
+        $result = $conn->query($query);
+        if (!$result)
+            die($conn->error);
         $rows = $result->num_rows;
-        if ($rows > 0) {
-
-
-
-            $json['scriptResp']['results'] = array();
-            while ($rowSR = $result->fetch_array(MYSQLI_ASSOC)) {
-
-                ///////////////////////////////////////////////////////////////////////////////////////////// SEGUIDORES DEL USUARIO
-                $val_select = "SELECT * FROM followUsuarios WHERE idFollowed = '" . $rowSR["idUsuario"] . "' AND statusRequest = 'active'";
-                $select_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-                $row_cnt = $select_result->num_rows;
-
-
-                /////////////////////////////////////////VEMOS SI TIENE IMAGEN CARGADA
-                $isavatar = "assets/img/users/" . $rowSR["idUsuario"] . ".jpg";
-                if (file_exists($isavatar)) {
-                    $rowSR['userImg'] = "api/" . $isavatar;
-                } else {
-                    $isavatar2 = "assets/img/users/" . $rowSR["idUsuario"] . ".png";
-                    if (file_exists($isavatar2)) {
-                        $rowSR['userImg'] = "api/" . $isavatar2;
-                    } else {
-                        $rowSR['userImg'] = "api/assets/img/users/default.jpg";
-                    }
-                }
-
-                $rowSR['totalFollowers'] = $row_cnt;
-                $json['results'][] = $rowSR;
-            }
-            $json['scriptResp'] = "results";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['scriptResp'] = "empty";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
+        $row = array();
+        for ($i = 0; $i < $rows; $i++) {
+            $result->data_seek($i);
+            $row['database'][] = $result->fetch_array(MYSQLI_ASSOC);
+            $temp = end($row['database']);
+            $row['keys'][] = $temp['nivelMesa'];
         }
-    }
-
-    if ($method == 'getCities') {
-
-        ///////////////////////////////////////////////////////////////////////////////////////////// CIUDADES PARA EL AUTOCOMPLETAR DE LA BUSQUEDA
-        $val_select = "SELECT DISTINCT cityUsuario FROM detalleUsuarios ";
-        $select_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-        $options = array();
-        while ($rowcity = $select_result->fetch_array(MYSQLI_ASSOC)) {
-            $options[] = $rowcity['cityUsuario'];
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////// CIUDADES PARA EL AUTOCOMPLETAR DEL PERFIL
-        $val_select2 = "SELECT * FROM city LEFT JOIN deps ON city.deps_city_id = deps.deps_id ";
-        $select_result2 = $dblink->query($val_select2) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select2 . "'}");
-        $options2 = array();
-        $i = 0;
-        while ($rowcity2 = $select_result2->fetch_array(MYSQLI_ASSOC)) {
-            $options2['data'][$i] = array();
-            $options2['data'][$i]['city'] = $rowcity2['city_name'];
-            $options2['data'][$i]['dep'] = $rowcity2['deps_name'];
-            $i++;
-        }
-        $options2['getValue'] = 'city';
-        $options2['template'] = array();
-        $options2['template']['type'] = 'description';
-        $options2['template']['fields'] = array();
-        $options2['template']['fields']['description'] = 'dep';
-        $options2['list'] = array();
-        $options2['list']['match'] = array();
-        $options2['list']['match']['enabled'] = true;
-
-        $json['totalCities'] = $options2;
-        $json['autocomp'] = $options;
-        $json['scriptResp'] = "listed";
+        $json['mesas'] = $row['database'];
+        $json['niveles'] = array_unique($row['keys']);
+        
         $output = ob_get_contents();
         ob_end_clean();
         $json['output'] = $output;
         echo json_encode($json);
         return;
-    }
-
-    if ($method == 'newFollower') {
-        $idFollowed = $_POST['idFollowed'];
-        $idFollower = $_POST['idFollower'];
-
-        $val_select = "INSERT INTO followUsuarios 
-            (`idFollowed`,`idFollower`,`dateRequest`,`statusRequest`,`lastUpdated`)  
-            VALUES ('" . $idFollowed . "', '" . $idFollower . "', '" . date('Y-m-d H:i:s') . "', 'active', '" . date('Y-m-d H:i:s') . "')";
-        $val_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-        if ($val_result) {
-            $json['scriptResp'] = "followed";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['scriptResp'] = "failFollowing";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-    }
-
-    if ($method == 'getFollowingList') {
-
-        $idUsuario = $_POST['idUsuario'];
-
-        ///////////////////////////////////////////////////////////////////////////////////////////// SEGUIDORES DEL USUARIO
-        $val_select = "SELECT * FROM followUsuarios LEFT JOIN detalleUsuarios ON ( followUsuarios.idFollower = detalleUsuarios.idUsuario) WHERE idFollowed = '" . $idUsuario . "' AND statusRequest = 'active'";
-        $select_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-        $row_cnt = $select_result->num_rows;
-        $options = array();
-        while ($rowcity = $select_result->fetch_array(MYSQLI_ASSOC)) {
-            ///////////////////////////////////////////////////////////////////////////////////////////// SEGUIDORES DEL USUARIO
-            $fols_select = "SELECT * FROM followUsuarios WHERE idFollowed = '" . $rowcity["idUsuario"] . "' AND statusRequest = 'active'";
-            $fols_result = $dblink->query($fols_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $fols_select . "'}");
-            $fols_cnt = $fols_result->num_rows;
-
-
-            /////////////////////////////////////////VEMOS SI TIENE IMAGEN CARGADA
-            $isavatar = "assets/img/users/" . $rowcity["idUsuario"] . ".jpg";
-            if (file_exists($isavatar)) {
-                $rowcity['userImg'] = "api/" . $isavatar;
-            } else {
-                $isavatar2 = "assets/img/users/" . $rowcity["idUsuario"] . ".png";
-                if (file_exists($isavatar2)) {
-                    $rowcity['userImg'] = "api/" . $isavatar2;
-                } else {
-                    $rowcity['userImg'] = "api/assets/img/users/default.jpg";
-                }
-            }
-
-            $rowcity['totalFollowers'] = $fols_cnt;
-
-            $options[] = $rowcity;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////// SEGUIDOS POR
-        $val_select2 = "SELECT * FROM followUsuarios LEFT JOIN detalleUsuarios ON ( followUsuarios.idFollower = detalleUsuarios.idUsuario) WHERE idFollower = '" . $idUsuario . "' AND statusRequest = 'active'";
-        $select_result2 = $dblink->query($val_select2) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select2 . "'}");
-        $row_cnt2 = $select_result2->num_rows;
-        $options2 = array();
-        while ($rowcity2 = $select_result2->fetch_array(MYSQLI_ASSOC)) {
-
-            $options2[] = $rowcity2;
-        }
-
-        $json['followList'] = $options;
-        $json['followingList'] = $options2;
-        $json['totalFans'] = $row_cnt;
-        $json['totalIdols'] = $row_cnt2;
-        $json['scriptResp'] = "followListLoaded";
-        $output = ob_get_contents();
-        ob_end_clean();
-        $json['output'] = $output;
-        echo json_encode($json);
-        return;
-    }
-
-    if ($method == 'deleteFollower') {
-        $idFollowed = $_POST['idFollowed'];
-        $idFollower = $_POST['idFollower'];
-
-        $val_select = "UPDATE followUsuarios SET  `statusRequest` = 'deleted' WHERE (`followUsuarios`.`idFollowed` = '" . $idFollowed . "') AND (`followUsuarios`.`idFollower` = '" . $idFollower . "');";
-        $val_result = $dblink->query($val_select) or die("{'scriptResp' : 'failFollowing', 'query' : '" . $val_select . "'}");
-        if ($val_result) {
-            $json['scriptResp'] = "deletedFollow";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['scriptResp'] = "failFollowing";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-    }
-
-    if ($method == 'newVisit') {
-        $idVisitor = $_POST['guest'];
-        $idVisited = $_POST['host'];
-
-        $val_select = "INSERT INTO visitas 
-            (`idVisitor`,`idVisited`,`dateVisit`)  
-            VALUES ('" . $idVisitor . "', '" . $idVisited . "', '" . date('Y-m-d H:i:s') . "')";
-        $val_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-        if ($val_result) {
-            $json['scriptResp'] = "visited";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['scriptResp'] = "failVisit";
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-    }
-
-    if ($method == 'getVisit') {
-
-        $idUsuario = $_POST['idUsuario'];
-        ///////////////////////////////////////////////////////////////////////////////////////////// SEGUIDORES DEL USUARIO
-        $val_select = "SELECT * FROM visitas WHERE idVisited = '" . $idUsuario . "'";
-        $select_result = $dblink->query($val_select) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_select . "'}");
-        $row_cnt = $select_result->num_rows;
-        $json['totalVisitas'] = $row_cnt;
-        $json['scriptResp'] = "visited";
-        $output = ob_get_contents();
-        ob_end_clean();
-        $json['output'] = $output;
-        echo json_encode($json);
         return;
     }
 }
 
 if ($_GET) {
     $method = broom('reg', $_GET['meth']);
-
-    //      VALIDAMOS EL USUARIO AL HACER CLIC EN EL LINK DEL EMAIL //
-    if ($method == 'validate') {
-        $token = broom('reg', $_GET['token']);
-        $queryValid = " SELECT idUsuario, emailUsuario, passUsuario FROM usuarios usr";
-        $queryresultValid = $dblink->query($queryValid);
-        if (!$queryresultValid)
-            die(header("Location: https://miinfo.co"));
-        while ($rowValid = $queryresultValid->fetch_array(MYSQLI_ASSOC)) {
-            $eval = hash('sha512', $rowValid['emailUsuario'] . $rowValid['passUsuario']);
-            if ($token == $eval) {
-
-                $val_select = "UPDATE usuarios SET statusUsuario = 'valid' WHERE idUsuario = '" . $rowValid['idUsuario'] . "'";
-                $val_result = $dblink->query($val_select) or die($val_select);
-                header("Location: api/lobby/validated.php");
-                return;
-            }
-        }
-        header("Location: api/lobby/validatednot.php");
-        return;
-    }
-
-    //      RESTAURAMOS LA CONTRASEÑA DEL USUARIO       //
-    if ($method == 'resetPass') {
-        $token = broom('reg', $_GET['token']);
-        $select = "SELECT tokenUsuario FROM usuarios WHERE tokenUsuario = '" . $token . "';";
-        $result = $dblink->query($select) or die("{'scriptResp' : 'queryFailedd'}");
-        $row_cnt = $result->num_rows;
-        if ($row_cnt > 0) {
-            header("Location: api/lobby/resetpw.php?token=" . $token);
-            return;
-        } else {
-            header("Location: https://miinfo.co");
-        }
-    }
 }
 
 //   Si no se llamó ningún método de la API     //

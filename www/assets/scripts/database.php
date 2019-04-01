@@ -1,13 +1,13 @@
 ﻿<?php
-/*        
+/*
  *          ***********************************************************
- * 	        *******************||  DROOM SOFTWARE   ||*****************
+ *          *******************||  DROOM SOFTWARE   ||*****************
  *          ***********************************************************
  * 
- *	        @date           2019-03-22
- *          @author         Bayman Burton <bayman@burtonservers.com>
- *          @copyright      2015-2019 Burton Tech
- *          @license        https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
+ *          @date               2019-03-22
+ *          @author             Bayman Burton <bayman@burtonservers.com>
+ *          @copyright          2015-2019 Burton Tech
+ *          @license            https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
  *          International Registered Trademark & Property of Burton Technology  https://burtonservers.com
  * 
  *          This source file is subject to the GNU General Public License (GPL v3)
@@ -22,7 +22,7 @@
  *          modification of any aspect of the aplication
  *
  *          Desc:
- *	        Integrated Restaurant Management Software.
+ *          Integrated Restaurant Management Software.
  *          Focused on handling the full operation of the restaurant, including support for multi
  *          restaurants, kitchen control, teller management and Waiter module for wireless order submitting
  *          also comes with an Admin Dashboard and custom reports.
@@ -38,9 +38,8 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASSWORD', 'vagrant');
 define('DB_DATABASE', 'droom');
-$conn = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_DATABASE);
-mysqli_set_charset($conn,"utf8");
-if($conn->connect_error)
-{
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
+mysqli_set_charset($conn, "utf8");
+if ($conn->connect_error) {
     echo "No se puede establecer la conexión con la Base de Datos";
 } 

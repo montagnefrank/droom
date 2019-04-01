@@ -1,13 +1,14 @@
-<?php 
+<?php
+
 /*
  *          ***********************************************************
  *          *******************||  DROOM SOFTWARE   ||*****************
  *          ***********************************************************
  * 
- *          @date              2019-03-22
- *          @author          Bayman Burton <bayman@burtonservers.com>
- *          @copyright      2015-2019 Burton Tech
- *          @license          https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
+ *          @date               2019-03-22
+ *          @author             Bayman Burton <bayman@burtonservers.com>
+ *          @copyright          2015-2019 Burton Tech
+ *          @license            https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
  *          International Registered Trademark & Property of Burton Technology  https://burtonservers.com
  * 
  *          This source file is subject to the GNU General Public License (GPL v3)
@@ -80,83 +81,66 @@
 <script type='text/javascript' src='assets/js/plugins/filestyle/bootstrap-filestyle.min.js'></script>
 <script type='text/javascript' src='assets/js/modalMultiple.js'></script>
 <script type='text/javascript' src='assets/salir/script_salir.js'></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 <script type="text/javascript" src="//cdn.rawgit.com/icons8/bower-webicon/v0.10.7/jquery-webicon.min.js"></script>
+<script src='assets/js/velocity.min.js'></script>
+<script src='assets/js/velocity.ui.min.js'></script>
 <script>
-    
-    $(document).ready(function() {
 
-        var existeusuario = false;
-        $('.page-container form').submit(function( e ){
+    $(document).ready(function () {
+        $('.page-container form').submit(function (e) {
             e.preventDefault();
             var username = $(this).find('.username').val();
             var password = $(this).find('.password').val();
 
-            if(username == '') {
-                $(this).find('.error').fadeOut('fast', function(){
+            if (username == '') {
+                $(this).find('.error').fadeOut('fast', function () {
                     $(this).css('top', '27px');
                 });
-                $(this).find('.error').fadeIn('fast', function(){
+                $(this).find('.error').fadeIn('fast', function () {
                     $(this).parent().find('.username').focus();
                 });
 
                 return false;
             }
-            if(password == '') {
-                $(this).find('.error').fadeOut('fast', function(){
+            if (password == '') {
+                $(this).find('.error').fadeOut('fast', function () {
                     $(this).css('top', '96px');
                 });
-                $(this).find('.error').fadeIn('fast', function(){
+                $(this).find('.error').fadeIn('fast', function () {
                     $(this).parent().find('.password').focus();
                 });
                 return false;
             }
 
-            //Cuando exista texto en el input usuario y contraseña
-            if(username != '' && password != ''){
-                var estado = false;
+            /// VALIDAMOS QUE NO EXISTAN CAMPOS VACIOS ///
+            if (username != '' && password != '') {
+
+                var formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+                formData.append('meth', 'login');
                 $.ajax({
-                    // Verificacion de los datos introducidos
-                    url : 'api/api.php',
-                    data : { 
-                        meth : 'login',
-                        username : username,
-                        password : password
-                    },
-                    dataType:"json",
-                    type : 'POST',
-                    success : function(respuesta) {
-                        
-                        if(respuesta == false){
-                            existeusuario = false;
+                    url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                    success: function (data) {
+
+                        if (data.scriptResp == "noMatch") {
                             $(".notificacion").html('<b style="font-size: 24px;">Error ! </b><p>Nombre de usuario y/o contraseñas incorrectos, intente nuevamente</p>');
                             $(".notificacion").show('slow').delay(4000).hide('slow');
                             $('.username').val('');
                             $('.password').val('');
-                        }else{
-                            existeusuario = true;
-                            
-                            
-                            //window.location.href = "estableceEstablecimiento.php";
-                            //window.location.href = "index.php?panel=index.php#autoscroll";
-                            
+                        } else {
+                            window.location.href = "/?show=home#autoscroll";
                         }
-                        console.log(respuesta);
                     },
-                    error : function(error) {
-                        console.log('Disculpe, existió un problema');
-                        $(".notificacion").html('<b style="font-size: 24px;">Error ! </b><p>Nombre de usuario y/o contraseñas incorrectos, intente nuevamente</p>');
+                    error: function (error) {
+                        console.log("Hubo un error de internet, intente de nuevo");
                         console.log(error);
-                    },
-                    complete : function(xhr, status) {
-                        console.log('Petición realizada');
                     }
                 });
             }
         });
 
-        $('.page-container form .username, .page-container form .password').keyup(function(){
+        $('.page-container form .username, .page-container form .password').keyup(function () {
             $(this).parent().find('.error').fadeOut('fast');
         });
 
@@ -183,88 +167,90 @@
         node.val(node.val().replace(/[^a-zA-Z\-\s]/g, ''));
     });
 </script>
-
+<?php require ("modules/" . $module . "/scripts.php"); ?> 
 
 <?php
-switch ($panel) {///////////////////////////////////////////////////////////////SELECTOR DE PANEL, DEPENDIENDO DEL PANEL HACE LAS LLAMADAS A LOS ARCHIVOS CORRESPONDINETES
-    case "index.php":
-        echo "<script type='text/javascript' src='assets/js/script_mesas.js'></script>";
-        echo "<script type='text/javascript' src='assets/js/script_consultapedido.js'></script>";
-        echo "<script type='text/javascript' src='assets/js/script_editapedido.js'></script>";
-        break;
-    case "cocina.php":
-        echo "<script type='text/javascript' src='assets/cocina/scriptcocina.js'></script>";
-        break;
-    case "procesos.php":
-        require ("assets/procesos/model.php");
-        break;
-    case "hacerpedido.php":
-        echo "<script type='text/javascript' src='assets/js/script_hacerpedido.js'></script>";
-        //estos scripts son los que inicializan el menu y el que lo crea y maneja
-        //echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
-        //echo "<script type='text/javascript' src='assets/js/script_start_menu_pedido.js'></script>";
-        break;
-    case "anadirpedido.php":
-        echo "<script type='text/javascript' src='assets/js/script_anadirpedido.js'></script>";
-        echo "<script type='text/javascript' src='assets/anadirpedido/script_anadirpedido.js'></script>";
-        break;
-    case "dashboard.php":
-        echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyA_s9AhhJurXNx1UHeK_6hm6CdSB8AR14c\"></script>";
-        echo "<script type='text/javascript' src='assets/dashboard/dashboard.js'></script>";
-        echo "<script type='text/javascript' src=\"assets/dashboard/echarts/dist/echarts.js\"></script>";
-        require ("assets/dashboard/dashboardscripts.php");
-        break;
-    case "caja.php":
-        echo "<script type='text/javascript' src='assets/caja/script_caja.js'></script>";
-        require ("assets/caja/caja_scripts.php");
-        break;
-    case "factura.php":
-        echo "<script type='text/javascript' src='assets/factura/script_factura.js'></script>";
-        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
-        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
-        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
-        break;
-    case "domicilio.php":
-        require ("assets/domicilio/dom_scripts.php");
-        echo "<script type='text/javascript' src='assets/domicilio/dom_facturardom.js'></script>";
-        break;
-    case "nuevodomicilio.php":
-        echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
-        echo "<script type='text/javascript' src='assets/domicilio/dom_seleccionproducto.js'></script>";
-        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
-        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
-        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
-        break;
-    case "parallevar.php":
-        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
-        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
-        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
-        echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
-        echo "<script type='text/javascript' src='assets/parallevar/script_seleccionproductos.js'></script>";
-        break;
-    case "reporte.php":
-        echo '<script type="text/javascript" charset="utf8" src="assets/js/datatables/datatables.js"></script>';
-        echo "<script type='text/javascript' src='assets/reporteventa/script_validacionReporte.js'></script>";
-        echo "<script type='text/javascript' src='assets/reporteventa/script_reporteventa.js'></script>";
-        break;
-    case "user_config.php":
-        echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.js"></script>';
-        echo '<script type="text/javascript" src="assets/user_config/script_user_config.js"></script>';
-        break;
-    case "entregas.php":
-        echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyA_s9AhhJurXNx1UHeK_6hm6CdSB8AR14c\"></script>";
-        echo "<script type='text/javascript' src='assets/entregas/ent_scripts.js'></script>";
-        echo "<script type='text/javascript' src='assets/entregas/ent_scripts.php'></script>";
-        require ("assets/entregas/ent_scripts.php");
-        break;
-    case "inventory.php":
-        require ("assets/inventory/model.php");
-        break;
-    case "user.php":
-        require ("assets/users/model.php");
-        break;
-    case "carta.php":
-        require ("assets/carta/model.php");
-        break;
-}
+
+//
+//switch ($panel) {///////////////////////////////////////////////////////////////SELECTOR DE PANEL, DEPENDIENDO DEL PANEL HACE LAS LLAMADAS A LOS ARCHIVOS CORRESPONDINETES
+//    case "index.php":
+//        echo "<script type='text/javascript' src='assets/js/script_mesas.js'></script>";
+//        echo "<script type='text/javascript' src='assets/js/script_consultapedido.js'></script>";
+//        echo "<script type='text/javascript' src='assets/js/script_editapedido.js'></script>";
+//        break;
+//    case "cocina.php":
+//        echo "<script type='text/javascript' src='assets/cocina/scriptcocina.js'></script>";
+//        break;
+//    case "procesos.php":
+//        require ("assets/procesos/model.php");
+//        break;
+//    case "hacerpedido.php":
+//        echo "<script type='text/javascript' src='assets/js/script_hacerpedido.js'></script>";
+//        //estos scripts son los que inicializan el menu y el que lo crea y maneja
+//        //echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
+//        //echo "<script type='text/javascript' src='assets/js/script_start_menu_pedido.js'></script>";
+//        break;
+//    case "anadirpedido.php":
+//        echo "<script type='text/javascript' src='assets/js/script_anadirpedido.js'></script>";
+//        echo "<script type='text/javascript' src='assets/anadirpedido/script_anadirpedido.js'></script>";
+//        break;
+//    case "dashboard.php":
+//        echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyA_s9AhhJurXNx1UHeK_6hm6CdSB8AR14c\"></script>";
+//        echo "<script type='text/javascript' src='assets/dashboard/dashboard.js'></script>";
+//        echo "<script type='text/javascript' src=\"assets/dashboard/echarts/dist/echarts.js\"></script>";
+//        require ("assets/dashboard/dashboardscripts.php");
+//        break;
+//    case "caja.php":
+//        echo "<script type='text/javascript' src='assets/caja/script_caja.js'></script>";
+//        require ("assets/caja/caja_scripts.php");
+//        break;
+//    case "factura.php":
+//        echo "<script type='text/javascript' src='assets/factura/script_factura.js'></script>";
+//        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
+//        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
+//        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
+//        break;
+//    case "domicilio.php":
+//        require ("assets/domicilio/dom_scripts.php");
+//        echo "<script type='text/javascript' src='assets/domicilio/dom_facturardom.js'></script>";
+//        break;
+//    case "nuevodomicilio.php":
+//        echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
+//        echo "<script type='text/javascript' src='assets/domicilio/dom_seleccionproducto.js'></script>";
+//        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
+//        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
+//        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
+//        break;
+//    case "parallevar.php":
+//        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
+//        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
+//        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
+//        echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
+//        echo "<script type='text/javascript' src='assets/parallevar/script_seleccionproductos.js'></script>";
+//        break;
+//    case "reporte.php":
+//        echo '<script type="text/javascript" charset="utf8" src="assets/js/datatables/datatables.js"></script>';
+//        echo "<script type='text/javascript' src='assets/reporteventa/script_validacionReporte.js'></script>";
+//        echo "<script type='text/javascript' src='assets/reporteventa/script_reporteventa.js'></script>";
+//        break;
+//    case "user_config.php":
+//        echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.js"></script>';
+//        echo '<script type="text/javascript" src="assets/user_config/script_user_config.js"></script>';
+//        break;
+//    case "entregas.php":
+//        echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyA_s9AhhJurXNx1UHeK_6hm6CdSB8AR14c\"></script>";
+//        echo "<script type='text/javascript' src='assets/entregas/ent_scripts.js'></script>";
+//        echo "<script type='text/javascript' src='assets/entregas/ent_scripts.php'></script>";
+//        require ("assets/entregas/ent_scripts.php");
+//        break;
+//    case "inventory.php":
+//        require ("assets/inventory/model.php");
+//        break;
+//    case "user.php":
+//        require ("assets/users/model.php");
+//        break;
+//    case "carta.php":
+//        require ("assets/carta/model.php");
+//        break;
+//}
 ?>

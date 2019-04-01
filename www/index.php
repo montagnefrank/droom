@@ -4,10 +4,10 @@
  *          *******************||  DROOM SOFTWARE   ||*****************
  *          ***********************************************************
  * 
- *          @date              2019-03-22
- *          @author          Bayman Burton <bayman@burtonservers.com>
- *          @copyright      2015-2019 Burton Tech
- *          @license          https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
+ *          @date               2019-03-22
+ *          @author             Bayman Burton <bayman@burtonservers.com>
+ *          @copyright          2015-2019 Burton Tech
+ *          @license            https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
  *          International Registered Trademark & Property of Burton Technology  https://burtonservers.com
  * 
  *          This source file is subject to the GNU General Public License (GPL v3)
@@ -36,21 +36,8 @@
 // DEBUG EN PANTALLA //
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
-// DESPLEGAMOS TODA LA CONFIG//
+// DESPLEGAMOS TODA LA CONFIG   //
 require ("assets/scripts/config.php");
-
-// VALIDAMOS SI EL USUARIO ESTA LOGUEADO //
-session_start();
-if (isset($_SESSION["usuario"])) {
-    // VALIDAMOS SI TIENE PANEL ASIGNADO //
-    if (isset($_GET['panel'])) {
-        $panel = $_GET['panel'];
-    } else {
-        $page = 'login';
-    }
-} else {
-    $page = 'login';
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -60,24 +47,23 @@ if (isset($_SESSION["usuario"])) {
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
-        <link rel="stylesheet" type="text/css" id="theme" href="assets/css/custom.css"/>
         <link rel="stylesheet" href="assets/node_modules/dragula/dist/dragula.min.css">
         <link rel="stylesheet" href="assets/css/reset.css">
         <link rel="stylesheet" href="assets/css/supersized.css">
+        <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
         <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" type="text/css" id="theme" href="assets/css/custom.css"/>
     </head>
     <body>
-
         <?php
         if ($page == 'login') {
             ?>
-            <div class="page-container">
+            <div class="page-container login">
                 <div class="login-center">
                     <img src="assets/img/logo_rec.png" />
                     <form method="post">
-                        <input type="text" name="username" class="username" placeholder="Usuario" value="111">
-                        <input type="password" name="password" class="password" placeholder="Contraseña" value="111">
+                        <input type="text" name="username" class="username" placeholder="Usuario" >
+                        <input type="password" name="password" class="password" placeholder="Contraseña" >
                         <button type="submit">Iniciar Sesión</button>
                         <div class="error"><span>+</span></div>
                         <div class="notificacion" hidden></div>
@@ -87,17 +73,17 @@ if (isset($_SESSION["usuario"])) {
             <?php
         } else {
 
-            if ($panel == "cocina.php") {
+            if ($module == "cocina.php") {
                 echo '<div class="page-container page-navigation-top-fixed page-navigation-toggled page-container-wide">';
             } else {
                 echo '<div class="page-container page-navigation-top-fixed">';
             }
-            require ("content/sidebar.php");
+            require ("assets/views/sidebar.php");
             ?>
             <div class="page-content" style="height: 100%;">
-                <?php require ("content/statusbar.php"); ?>          
+                <?php require ("assets/views/statusbar.php"); ?>          
                 <!--PANEL A MOSTRAR-->                      
-                <?php require ("content/panels/" . $panel); ?>                           
+                <?php require ("modules/" . $module . "/view.php"); ?>                           
             </div>
         </div>
         <!-- MENSAJE DE SALIDA-->
@@ -123,7 +109,7 @@ if (isset($_SESSION["usuario"])) {
 
         <!-- START SIDEBAR -->
         <?php
-        if ($panel == "dashboard.php") {
+        if ($module == "dashboard.php") {
             require ("assets/dashboard/rightbar.php");
         }
         ?>

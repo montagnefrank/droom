@@ -1,13 +1,13 @@
-<?php 
-/*        
+<?php
+/*
  *          ***********************************************************
- * 	        *******************||  DROOM SOFTWARE   ||*****************
+ *          *******************||  DROOM SOFTWARE   ||*****************
  *          ***********************************************************
  * 
- *	        @date           2019-03-22
- *          @author         Bayman Burton <bayman@burtonservers.com>
- *          @copyright      2015-2019 Burton Tech
- *          @license        https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
+ *          @date               2019-03-22
+ *          @author             Bayman Burton <bayman@burtonservers.com>
+ *          @copyright          2015-2019 Burton Tech
+ *          @license            https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License (GPL v3)
  *          International Registered Trademark & Property of Burton Technology  https://burtonservers.com
  * 
  *          This source file is subject to the GNU General Public License (GPL v3)
@@ -22,7 +22,7 @@
  *          modification of any aspect of the aplication
  *
  *          Desc:
- *	        Integrated Restaurant Management Software.
+ *          Integrated Restaurant Management Software.
  *          Focused on handling the full operation of the restaurant, including support for multi
  *          restaurants, kitchen control, teller management and Waiter module for wireless order submitting
  *          also comes with an Admin Dashboard and custom reports.
@@ -33,5 +33,55 @@
  *          
  */
 
-require ("assets/scripts/database.php");
+//      ENLACE A LA BASE DE DATOS       //
+require ("database.php");
+
+// PURIFICAMOS VARIABLES //
+function broom($type, $string) {
+
+    if ($type == "reg") { /* FILTRAR a - Z Y ESPACIOS */
+        return preg_replace("/[^ \w]+/", "", $string);
+    }
+
+    if ($type == "text") { /* FILTRAR SOLO TEXTO PARA LECTURA SIN CARCTERES ESPECIALES */
+        $string = str_replace(
+                array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä', 'é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë', 'í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î', 'ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô', 'ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü', 'ñ', 'Ñ', 'ç', 'Ç'), array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A', 'e', 'e', 'e', 'e', 'E', 'E', 'E', 'E', 'i', 'i', 'i', 'i', 'I', 'I', 'I', 'I', 'o', 'o', 'o', 'o', 'O', 'O', 'O', 'O', 'u', 'u', 'u', 'u', 'U', 'U', 'U', 'U', 'n', 'N', 'c', 'C'), $string
+        );
+        return preg_replace("/[^ \w]+/", "", $string);
+    }
+
+    if ($type == "num") { /* FILTRAR TODO MENOS NUMEROS */
+        return preg_replace('/\D/', '', $string);
+    }
+
+    if ($type == "spa") { /* TODO EN CASTELLANO */
+        return preg_replace("#[^\p{L}\s-]#u", "", $string);
+    }
+
+    if ($type == "url") { // CONVERTIR A URL    //
+        $step1 = preg_replace("/[^ \w]+/", "", $string);
+        $step2 = str_replace(' ', '_', $step1);
+        $step3 = str_replace(
+                array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'), array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'), $step2
+        );
+        return $step3;
+    }
+}
+
+//           VALIDAMOS QUE LA URL EXISTA             //
+function is_url_exist($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if ($code == 200) {
+        $status = true;
+    } else {
+        $status = false;
+    }
+    curl_close($ch);
+    return $status;
+}
+
 ?>
