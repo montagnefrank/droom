@@ -1,6 +1,6 @@
 <?php
 
-require("../conn.php");
+require ("../scripts/database.php");
 
 if(isset($_POST["idpedido"])){
 

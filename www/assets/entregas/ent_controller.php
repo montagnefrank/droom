@@ -4,7 +4,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 if (isset($_POST["dom_newprod"])) {
     $dom_select = "SELECT * FROM producto pro JOIN submenu su ON su.idSubmenu = pro.idSubmenu JOIN menu me ON me.idMenu = su.idMenu WHERE codProducto = '" . $_POST["dom_newprod"] . "' LIMIT 1";

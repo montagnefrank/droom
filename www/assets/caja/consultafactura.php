@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 if($_POST["idfactura"]){
     $select_factura = "SELECT * FROM factura WHERE idFactura = '". $_POST["idfactura"] ."' LIMIT 1";

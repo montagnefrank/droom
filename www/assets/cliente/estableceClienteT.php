@@ -3,7 +3,7 @@
 //error_reporting(E_ALL ^ E_NOTICE);
 //ini_set('display_errors', 1);
 
-require("../conn.php");
+require ("../scripts/database.php");
 
 $tel = $_POST['tel'];
 

@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 $query="SELECT * FROM pedidoproducto pp "
         . "join pedido pe on(pe.idPedido = pp.idPedido) "

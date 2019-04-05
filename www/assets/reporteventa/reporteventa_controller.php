@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 //PARA GENERAR LOS REPORTES
 if (isset($_POST["tipoReporte"]) && isset($_POST["fechaInicio"]) && isset($_POST["fechaFin"])) {

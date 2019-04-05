@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 session_start();
 $idestablecimiento = $_SESSION['usuario']['idEstablecimiento'];

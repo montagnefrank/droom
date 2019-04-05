@@ -3,7 +3,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 if ($_POST["reportedeventas"] == "2"){//////////////////////////////////////////ESTABLECIMIENTO VILLAFLORA
     if ($_POST["reportede"] == "1"){/////////////////////////////////////////////VENTAS DIARIAS

@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 //Para cuando se desea obtener el establecimiento del usuario
 if(isset($_GET["establecimiento"])){

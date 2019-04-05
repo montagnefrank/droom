@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require ("../conn.php");
+require ("../scripts/database.php");
 session_start();
 if($_POST){
     $insert_com = "INSERT INTO comentarios (idCliente,idUsuario,fechaComentario,textoComentario,statusComentario) VALUES ('". $_POST['idcliente'] ."','". $_SESSION['usuario']['idUsuario'] ."','". date("Y-m-d") ."','". $_POST['comment'] ."','ACTIVE')";

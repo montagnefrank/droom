@@ -34,176 +34,121 @@
  */
 ?>
 <script>
-
     //       ACTIVAMOS EL MENU LATERAL       //
     $(".menuItem").removeClass("active");
     $(".pedidos").addClass("active");
 
+    //          CARGAMOS LAS MESAS Y LOS PEDIDOS           //
+    cargarMesasNiveles();
+    actualizaTabla();
+
     //      MOSTRAR MESAS Y NIVELES AL HACER CLIC    //
-    $(document).on("click", ".mostratMesasBtn", function () {
-        $(".menuItemTabs").delay(500).slideToggle(500, "easeInOutBack", function () {});
+    $(document).on("click", ".mostratMesasBtn", function() {
+        $(".menuItemTabs").delay(500).slideToggle(500, "easeInOutBack");
     });
-    
+
     //      Seleccionar Mesa Para nuevo pedido  //
-    $(document).on("click", ".menuItemBox", function () {
+    $(document).on("click", ".menuItemBox", function() {
         $(".menuItemBox").removeClass('tile-selected');
         $(this).addClass('tile-selected');
         $('.mesaSelected').html($(this).parent().find('.idMesaContainer').html());
     });
 
-    $(document).ready(function () {
-
-        var formData = new FormData();
-        formData.append('meth', 'consultaPedidos');
-        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
-            success: function (data) {
-                $(".mesas-ocu").text(data.pedidos.length + " ocupada(s)");
-                if (data.pedidos.length != 0) {
-                    $(data.pedidos).each(function (index, value) {
-                        var tile, icon;
-                        if (value.estadoPedido == "SOLICITADO") {
-                            tile = "tile-info";
-                            icon = '<i class="fa fa-asterisk fa-2x" style="font-size:20px;color:white;" aria-hidden="true"></i>';
-                        } else
-                        if (value.estadoPedido == "EN PROCESO") {
-                            tile = "tile-warning";
-                            icon = '<i class="fas fa-sync-alt fa-spin fa-2x fa-fw" style="font-size:20px;color:white;"></i>';
-                        } else
-                        if (value.estadoPedido == "LISTO PARA ENTREGAR") {
-                            tile = "tile-success";
-                            icon = '<i class="fa fa-check" style="font-size:20px;color:white;" aria-hidden="true"></i>';
-                        } else
-                        if (value.estadoPedido == "ENTREGADO") {
-                            tile = "tile-default";
-                            icon = '<i class="fa fa-thumbs-o-up" aria-hidden="true" style="font-size:20px;color:black;"></i>';
-                        }
-
-                        $(".contenedorPedido").append(
-                                '<div class="col-md-3">' +
-                                '<a href="#" class="tile ' + tile + ' estadoPedido" style="padding: 22px;">' +
-                                'Mesa ' + value.numeroMesa +
-                                '<p> Pedido # ' + value.idPedido + '</p>' +
-                                '<div style="position: absolute;top: -24px;right: 2px;">' + icon + '</div>' +
-                                '<div style="position: absolute;top: -5px;left: 7px;"><p style="font-size:25px;color:white;">' + (index + 1) + '</p></div>' +
-                                '<div style="display:none;" class="idMesa">' + value.idMesa + '</div>' +
-                                '<div style="display:none;" class="numeroMesa">' + value.numeroMesa + '</div>' +
-                                '<div style="display:none;" class="idPedido">' + value.idPedido + '</div>' +
-                                '<div style="display:none;" class="estadoPedido">' + value.estadoPedido + '</div>' +
-                                '</a>' +
-                                '</div>'
-                                );
-                    });
-                } else
-                if (data.pedidos.length == 0) {
-                    $(".listaPedidos").append("<center><p style='padding:10px;color:white;'>Ningun pedido por atender</p></center>");
+    //              VALIDAMOS  EL NUEVO PEDIDO QUE SE VA A CARGAR Y SI LA MESA YA FUE SELECCIONADA      //
+    $(".btnNuevoPedido").click(function() {
+        if ($(".mesaSelected").html() != "" && $(".mesaSelected").html() != "Seleccione") {
+            var formData = new FormData();
+            formData.append('idmesa', $(".mesaSelected").html());
+            formData.append('numeromesa', $("#selectMesas option:selected").text());
+            formData.append('meth', 'asignaMesa');
+            $.ajax({
+                url: 'api/api.php',
+                type: 'POST',
+                dataType: "json",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function(data) {
+                    window.location.replace("/?show=hacerpedido#autoscroll");
+                },
+                error: function(error) {
+                    console.log("Hubo un error de internet, intente de nuevo");
+                    console.log(error);
                 }
-            },
-            error: function (error) {
-                console.log("Hubo un error de internet, intente de nuevo");
-                console.log(error);
-            }
-        });
-
-        $(".btnNuevoPedido").click(function () {
-            if ($(".mesaSelected").html() != "" && $(".mesaSelected").html() != "Seleccione") {
-                var formData = new FormData();
-                formData.append('idmesa', $(".mesaSelected").html());
-                formData.append('numeromesa', $("#selectMesas option:selected").text());
-                formData.append('meth', 'asignaMesa');
-                $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
-                    success: function (data) {
-                        window.location.replace("/?show=hacerpedido#autoscroll");
-                    },
-                    error: function (error) {
-                        console.log("Hubo un error de internet, intente de nuevo");
-                        console.log(error);
-                    }
-                });
-            } else {
-                $.notify('Mesa no seleccionada !\n Seleccione una mesa e intente nuevamente', "error");
-            }
-        });
-
-        $(".btnAnadirPedido").click(function () {
-            window.location.replace("/?show=anadirpedido#autoscroll");
-        });
+            });
+        } else {
+            $.notify('Mesa no seleccionada !\n Seleccione una mesa e intente nuevamente', "error");
+        }
     });
 
-    cargaSelectNuevoPedido();
+    //          EDITAR EL PEDIDO SELECCIONADO EN EL MODAL           //
+    $(".btnAnadirPedido").click(function() {
+        window.location.replace("/?show=anadirpedido#autoscroll");
+    });
 
+    //      AL HACER CLIC EN CADA PEDIDO DE LA TABLA        //
     var idMesa, numeroMesa, idPedido, estadoPedido;
-    $(document).on('click', '.estadoPedido', function (e) {
+    $(document).on('click', '.estadoPedido', function(e) {
 
         idMesa = $(this).find(".idMesa").html();
         numeroMesa = $(this).find(".numeroMesa").html();
         idPedido = $(this).find(".idPedido").html();
         estadoPedido = $(this).find(".estadoPedido").html();
 
-
+        var formData = new FormData();
+        formData.append('idmesa', idMesa);
+        formData.append('numeromesa', numeroMesa);
+        formData.append('idpedido', idPedido);
+        formData.append('meth', 'asignaMesa');
         $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/mesas/asignaMesa.php',
-            data: {
-                idmesa: idMesa,
-                numeromesa: numeroMesa,
-                idpedido: idPedido
-            },
+            url: 'api/api.php',
             type: 'POST',
-            success: function (idmesa) {
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
                 asignaPedido(idPedido);
+                $(".tituloEstadoPedido").html("<center>Pedido # " + idPedido + " en Mesa " + numeroMesa + "</center>");
                 $("#ModalEstadoPedido").modal("show");
             },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
     });
 
-
-
+    //                  LLENAMOS EL MODAL CON LOS DATOS DEL PEDIDO          //
     function asignaPedido(idpedido) {
-
+        var formData = new FormData();
+        formData.append('idpedido', idpedido);
+        formData.append('meth', 'consultaProductos');
         $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/mesas/consultaProductos.php',
+            url: 'api/api.php',
             type: 'POST',
-            data: {
-                idpedido: idpedido,
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                $(".contenidoEstadoPedido").html(data.output);
             },
-            success: function (pedidos) {
-
-                $(".tituloEstadoPedido").html("<center>Pedido # " + idPedido + " en Mesa " + numeroMesa + "</center>");
-
-
-                $(".contenidoEstadoPedido").html(
-                        pedidos
-                        );
-                $("#ModalEstadoPedido").modal("show");
-            },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
     }
 
+    //           PARA CANCELAR EL PEDIDO        //
+    var idpedidoproducto, idpedidoproductocombinado1, idpedidoproductocombinado2, idpedidoproductocombinado3, descripcionpedidoproducto, menupedidoproducto;
+    $(document).on('click', '.cancelarPedido', function(e) {
 
-    var idpedidoproducto,
-            idpedidoproductocombinado1,
-            idpedidoproductocombinado2,
-            idpedidoproductocombinado3,
-            descripcionpedidoproducto,
-            menupedidoproducto;
-//PARA CANCELAR EL PEDIDO
-    $(document).on('click', '.cancelarPedido', function (e) {
-
+        //                      CONSTRUIMOS EL MODAL DE OCNFIRMACION            //
         idpedidoproducto = $(this).parent().parent().find(".idpedidoproducto").html();
         var nombrepedidoproducto = $(this).parent().parent().find(".nombrepedidoproducto").html();
         var submenupedidoproducto = $(this).parent().parent().find(".submenupedidoproducto").html();
@@ -211,8 +156,8 @@
         menupedidoproducto = $(this).parent().parent().find(".menupedidoproducto").html();
 
         var html = "<br>" +
-                "<div style='padding: 20px;'><div class='tile tile-primary' style='padding: 20px;'>" +
-                "<p style='font-size: 20px;text-align: center;'><b>" + nombrepedidoproducto + "</b></p>";
+            "<div style='padding: 20px;'><div class='tile tile-primary' style='padding: 20px;'>" +
+            "<p style='font-size: 20px;text-align: center;'>" + nombrepedidoproducto + "</p>";
 
         if ((descripcionpedidoproducto != "Unitario" && descripcionpedidoproducto !== "entera")) {
             if (descripcionpedidoproducto == "Combinada 1/2") {
@@ -243,95 +188,143 @@
         }
 
         html += "</div></div>" +
-                "<br>" +
-                "<p style='font-size: 20px;text-align: center;'> Desea realmente cancelar el pedido actual ?</p>";
+            "<br>" +
+            "<p style='font-size: 20px;text-align: center;'> Desea realmente cancelar el pedido actual ?</p>";
         $(".contenidoCancelar").html(html);
         $(".modalCancelar").modal("show");
 
     });
 
-//CONFIRMACION DE CANCELACION DE PEDIDO
-    $(document).on('click', '.confirmaCancelaPedido', function (e) {
+    //          SI EL CLIENTE CONFIRMA LA CANCELACION DEL PEDIDO            //
+    $(document).on('click', '.confirmaCancelaPedido', function(e) {
 
+        var formData = new FormData();
+        formData.append('idpedidoproducto', idpedidoproducto);
+        formData.append('idpedidoproductocombinado1', idpedidoproductocombinado1);
+        formData.append('idpedidoproductocombinado2', idpedidoproductocombinado2);
+        formData.append('idpedidoproductocombinado3', idpedidoproductocombinado3);
+        formData.append('descripcionpedidoproducto', descripcionpedidoproducto);
+        formData.append('menupedidoproducto', menupedidoproducto);
+        formData.append('numeromesa', numeroMesa);
+        formData.append('idpedido', idPedido);
+        formData.append('meth', 'cancelaPedido');
         $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/mesas/cancelaPedido.php',
+            url: 'api/api.php',
             type: 'POST',
-            data: {
-                idpedidoproducto: idpedidoproducto,
-                idpedidoproductocombinado1: idpedidoproductocombinado1,
-                idpedidoproductocombinado2: idpedidoproductocombinado2,
-                idpedidoproductocombinado3: idpedidoproductocombinado3,
-                descripcionpedidoproducto: descripcionpedidoproducto,
-                menupedidoproducto: menupedidoproducto,
-                numeromesa: numeroMesa,
-                idpedido: idPedido
-            },
-            success: function (nropedidos) {
-                if (parseInt(nropedidos) > 0) {
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                if (parseInt(data.output) > 0) {
                     asignaPedido(idPedido);
                     $(".modalCancelar").modal("hide");
-                } else
-                if (parseInt(nropedidos) == 0) {
+                }
+
+                if (parseInt(data.output) == 0) {
                     $(".modalCancelar").modal("hide");
                     $("#ModalEstadoPedido").modal("hide");
-
-                    $(".estadoPedido .numeroMesa").each(function (index) {
+                    $(".estadoPedido .numeroMesa").each(function(index) {
                         if ($(this).text() == numeroMesa) {
                             $(this).parent().remove();
                         }
                     });
-
                     actualizaTabla();
-                    cargaSelectNuevoPedido();
+                    cargarMesasNiveles();
                 }
             },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
-
     });
 
-
+    //          LLENAMOS LA TABLA DE LOS PEDIDOS ACTUALES           //
     function actualizaTabla() {
-
+        var formData = new FormData();
+        formData.append('meth', 'consultaPedidos');
         $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/mesas/consultaPedidos.php',
-            dataType: "json",
+            url: 'api/api.php',
             type: 'POST',
-            success: function (pedidos) {
-                $(".mesas-ocu").text(pedidos.length + " ocupadas");
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                $(".mesas-ocu").text(data.pedidos.length + " ocupada(s)");
+                if (data.pedidos.length != 0) {
+                    $(data.pedidos).each(function(index, value) {
+                        var tile, icon;
+                        if (value.estadoPedido == "SOLICITADO") {
+                            tile = "tile-info";
+                            icon = '<i class="fa fa-asterisk fa-2x" style="font-size:20px;color:white;" aria-hidden="true"></i>';
+                        } else
+                        if (value.estadoPedido == "EN PROCESO") {
+                            tile = "tile-warning";
+                            icon = '<i class="fas fa-sync-alt fa-spin fa-2x fa-fw" style="font-size:20px;color:white;"></i>';
+                        } else
+                        if (value.estadoPedido == "LISTO PARA ENTREGAR") {
+                            tile = "tile-success";
+                            icon = '<i class="fa fa-check" style="font-size:20px;color:white;" aria-hidden="true"></i>';
+                        } else
+                        if (value.estadoPedido == "ENTREGADO") {
+                            tile = "tile-default";
+                            icon = '<i class="fa fa-thumbs-o-up" aria-hidden="true" style="font-size:20px;color:black;"></i>';
+                        }
+
+                        $(".contenedorPedido").append(
+                            '<div class="col-md-3">' +
+                            '<a href="#" class="tile ' + tile + ' estadoPedido" style="padding: 22px;">' +
+                            'Mesa ' + value.numeroMesa +
+                            '<p> Pedido # ' + value.idPedido + '</p>' +
+                            '<div style="position: absolute;top: -24px;right: 2px;">' + icon + '</div>' +
+                            '<div style="position: absolute;top: -5px;left: 7px;"><p style="font-size:25px;color:white;">' + (index + 1) + '</p></div>' +
+                            '<div style="display:none;" class="idMesa">' + value.idMesa + '</div>' +
+                            '<div style="display:none;" class="numeroMesa">' + value.numeroMesa + '</div>' +
+                            '<div style="display:none;" class="idPedido">' + value.idPedido + '</div>' +
+                            '<div style="display:none;" class="estadoPedido">' + value.estadoPedido + '</div>' +
+                            '</a>' +
+                            '</div>'
+                        );
+                    });
+                } else
+                if (data.pedidos.length == 0) {
+                    $(".listaPedidos").append("<center><p style='padding:10px;color:white;'>Ningun pedido por atender</p></center>");
+                }
             },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
     }
 
-    function cargaSelectNuevoPedido() {
-        var formData = new FormData(), i = 0;
+    //              DISTRIBUIMOS LAS MESAS EN SUS RESPECTIVOS NIVELES           //
+    function cargarMesasNiveles() {
+        var formData = new FormData(),
+            i = 0;
         formData.append('meth', 'mesas');
-        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
-            success: function (data) {
+        $.ajax({
+            url: 'api/api.php',
+            type: 'POST',
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
                 $(".mesas-disp").text(data.mesas.length + " disponible(s)");
                 var htmlcontent = '<ul class="nav nav-tabs nav-justified">';
                 var htmlcontentTabs = '<div class="panel-body tab-content">';
 
-                $.each(data.niveles, function (i, n) {
+                $.each(data.niveles, function(i, n) {
                     if (i == 0) {
                         htmlcontent += '<li class="active"><a href="#tab' + i + '" data-toggle="tab"> <button type="button" class="btn btn-primary btn-rounded">' + n + '</button></a></li>';
                         htmlcontentTabs += '<div class="tab-pane active" id="tab' + i + '">';
-                        $.each(data.mesas, function (ii, nn) {
+                        $.each(data.mesas, function(ii, nn) {
                             if (nn.nivelMesa == n) {
                                 htmlcontentTabs += '<div class="col-md-3"><div class="hidethis idMesaContainer">' + nn.idMesa + '</div><a  class="tile tile-info tile-valign menuItemBox">Mesa ' + nn.numeroMesa + '<div class="informer informer-default"><i class="fas fa-toggle-off"></i></div><div class="informer informer-default dir-br textoMesa">' + nn.textoMesa + '</div></a></div>';
                             }
@@ -340,7 +333,7 @@
                     } else {
                         htmlcontent += '<li><a href="#tab' + i + '" data-toggle="tab"><button type="button" class="btn btn-primary btn-rounded">' + n + '</button></a></li>';
                         htmlcontentTabs += '<div class="tab-pane" id="tab' + i + '">';
-                        $.each(data.mesas, function (ii, nn) {
+                        $.each(data.mesas, function(ii, nn) {
                             if (nn.nivelMesa == n) {
                                 htmlcontentTabs += '<div class="col-md-3"><div class="hidethis idMesaContainer">' + nn.idMesa + '</div><a class="tile tile-info tile-valign menuItemBox">Mesa ' + nn.numeroMesa + '<div class="informer informer-default"><i class="fas fa-toggle-off"></i></div><div class="informer informer-default dir-br textoMesa">' + nn.textoMesa + '</div></a></div>';
                             }
@@ -353,14 +346,15 @@
                 htmlcontentTabs += '</div>';
                 $(".menuItemTabs").html(htmlcontent + htmlcontentTabs);
             },
-            error: function (error) {
+            error: function(error) {
                 console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
             }
         });
     }
 
-    $(document).on('click', '.pedido_imprimir', function () {
+    //                      MANDAMOS EL PEDIDO PARA IMPRIMIR                //
+    $(document).on('click', '.pedido_imprimir', function() {
         var mesa_nro = $("#ModalEstadoPedido .modal-body h3:eq(0)").html();
         var pedido_nro = $("#ModalEstadoPedido .modal-header h4:eq(0)").html();
         var pedidos = $("#ModalEstadoPedido .modal-body").children("div");
@@ -369,7 +363,7 @@
         output += "<tr><td> " + mesa_nro + "  <br /></td></tr> \n\ ";
         output += "<tr><td> " + pedido_nro + " <br /></td></tr> \n\ ";
         output += "<tr><td> ======================== <br /></td></tr> \n\ ";
-        $(pedidos).each(function (index, value) {
+        $(pedidos).each(function(index, value) {
             var ped = $(value).find(".nombrepedidoproducto").html();
             var cat = $(value).find(".submenupedidoproducto").html();
             var table = $(value).children("table").html();
@@ -378,7 +372,7 @@
                 output += "<tr><td> " + ped + " - " + cat + " <br /></td></tr> \n\ ";
             } else {
                 output += "<tr><td> " + ped + " - " + cat + " <br /></td></tr> \n\ ";
-                $(table_obj).find("tbody tr td ul li").each(function (index, value) {
+                $(table_obj).find("tbody tr td ul li").each(function(index, value) {
                     var ing = $(value).html();
                     output += "<tr><td> " + ing + " <br /></td></tr> \n\ ";
                 });
@@ -395,27 +389,9 @@
     });
     var descripcionpedidoproducto;
 
-    var idpedido,
-            idpedidoproducto,
-            idproducto,
-            nombrepedidoproducto,
-            nombreMenu,
-            nombreSubmenu,
-            idsubmenu,
-            idmenu,
-            observacionpedidoproducto,
-            cantidadpedidoproducto,
-            idpedidoproductocombinado1,
-            nombrepedidoproductocombinado1,
-            submenupedidoproductocombinado1,
-            idpedidoproductocombinado2,
-            nombrepedidoproductocombinado2,
-            submenupedidoproductocombinado2,
-            idpedidoproductocombinado3,
-            nombrepedidoproductocombinado3,
-            submenupedidoproductocombinado3;
-
-    $(document).on('click', '.editarPedido', function () {
+    //              CUANDO VISUALIZMOS EL MODAL DE PEDIDO Y QUEREMOS EDITAR UNA ORDEN           //
+    var idpedido, idpedidoproducto, idproducto, nombrepedidoproducto, nombreMenu, nombreSubmenu, idsubmenu, idmenu, observacionpedidoproducto, cantidadpedidoproducto, idpedidoproductocombinado1, nombrepedidoproductocombinado1, submenupedidoproductocombinado1, idpedidoproductocombinado2, nombrepedidoproductocombinado2, submenupedidoproductocombinado2, idpedidoproductocombinado3, nombrepedidoproductocombinado3, submenupedidoproductocombinado3;
+    $(document).on('click', '.editarPedido', function() {
 
         idproducto = $(this).parent().parent().find(".idproducto").html();
         idsubmenu = $(this).parent().parent().find(".idsubmenu").html();
@@ -423,25 +399,19 @@
         nombreMenu = $(this).parent().parent().find(".menupedidoproducto").html();
         nombreSubmenu = $(this).parent().parent().find(".submenupedidoproducto").html();
         nombrepedidoproducto = $(this).parent().parent().find(".nombrepedidoproducto").html();
-
         observacionpedidoproducto = $(this).parent().parent().find(".observacionpedidoproducto").html();
         cantidadpedidoproducto = $(this).parent().parent().find(".cantidadpedidoproducto").html();
-
         idpedido = $(this).parent().parent().find(".idpedido").html();
         idpedidoproducto = $(this).parent().parent().find(".idpedidoproducto").html();
-
         idpedidoproductocombinado1 = $(this).parent().parent().find(".idpedidoproductocombinado1").html();
         nombrepedidoproductocombinado1 = $(this).parent().parent().find(".nombrepedidoproductocombinado1").html();
         submenupedidoproductocombinado1 = $(this).parent().parent().find(".submenupedidoproductocombinado1").html();
-
         idpedidoproductocombinado2 = $(this).parent().parent().find(".idpedidoproductocombinado2").html();
         nombrepedidoproductocombinado2 = $(this).parent().parent().find(".nombrepedidoproductocombinado2").html();
         submenupedidoproductocombinado2 = $(this).parent().parent().find(".submenupedidoproductocombinado2").html();
-
         idpedidoproductocombinado3 = $(this).parent().parent().find(".idpedidoproductocombinado3").html();
         nombrepedidoproductocombinado3 = $(this).parent().parent().find(".nombrepedidoproductocombinado3").html();
         submenupedidoproductocombinado3 = $(this).parent().parent().find(".submenupedidoproductocombinado3").html();
-
         descripcionpedidoproducto = $(this).parent().parent().find(".descripcionpedidoproducto").html();
 
         if (nombreMenu == "Ensaladas y Bocaditos" || nombreMenu == "Pastas" || nombreMenu == "Carnes" || nombreMenu == "Crepes y Postres") {
@@ -455,7 +425,7 @@
 
     });
 
-    $('#ModalEditaIngredientes').on('hidden.bs.modal', function () {
+    $('#ModalEditaIngredientes').on('hidden.bs.modal', function() {
         $(".contenidoEditaIngredientes").html("");
         $(".input-number").val(1);
     });
@@ -463,67 +433,66 @@
     function estableceTipoPizza(idSubmenu, nombreSubmenu, idMenu, nombreMenu, idProducto) {
         $(".tituloEditaPizza").html("<center>Pizza " + nombreSubmenu + "</center>");
         $(".contenidoEditaPizza").html("");
+        
+        var formData = new FormData();
+        formData.append('idsubmenu', idSubmenu);
+        formData.append('meth', 'getProductos');
         $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/hacerpedido/getProductos.php',
-            dataType: "json",
+            url: 'api/api.php',
             type: 'POST',
-            data: {
-                idsubmenu: idSubmenu,
-            },
-            success: function (productos) {
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                if(data.status == 'yes'){
+                    var htmlselect = '<center><div class="btn-group radioTipopizzas" data-toggle="buttons">' +
+                       '<label class="btn btn-primary">' +
+                       '<input type="radio" name="options" value="" autocomplete="off">Seleccione ..' +
+                       '</label>';
+                    $.when(
+                        $(data.productos).each(function(index, value) {
 
-                console.log(productos);
-                var htmlselect = '<center><div class="btn-group radioTipopizzas" data-toggle="buttons">' +
-                        '<label class="btn btn-primary">' +
-                        '<input type="radio" name="options" value="" autocomplete="off">Seleccione ..' +
-                        '</label>';
-                $.when(
-                        $(productos).each(function (index, value) {
-
-                    htmlselect += '<label class="btn btn-primary">' +
-                            '<input type="radio" name="options" id="' + value.idProducto + '" value="' + value.idProducto + '" autocomplete="off">' + value.nombreProducto +
-                            "<div class='nombreproducto' style='display: none;'>" + value.nombreProducto + "</div>" +
-                            "<div class='precioproducto' style='display: none;'>" + value.precioProducto + "</div>" +
-                            "<div class='idproducto' style='display: none;'>" + value.idProducto + "</div>" +
-                            "<div class='idsubmenu' style='display: none;'>" + value.idSubmenu + "</div>" +
-                            "<div class='nombresubmenu' style='display: none;'>" + nombreSubmenu + "</div>" +
-                            "<div class='nombremenu' style='display: none;'>" + nombreMenu + "</div>" +
-                            "<div class='idmenu' style='display: none;'>" + idMenu + "</div>" +
-                            '</label>';
-                })
-                        ).then(function () {
-                    htmlselect += '</div>' +
+                            htmlselect += '<label class="btn btn-primary">' +
+                                '<input type="radio" name="options" id="' + value.idProducto + '" value="' + value.idProducto + '" autocomplete="off">' + value.nombreProducto +
+                                "<div class='nombreproducto' style='display: none;'>" + value.nombreProducto + "</div>" +
+                                "<div class='precioproducto' style='display: none;'>" + value.precioProducto + "</div>" +
+                                "<div class='idproducto' style='display: none;'>" + value.idProducto + "</div>" +
+                                "<div class='idsubmenu' style='display: none;'>" + value.idSubmenu + "</div>" +
+                                "<div class='nombresubmenu' style='display: none;'>" + nombreSubmenu + "</div>" +
+                                "<div class='nombremenu' style='display: none;'>" + nombreMenu + "</div>" +
+                                "<div class='idmenu' style='display: none;'>" + idMenu + "</div>" +
+                                '</label>';
+                        })
+                    ).then(function() {
+                        htmlselect += '</div>' +
                             '</center><br>' +
                             '<div id="contentPizzasPrincipal"></div>';
-                    $(".contenidoEditaPizza").append(htmlselect);
+                        $(".contenidoEditaPizza").append(htmlselect);
 
-                    //PARA BUSCAR EL PRODUCTO SELECCIONADO
-                    $(".radioTipopizzas .btn-primary .idproducto").each(function (index, value) {
-                        if ($(this).text() == idProducto) {
-                            $(this).parent().addClass("active");
-                            $(this).parent().find("input[type='radio']").prop("checked", true);
-                            asignaTipoPizza($(this));
-                        }
-                    });
-                });
+                        //PARA BUSCAR EL PRODUCTO SELECCIONADO
+                        $(".radioTipopizzas .btn-primary .idproducto").each(function(index, value) {
+                            if ($(this).text() == idProducto) {
+                                $(this).parent().addClass("active");
+                                $(this).parent().find("input[type='radio']").prop("checked", true);
+                                asignaTipoPizza($(this));
+                            }
+                        });
+                    });   
+                }
             },
-            error: function (error) {
-                console.log('Disculpe, existió un problema al consultar los productos');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
-
         $("#ModalEditaPizza").modal("show");
     }
 
     var Menu, nombre, precio, id, idsubmenu, nombreSubmenu, idmenu, nombremenu;
-
     function asignaTipoPizza(elemento) {
-
+    
         nombre = elemento.parent().find(".nombreproducto").html();
         precio = elemento.parent().find(".precioproducto").html();
         id = elemento.parent().find(".idproducto").html();
@@ -531,59 +500,57 @@
         nombreSubmenu = elemento.parent().find(".nombresubmenu").html();
         idmenu = elemento.parent().find(".idmenu").html();
         nombremenu = elemento.parent().find(".nombremenu").html();
-
+        
+        var formData = new FormData();
+        formData.append('idsubmenu', idsubmenu);
+        formData.append('meth', 'getIdperfil');
         $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/hacerpedido/getIdperfil.php',
-            dataType: "json",
+            url: 'api/api.php',
             type: 'POST',
-            data: {
-                idsubmenu: idsubmenu,
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
+                Menu = data.menu;
             },
-            success: function (menu) {
-                Menu = menu;
-            },
-            error: function (error) {
-                console.log('Disculpe, existió un problema al consultar el menu');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
-
+    
         $(".tituloSeleccionPizza").html("<center>Pizza " + nombreSubmenu + " - " + nombre + "</center>");
         $("#contentPizzasPrincipal").html(
-                '<center><div class="btn-group radioPizzas" data-toggle="buttons">' +
-                '<label class="btn btn-primary">' +
-                '<input type="radio" name="options" value="" autocomplete="off">Seleccione ..' +
-                '</label>' +
-                '<label class="btn btn-primary">' +
-                '<input type="radio" name="options" id="entera" value="entera" autocomplete="off">Entera' +
-                "<div class='nombre' style='display: none;'>entera</div>" +
-                '</label>' +
-                '<label class="btn btn-primary">' +
-                '<input type="radio" name="options" id="medio" value="medio" autocomplete="off">Combinada 1/2' +
-                "<div class='nombre' style='display: none;'>Combinada 1/2</div>" +
-                '</label>' +
-                '<label class="btn btn-primary">' +
-                '<input type="radio" name="options" id="cuarto" value="cuarto" autocomplete="off">Combinada 1/4' +
-                "<div class='nombre' style='display: none;'>Combinada 1/4</div>" +
-                '</label>' +
-                '<label class="btn btn-primary">' +
-                '<input type="radio" name="options" id="personalizada" value="personalizada" autocomplete="off">Personalizada' +
-                "<div class='nombre' style='display: none;'>Personalizada</div>" +
-                '</label>' +
-                '</div>' +
-                '</center><br>' +
-                "<div class='col-md-12' id='contentSeleccion'></div>"
-                );
+            '<center><div class="btn-group radioPizzas" data-toggle="buttons">' +
+            '<label class="btn btn-primary">' +
+            '<input type="radio" name="options" value="" autocomplete="off">Seleccione ..' +
+            '</label>' +
+            '<label class="btn btn-primary">' +
+            '<input type="radio" name="options" id="entera" value="entera" autocomplete="off">Entera' +
+            "<div class='nombre' style='display: none;'>entera</div>" +
+            '</label>' +
+            '<label class="btn btn-primary">' +
+            '<input type="radio" name="options" id="medio" value="medio" autocomplete="off">Combinada 1/2' +
+            "<div class='nombre' style='display: none;'>Combinada 1/2</div>" +
+            '</label>' +
+            '<label class="btn btn-primary">' +
+            '<input type="radio" name="options" id="cuarto" value="cuarto" autocomplete="off">Combinada 1/4' +
+            "<div class='nombre' style='display: none;'>Combinada 1/4</div>" +
+            '</label>' +
+            '<label class="btn btn-primary">' +
+            '<input type="radio" name="options" id="personalizada" value="personalizada" autocomplete="off">Personalizada' +
+            "<div class='nombre' style='display: none;'>Personalizada</div>" +
+            '</label>' +
+            '</div>' +
+            '</center><br>' +
+            "<div class='col-md-12' id='contentSeleccion'></div>"
+        );
 
 
         //PARA BUSCAR EL PRODUCTO SELECCIONADO
-        $(".radioPizzas .btn-primary .nombre").each(function (index, value) {
-            console.log($(this).text());
-            console.log(descripcionpedidoproducto);
+        $(".radioPizzas .btn-primary .nombre").each(function(index, value) {
             if ($(this).text() == descripcionpedidoproducto) {
                 $(this).parent().addClass("active");
                 $(this).parent().find("input[type='radio']").prop("checked", true);
@@ -629,79 +596,79 @@
                 data: {
                     nombreProducto: nombre,
                 },
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
-                        }
-                    })
-                            ).then(function () {
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                            }
+                        })
+                    ).then(function() {
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                "<div class='col-md-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-12'>" +
-                                "<center><img src='img/pizzas/p_entera.png' alt='pizza entera' class='img-responsive imgEntera'>" + "</center>" +
-                                "<br>" + "<br>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_entera" autocomplete="off"><div id="lblEntera">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            "<div class='col-md-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-12'>" +
+                            "<center><img src='assets/img/pizzas/p_entera.png' alt='pizza entera' class='img-responsive imgEntera'>" + "</center>" +
+                            "<br>" + "<br>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_entera" autocomplete="off"><div id="lblEntera">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -714,11 +681,11 @@
                     });
 
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -735,111 +702,111 @@
                 data: {
                     nombreProducto: nombre,
                 },
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            if (submenupedidoproductocombinado1 == value.nombreSubmenu) {
-                                htmlselectPizzas += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
-                            } else {
-                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                if (submenupedidoproductocombinado1 == value.nombreSubmenu) {
+                                    htmlselectPizzas += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
+                                } else {
+                                    htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                                }
                             }
-                        }
-                    })
-                            ).then(function () {
+                        })
+                    ).then(function() {
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_medio1" autocomplete="off"><div id="lblMitad1">' + submenupedidoproductocombinado1 + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "<div class='col-md-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-12'>" +
-                                "<center><img src='img/pizzas/p_medio1.png' alt='pizza media' class='img-responsive imgMedio1'></center>" +
-                                "</div>" +
-                                "<div class='col-md-12'>" +
-                                "<center><img src='img/pizzas/p_medio2.png' alt='pizza media' class='img-responsive imgMedio2'></center>" +
-                                "<br>" + "<br>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_medio2" autocomplete="off"><div id="lblMitad2">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Mitad 2</label><br/>" +
-                                "<select class='form-control selectPizzaMedio' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Mitad 1</label><br/>" +
-                                nombreSubmenu +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_medio1" autocomplete="off"><div id="lblMitad1">' + submenupedidoproductocombinado1 + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "<div class='col-md-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-12'>" +
+                            "<center><img src='assets/img/pizzas/p_medio1.png' alt='pizza media' class='img-responsive imgMedio1'></center>" +
+                            "</div>" +
+                            "<div class='col-md-12'>" +
+                            "<center><img src='assets/img/pizzas/p_medio2.png' alt='pizza media' class='img-responsive imgMedio2'></center>" +
+                            "<br>" + "<br>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_medio2" autocomplete="off"><div id="lblMitad2">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Mitad 2</label><br/>" +
+                            "<select class='form-control selectPizzaMedio' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Mitad 1</label><br/>" +
+                            nombreSubmenu +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -854,11 +821,11 @@
                         pizzaTemporal.ingredientesMedio = [];
                     });
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -873,110 +840,110 @@
                     nombreProducto: nombre,
                 },
                 dataType: "json",
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            if (submenupedidoproductocombinado1 == value.nombreSubmenu) {
-                                htmlselectPizzas += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
-                            } else {
-                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                if (submenupedidoproductocombinado1 == value.nombreSubmenu) {
+                                    htmlselectPizzas += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
+                                } else {
+                                    htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                                }
                             }
-                        }
-                    })
-                            ).then(function () {
+                        })
+                    ).then(function() {
 
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_cuarto1" autocomplete="off"><div id="lblCuarto1">' + submenupedidoproductocombinado1 + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "<div class='col-md-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style='position:absolute;z-index:500;left: 0;right: 0;margin: 0 auto;'>" +
-                                "<center><img src='img/pizzas/p_cuarto1.png' alt='pizza media' class='img-responsive imgCuarto1'></center>" +
-                                "</div>" +
-                                "<div class='col-md-12' style='padding-top: 33px;padding-right: 15px;'>" +
-                                "<center><img src='img/pizzas/p_cuarto2.png' alt='pizza media' class='img-responsive imgCuarto2'></center>" +
-                                "<br>" + "<br>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_cuarto2" autocomplete="off"><div id="lblCuarto2">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Cuarto</label><br/>" +
-                                "<select class='form-control selectPizzaCuarto' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Pizza</label><br/>" +
-                                nombreSubmenu +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_cuarto1" autocomplete="off"><div id="lblCuarto1">' + submenupedidoproductocombinado1 + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "<div class='col-md-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style='position:absolute;z-index:500;left: 0;right: 0;margin: 0 auto;'>" +
+                            "<center><img src='assets/img/pizzas/p_cuarto1.png' alt='pizza media' class='img-responsive imgCuarto1'></center>" +
+                            "</div>" +
+                            "<div class='col-md-12' style='padding-top: 33px;padding-right: 15px;'>" +
+                            "<center><img src='assets/img/pizzas/p_cuarto2.png' alt='pizza media' class='img-responsive imgCuarto2'></center>" +
+                            "<br>" + "<br>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_cuarto2" autocomplete="off"><div id="lblCuarto2">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Cuarto</label><br/>" +
+                            "<select class='form-control selectPizzaCuarto' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Pizza</label><br/>" +
+                            nombreSubmenu +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -992,11 +959,11 @@
 
                     });
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -1011,177 +978,177 @@
                     nombreProducto: nombre,
                 },
                 dataType: "json",
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas1 = "<option value=''>Seleccione ..</option>";
                     var htmlselectPizzas2 = "<option value=''>Seleccione ..</option>";
                     var htmlselectPizzas3 = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            if (submenupedidoproductocombinado1 == value.nombreSubmenu) {
-                                htmlselectPizzas1 += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
-                            } else {
-                                htmlselectPizzas1 += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
-                            }
-                        }
-                    })
-                            ).then(function () {
-                        $.when(
-                                $(pizzas).each(function (index, value) {
+                        $(pizzas).each(function(index, value) {
                             if (nombreSubmenu != value.nombreSubmenu) {
-                                if (submenupedidoproductocombinado2 == value.nombreSubmenu) {
-                                    htmlselectPizzas2 += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
+                                if (submenupedidoproductocombinado1 == value.nombreSubmenu) {
+                                    htmlselectPizzas1 += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
                                 } else {
-                                    htmlselectPizzas2 += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                                    htmlselectPizzas1 += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
                                 }
                             }
                         })
-                                ).then(function () {
-                            $.when(
-                                    $(pizzas).each(function (index, value) {
+                    ).then(function() {
+                        $.when(
+                            $(pizzas).each(function(index, value) {
                                 if (nombreSubmenu != value.nombreSubmenu) {
-                                    if (submenupedidoproductocombinado3 == value.nombreSubmenu) {
-                                        console.log(submenupedidoproductocombinado3);
-                                        htmlselectPizzas3 += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
+                                    if (submenupedidoproductocombinado2 == value.nombreSubmenu) {
+                                        htmlselectPizzas2 += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
                                     } else {
-                                        htmlselectPizzas3 += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                                        htmlselectPizzas2 += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
                                     }
                                 }
                             })
-                                    ).then(function () {
+                        ).then(function() {
+                            $.when(
+                                $(pizzas).each(function(index, value) {
+                                    if (nombreSubmenu != value.nombreSubmenu) {
+                                        if (submenupedidoproductocombinado3 == value.nombreSubmenu) {
+                                            console.log(submenupedidoproductocombinado3);
+                                            htmlselectPizzas3 += "<option value='" + value.idProducto + "' selected>" + value.nombreSubmenu + "</option>";
+                                        } else {
+                                            htmlselectPizzas3 += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                                        }
+                                    }
+                                })
+                            ).then(function() {
 
 
                                 //do
                                 $("#contentSeleccion").html(
-                                        "<div class='grid'>" +
-                                        "<div class='row'>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                        '<center>' +
-                                        '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
-                                        '<label class="btn btn-primary" style="width: 50%;">' +
-                                        '<input type="checkbox" class="inp_personalizado1" autocomplete="off"><div id="lblPersonalizado1">' + nombreSubmenu + '</div>' +
-                                        ' </label>' +
-                                        '<label class="btn btn-primary" style="width: 50%;">' +
-                                        '<input type="checkbox" class="inp_personalizado2" autocomplete="off"><div id="lblPersonalizado2">' + submenupedidoproductocombinado1 + '</div>' +
-                                        ' </label>' +
-                                        "</div>" +
-                                        '</center>' +
-                                        "<div class='col-md-12 col-sm-12 col-xs-12' style='padding: 40px 0px;'>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<div class='col-md-12' style='position: absolute;top:4px;left: 8px;'>" +
-                                        "<img src='img/pizzas/p_personalizado1.png' alt='pizza media' class='img-responsive imgPersonalizado1'>" +
-                                        "</div>" +
-                                        "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                        "</div>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6' style='padding-bottom: 10px;'>" +
-                                        "<div class='col-md-12' style='position: absolute;top:4px;right: 8px;'>" +
-                                        "<img src='img/pizzas/p_personalizado2.png' alt='pizza media' class='img-responsive imgPersonalizado2'>" +
-                                        "</div>" +
-                                        "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                        "</div>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<div class='col-md-12' style='position: absolute;bottom:4px;left: 8px;'>" +
-                                        "<img src='img/pizzas/p_personalizado3.png' alt='pizza media' class='img-responsive imgPersonalizado3'>" +
-                                        "</div>" +
-                                        "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                        "</div>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<div class='col-md-12' style='position: absolute;bottom:4px;right: 8px;'>" +
-                                        "<img src='img/pizzas/p_personalizado4.png' alt='pizza media' class='img-responsive imgPersonalizado4'>" +
-                                        "</div>" +
-                                        "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                        "</div>" +
-                                        "</div>" +
-                                        '<center>' +
-                                        '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
-                                        '<label class="btn btn-primary" style="width: 50%;">' +
-                                        '<input type="checkbox" class="inp_personalizado3" autocomplete="off"><div id="lblPersonalizado3">' + submenupedidoproductocombinado2 + '</div>' +
-                                        ' </label>' +
-                                        '<label class="btn btn-primary" style="width: 50%;">' +
-                                        '<input type="checkbox" class="inp_personalizado4" autocomplete="off"><div id="lblPersonalizado4">' + submenupedidoproductocombinado3 + '</div>' +
-                                        ' </label>' +
-                                        "</div>" +
-                                        '</center>' +
-                                        "</div>" +
-                                        "</div>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                        "<br>" +
-                                        "<div class='form-group'>" +
-                                        "<label for=''>Personalizada 1</label><br/>" +
-                                        nombreSubmenu +
-                                        "</div>" +
-                                        "</div>" +
-                                        "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                        "<br>" +
-                                        "<div class='form-group'>" +
-                                        "<label for=''>Personalizada 2</label><br/>" +
-                                        "<select class='form-control selectPizzaPersonalizado2' >" +
-                                        htmlselectPizzas1 +
-                                        "</select>" +
-                                        "</div>" +
-                                        "</div>" +
-                                        "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                        "<br>" +
-                                        "<div class='form-group'>" +
-                                        "<label for=''>Personalizada 3</label><br/>" +
-                                        "<select class='form-control selectPizzaPersonalizado3' >" +
-                                        htmlselectPizzas2 +
-                                        "</select>" +
-                                        "</div>" +
-                                        "</div>" +
-                                        "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                        "<br>" +
-                                        "<div class='form-group'>" +
-                                        "<label for=''>Personalizada 4</label><br/>" +
-                                        "<select class='form-control selectPizzaPersonalizado4' >" +
-                                        htmlselectPizzas3 +
-                                        "</select>" +
-                                        "</div>" +
-                                        "</div>" +
-                                        "</div>" +
-                                        "</div>"
-                                        );
+                                    "<div class='grid'>" +
+                                    "<div class='row'>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                                    '<center>' +
+                                    '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
+                                    '<label class="btn btn-primary" style="width: 50%;">' +
+                                    '<input type="checkbox" class="inp_personalizado1" autocomplete="off"><div id="lblPersonalizado1">' + nombreSubmenu + '</div>' +
+                                    ' </label>' +
+                                    '<label class="btn btn-primary" style="width: 50%;">' +
+                                    '<input type="checkbox" class="inp_personalizado2" autocomplete="off"><div id="lblPersonalizado2">' + submenupedidoproductocombinado1 + '</div>' +
+                                    ' </label>' +
+                                    "</div>" +
+                                    '</center>' +
+                                    "<div class='col-md-12 col-sm-12 col-xs-12' style='padding: 40px 0px;'>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<div class='col-md-12' style='position: absolute;top:4px;left: 8px;'>" +
+                                    "<img src='assets/img/pizzas/p_personalizado1.png' alt='pizza media' class='img-responsive imgPersonalizado1'>" +
+                                    "</div>" +
+                                    "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                                    "</div>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6' style='padding-bottom: 10px;'>" +
+                                    "<div class='col-md-12' style='position: absolute;top:4px;right: 8px;'>" +
+                                    "<img src='assets/img/pizzas/p_personalizado2.png' alt='pizza media' class='img-responsive imgPersonalizado2'>" +
+                                    "</div>" +
+                                    "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                                    "</div>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<div class='col-md-12' style='position: absolute;bottom:4px;left: 8px;'>" +
+                                    "<img src='assets/img/pizzas/p_personalizado3.png' alt='pizza media' class='img-responsive imgPersonalizado3'>" +
+                                    "</div>" +
+                                    "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                                    "</div>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<div class='col-md-12' style='position: absolute;bottom:4px;right: 8px;'>" +
+                                    "<img src='assets/img/pizzas/p_personalizado4.png' alt='pizza media' class='img-responsive imgPersonalizado4'>" +
+                                    "</div>" +
+                                    "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    '<center>' +
+                                    '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
+                                    '<label class="btn btn-primary" style="width: 50%;">' +
+                                    '<input type="checkbox" class="inp_personalizado3" autocomplete="off"><div id="lblPersonalizado3">' + submenupedidoproductocombinado2 + '</div>' +
+                                    ' </label>' +
+                                    '<label class="btn btn-primary" style="width: 50%;">' +
+                                    '<input type="checkbox" class="inp_personalizado4" autocomplete="off"><div id="lblPersonalizado4">' + submenupedidoproductocombinado3 + '</div>' +
+                                    ' </label>' +
+                                    "</div>" +
+                                    '</center>' +
+                                    "</div>" +
+                                    "</div>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                                    "<br>" +
+                                    "<div class='form-group'>" +
+                                    "<label for=''>Personalizada 1</label><br/>" +
+                                    nombreSubmenu +
+                                    "</div>" +
+                                    "</div>" +
+                                    "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                                    "<br>" +
+                                    "<div class='form-group'>" +
+                                    "<label for=''>Personalizada 2</label><br/>" +
+                                    "<select class='form-control selectPizzaPersonalizado2' >" +
+                                    htmlselectPizzas1 +
+                                    "</select>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                                    "<br>" +
+                                    "<div class='form-group'>" +
+                                    "<label for=''>Personalizada 3</label><br/>" +
+                                    "<select class='form-control selectPizzaPersonalizado3' >" +
+                                    htmlselectPizzas2 +
+                                    "</select>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                                    "<br>" +
+                                    "<div class='form-group'>" +
+                                    "<label for=''>Personalizada 4</label><br/>" +
+                                    "<select class='form-control selectPizzaPersonalizado4' >" +
+                                    htmlselectPizzas3 +
+                                    "</select>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>" +
+                                    "</div>"
+                                );
 
                                 $("#contentSeleccion").append(
-                                        '<br><div class="row">' +
-                                        '<div class="col-md-12">' +
-                                        '<div class="col-md-5">' +
-                                        '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                        '</div>' +
-                                        '<div class="col-md-7">' +
-                                        '<div class="col-md-9 col-md-offset-3">' +
-                                        '<div class="form-group">' +
-                                        '<div class="center">' +
-                                        '<p></p>' +
-                                        '<div class="input-group">' +
-                                        '<span class="input-group-btn">' +
-                                        '<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">' +
-                                        '<span class="glyphicon glyphicon-minus"></span>' +
-                                        '</button>' +
-                                        '</span>' +
-                                        '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                        '<span class="input-group-btn">' +
-                                        '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                        '<span class="glyphicon glyphicon-plus"></span>' +
-                                        '</button>' +
-                                        '</span>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<br>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="col-md-12">' +
-                                        '<div class="form-group">' +
-                                        '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                        '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>'
-                                        );
+                                    '<br><div class="row">' +
+                                    '<div class="col-md-12">' +
+                                    '<div class="col-md-5">' +
+                                    '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                                    '</div>' +
+                                    '<div class="col-md-7">' +
+                                    '<div class="col-md-9 col-md-offset-3">' +
+                                    '<div class="form-group">' +
+                                    '<div class="center">' +
+                                    '<p></p>' +
+                                    '<div class="input-group">' +
+                                    '<span class="input-group-btn">' +
+                                    '<button type="button" class="btn btn-primary btn-number btnflat" data-type="minus" data-field="quant[1]">' +
+                                    '<span class="glyphicon glyphicon-minus"></span>' +
+                                    '</button>' +
+                                    '</span>' +
+                                    '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                                    '<span class="input-group-btn">' +
+                                    '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                                    '<span class="glyphicon glyphicon-plus"></span>' +
+                                    '</button>' +
+                                    '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<br>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="col-md-12">' +
+                                    '<div class="form-group">' +
+                                    '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                                    '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                );
 
                                 funcionalidadCantidad();
 
@@ -1211,19 +1178,18 @@
                         });
                     });
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
         }
     }
 
-
-    $(".btnEnviaSeleccion").click(function () {
+    $(".btnEnviaSeleccion").click(function() {
         var arrayProductos = [];
 
         var valorChecked = $(".radioPizzas input[type=radio]:checked").val();
@@ -1310,18 +1276,18 @@
                 idpedidoproductocombinado2: idpedidoproductocombinado2,
                 idpedidoproductocombinado3: idpedidoproductocombinado3
             },
-            success: function (respuesta) {
+            success: function(respuesta) {
                 if (respuesta == "true") {
                     $("#ModalEditaPizza").modal("hide");
                     asignaPedido(idpedido);
                     $.notify("Pedido actualizado correctamente.", "success");
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function (xhr, status) {
+            complete: function(xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -1329,44 +1295,17 @@
 
     });
 
-
-    function asignaPedido(idpedido) {
-
-        $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/mesas/consultaProductos.php',
-            type: 'POST',
-            data: {
-                idpedido: idpedido,
-            },
-            success: function (pedidos) {
-                $(".contenidoEstadoPedido").html(
-                        "<center><h3>Mesa # " + numeroMesa + "</h3></center>" +
-                        pedidos
-                        );
-            },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
-                console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
-            }
-        });
-    }
-
-
-    $(".btnEnviaProducto").click(function () {
+    $(".btnEnviaProducto").click(function() {
         var arrayProductos = [];
         var Ingredientes = [];
         $.when(
-                $(".rightIngrediente .contenedorIngrediente").each(function (index) {
-            Ingredientes.push({
-                idIngrediente: $(this).find(".idingrediente").html(),
-                nombreIngrediente: $(this).find(".nombreingrediente").html()
-            });
-        })
-                ).then(function () {
+            $(".rightIngrediente .contenedorIngrediente").each(function(index) {
+                Ingredientes.push({
+                    idIngrediente: $(this).find(".idingrediente").html(),
+                    nombreIngrediente: $(this).find(".nombreingrediente").html()
+                });
+            })
+        ).then(function() {
             arrayProductos.push({
                 "idProducto": idproducto,
                 "nombreProducto": nombrepedidoproducto,
@@ -1385,18 +1324,18 @@
                     idpedido: idpedido,
                     idpedidoproducto: idpedidoproducto
                 },
-                success: function (respuesta) {
+                success: function(respuesta) {
                     if (respuesta == "true") {
                         $("#ModalEditaIngredientes").modal("hide");
                         asignaPedido(idpedido);
                         $.notify("Pedido actualizado correctamente.", "success");
                     }
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -1406,126 +1345,129 @@
         });
     });
 
-
-
-
-//PARA OTROS PRODUCTOS DIFERENTES DE PIZZA
-
+    //          PARA OTROS PRODUCTOS DIFERENTES DE PIZZA            //
     function asignaIngredientes(nombreMenu, id) {
+
+        var formData = new FormData();
+        formData.append('idproducto', id);
+        formData.append('meth', 'consultaIngredientesE');
         $.ajax({
-            // Consulta de ingredientes de pizza especificos
-            url: 'assets/hacerpedido/consultaIngredientesE.php',
+            url: 'api/api.php',
             type: 'POST',
             dataType: "json",
-            data: {
-                idproducto: id
-            },
-            success: function (ingredientes) {
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(data) {
                 var htmlselectIngredientesE = "";
-                $.when(
-                        $(ingredientes).each(function (index, value) {
+                $.when($(data.ing).each(function(index, value) {
+
                     htmlselectIngredientesE += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
-                            '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
-                            value.nombreIngrediente +
-                            "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
-                            "<div class='idingrediente' style='display: none;'>" + value.idIngrediente + "</div>" +
-                            '</div>' +
-                            '</div>';
-                })
-                        ).then(function () {
+                        '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
+                        value.nombreIngrediente +
+                        "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
+                        "<div class='idingrediente' style='display: none;'>" + value.idIngrediente + "</div>" +
+                        '</div>' +
+                        '</div>';
+                })).then(function() {
+
+                    var formData = new FormData();
+                    formData.append('tipoIngrediente', nombreMenu);
+                    formData.append('meth', 'consultaIngredientesG');
                     $.ajax({
-                        // Consulta de ingredientes de pizza generales
-                        url: 'assets/hacerpedido/consultaIngredientesG.php',
+                        url: 'api/api.php',
                         type: 'POST',
                         dataType: "json",
-                        data: {
-                            tipoIngrediente: nombreMenu
-                        },
-                        success: function (ingredientes) {
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function(data) {
 
                             var htmlselectIngredientesG = "";
                             $.when(
-                                    $(ingredientes).each(function (index, value) {
-                                htmlselectIngredientesG += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
+                                $(data.ings).each(function(index, value) {
+                                    htmlselectIngredientesG += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
                                         '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
                                         value.nombreIngrediente +
                                         "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
                                         "<div class='idingrediente' style='display: none;'>" + value.idIngrediente + "</div>" +
                                         '</div>' +
                                         '</div>';
-                            })
-                                    ).then(function () {
+                                })
+                            ).then(function() {
 
                                 $(".contenidoEditaIngredientes").html(
-                                        "<div class='row'>" +
-                                        "<div class='col-md-12'>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "Ingredientes" +
-                                        "<div class='col-md-12 rightIngrediente' style='height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
-                                        htmlselectIngredientesE +
-                                        '</div>' +
-                                        '</div>' +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "Ingredientes Extras" +
-                                        "<div class='col-md-12 leftIngrediente' style='height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
-                                        htmlselectIngredientesG +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>'
-                                        );
+                                    "<div class='row'>" +
+                                    "<div class='col-md-12'>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "Ingredientes" +
+                                    "<div class='col-md-12 rightIngrediente' style='height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
+                                    htmlselectIngredientesE +
+                                    '</div>' +
+                                    '</div>' +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "Ingredientes Extras" +
+                                    "<div class='col-md-12 leftIngrediente' style='height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
+                                    htmlselectIngredientesG +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                );
 
                                 $(".contenidoEditaIngredientes").append(
-                                        '<br><div class="row">' +
-                                        '<div class="col-md-12">' +
-                                        '<div class="col-md-5">' +
-                                        '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                        '</div>' +
-                                        '<div class="col-md-7">' +
-                                        '<div class="col-md-9 col-md-offset-3">' +
-                                        '<div class="form-group">' +
-                                        '<div class="center">' +
-                                        '<p></p>' +
-                                        '<div class="input-group">' +
-                                        '<span class="input-group-btn">' +
-                                        '<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant[1]">' +
-                                        '<span class="glyphicon glyphicon-minus"></span>' +
-                                        '</button>' +
-                                        '</span>' +
-                                        '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                        '<span class="input-group-btn">' +
-                                        '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                        '<span class="glyphicon glyphicon-plus"></span>' +
-                                        '</button>' +
-                                        '</span>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<br>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="col-md-12">' +
-                                        '<div class="form-group">' +
-                                        '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                        '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>'
-                                        );
+                                    '<br><div class="row">' +
+                                    '<div class="col-md-12">' +
+                                    '<div class="col-md-5">' +
+                                    '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                                    '</div>' +
+                                    '<div class="col-md-7">' +
+                                    '<div class="col-md-9 col-md-offset-3">' +
+                                    '<div class="form-group">' +
+                                    '<div class="center">' +
+                                    '<p></p>' +
+                                    '<div class="input-group">' +
+                                    '<span class="input-group-btn">' +
+                                    '<button type="button" class="btn btn-primary btn-number btnflat" data-type="minus" data-field="quant[1]">' +
+                                    '<span class="glyphicon glyphicon-minus"></span>' +
+                                    '</button>' +
+                                    '</span>' +
+                                    '<input type="number" name="quant[1]" class="form-control input-number" value="' + cantidadpedidoproducto + '" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                                    '<span class="input-group-btn">' +
+                                    '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                                    '<span class="glyphicon glyphicon-plus"></span>' +
+                                    '</button>' +
+                                    '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<br>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="col-md-12">' +
+                                    '<div class="form-group">' +
+                                    '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                                    '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual.">' + observacionpedidoproducto + '</textarea>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                );
 
                                 funcionalidadCantidad();
 
                                 dragula([document.querySelector('.leftIngrediente'), document.querySelector('.rightIngrediente')], {
-                                    isContainer: function (el) {
+                                    isContainer: function(el) {
                                         return false; // only elements in drake.containers will be taken into account
                                     },
-                                    moves: function (el, source, handle, sibling) {
+                                    moves: function(el, source, handle, sibling) {
                                         return true; // elements are always draggable by default
                                     },
-                                    accepts: function (el, target, source, sibling) {
+                                    accepts: function(el, target, source, sibling) {
                                         return true; // elements can be dropped in any of the `containers` by default
                                     },
-                                    invalid: function (el, handle) {
+                                    invalid: function(el, handle) {
                                         return false; // don't prevent any drags from initiating by default
                                     },
                                     direction: 'vertical', // Y axis is considered when determining where an element would be dropped
@@ -1539,38 +1481,30 @@
 
                                 dragula([document.querySelector('.rightIngrediente')], {
                                     removeOnSpill: true, // spilling will `.remove` the element, if this is true
-                                    accepts: function (el, target, source, sibling) {
+                                    accepts: function(el, target, source, sibling) {
                                         return false; // elements can be dropped in any of the `containers` by default
                                     }
                                 });
 
                             })
                         },
-                        error: function (error) {
-                            console.log('Disculpe, existió un problema');
+                        error: function(error) {
+                            console.log("Hubo un error de internet, intente de nuevo");
                             console.log(error);
-                        },
-                        complete: function (xhr, status) {
-                            console.log('Petición realizada');
                         }
                     });
-
                 });
             },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
+            error: function(error) {
+                console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
             }
         });
     }
 
+    //FUNCIONALIDAD MODULO PIZZAS
 
-//FUNCIONALIDAD MODULO PIZZAS
-
-    $(document).on('change', '.radioTipopizzas input[type=radio]', function () {
+    $(document).on('change', '.radioTipopizzas input[type=radio]', function() {
 
         if ($(this).val() != "") {
             nombre = $(this).parent().find(".nombreproducto").html();
@@ -1589,40 +1523,40 @@
                 data: {
                     idsubmenu: idsubmenu,
                 },
-                success: function (menu) {
+                success: function(menu) {
                     Menu = menu;
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema al consultar el menu');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
 
             $(".tituloEditaPizza").html("<center>Pizza " + nombreSubmenu + " - " + nombre + "</center>");
             $("#contentPizzasPrincipal").html(
-                    '<center><div class="btn-group radioPizzas" data-toggle="buttons">' +
-                    '<label class="btn btn-primary active">' +
-                    '<input type="radio" name="options" value="" autocomplete="off" checked>Seleccione ..' +
-                    '</label>' +
-                    '<label class="btn btn-primary">' +
-                    '<input type="radio" name="options" id="entera" value="entera" autocomplete="off">Entera' +
-                    '</label>' +
-                    '<label class="btn btn-primary">' +
-                    '<input type="radio" name="options" id="medio" value="medio" autocomplete="off">Combinada 1/2' +
-                    '</label>' +
-                    '<label class="btn btn-primary">' +
-                    '<input type="radio" name="options" id="cuarto" value="cuarto" autocomplete="off">Combinada 1/4' +
-                    '</label>' +
-                    '<label class="btn btn-primary">' +
-                    '<input type="radio" name="options" id="personalizada" value="personalizada" autocomplete="off">Personalizada' +
-                    '</label>' +
-                    '</div>' +
-                    '</center><br>' +
-                    "<div class='col-md-12' id='contentSeleccion'></div>"
-                    );
+                '<center><div class="btn-group radioPizzas" data-toggle="buttons">' +
+                '<label class="btn btn-primary active">' +
+                '<input type="radio" name="options" value="" autocomplete="off" checked>Seleccione ..' +
+                '</label>' +
+                '<label class="btn btn-primary">' +
+                '<input type="radio" name="options" id="entera" value="entera" autocomplete="off">Entera' +
+                '</label>' +
+                '<label class="btn btn-primary">' +
+                '<input type="radio" name="options" id="medio" value="medio" autocomplete="off">Combinada 1/2' +
+                '</label>' +
+                '<label class="btn btn-primary">' +
+                '<input type="radio" name="options" id="cuarto" value="cuarto" autocomplete="off">Combinada 1/4' +
+                '</label>' +
+                '<label class="btn btn-primary">' +
+                '<input type="radio" name="options" id="personalizada" value="personalizada" autocomplete="off">Personalizada' +
+                '</label>' +
+                '</div>' +
+                '</center><br>' +
+                "<div class='col-md-12' id='contentSeleccion'></div>"
+            );
 
         } else {
             $(".contentIngredientes").html("");
@@ -1632,7 +1566,7 @@
         }
     })
 
-    $(document).on('change', '.radioPizzas input[type=radio]', function () {
+    $(document).on('change', '.radioPizzas input[type=radio]', function() {
         console.log(nombre);
         pizzaTemporal = {};
 
@@ -1668,79 +1602,79 @@
                 data: {
                     nombreProducto: nombre,
                 },
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
-                        }
-                    })
-                            ).then(function () {
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                            }
+                        })
+                    ).then(function() {
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                "<div class='col-md-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-12'>" +
-                                "<center><img src='img/pizzas/p_entera.png' alt='pizza entera' class='img-responsive imgEntera'>" + "</center>" +
-                                "<br>" + "<br>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_entera" autocomplete="off"><div id="lblEntera">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6 col-md-offset-3 col-sm-offset-3 col-xs-offset-3'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            "<div class='col-md-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-12'>" +
+                            "<center><img src='assets/img/pizzas/p_entera.png' alt='pizza entera' class='img-responsive imgEntera'>" + "</center>" +
+                            "<br>" + "<br>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_entera" autocomplete="off"><div id="lblEntera">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" disabled="disabled" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -1755,11 +1689,11 @@
 
 
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -1776,107 +1710,107 @@
                 data: {
                     nombreProducto: nombre,
                 },
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
-                        }
-                    })
-                            ).then(function () {
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                            }
+                        })
+                    ).then(function() {
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_medio1" autocomplete="off"><div id="lblMitad1">Mitad</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "<div class='col-md-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-12'>" +
-                                "<center><img src='img/pizzas/p_medio1.png' alt='pizza media' class='img-responsive imgMedio1'></center>" +
-                                "</div>" +
-                                "<div class='col-md-12'>" +
-                                "<center><img src='img/pizzas/p_medio2.png' alt='pizza media' class='img-responsive imgMedio2'></center>" +
-                                "<br>" + "<br>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_medio2" autocomplete="off"><div id="lblMitad2">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Mitad 2</label><br/>" +
-                                "<select class='form-control selectPizzaMedio' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Mitad 1</label><br/>" +
-                                nombreSubmenu +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_medio1" autocomplete="off"><div id="lblMitad1">Mitad</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "<div class='col-md-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-12'>" +
+                            "<center><img src='assets/img/pizzas/p_medio1.png' alt='pizza media' class='img-responsive imgMedio1'></center>" +
+                            "</div>" +
+                            "<div class='col-md-12'>" +
+                            "<center><img src='assets/img/pizzas/p_medio2.png' alt='pizza media' class='img-responsive imgMedio2'></center>" +
+                            "<br>" + "<br>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_medio2" autocomplete="off"><div id="lblMitad2">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Mitad 2</label><br/>" +
+                            "<select class='form-control selectPizzaMedio' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Mitad 1</label><br/>" +
+                            nombreSubmenu +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" disabled="disabled" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -1892,11 +1826,11 @@
 
                     });
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -1911,105 +1845,105 @@
                     nombreProducto: nombre,
                 },
                 dataType: "json",
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
-                        }
-                    })
-                            ).then(function () {
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                            }
+                        })
+                    ).then(function() {
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_cuarto1" autocomplete="off"><div id="lblCuarto1">Cuarto</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "<div class='col-md-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style='position:absolute;z-index:500;left: 0;right: 0;margin: 0 auto;'>" +
-                                "<center><img src='img/pizzas/p_cuarto1.png' alt='pizza media' class='img-responsive imgCuarto1'></center>" +
-                                "</div>" +
-                                "<div class='col-md-12' style='padding-top: 33px;padding-right: 15px;'>" +
-                                "<center><img src='img/pizzas/p_cuarto2.png' alt='pizza media' class='img-responsive imgCuarto2'></center>" +
-                                "<br>" + "<br>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
-                                '<label class="btn btn-primary btn-block">' +
-                                '<input type="checkbox" class="inp_cuarto2" autocomplete="off"><div id="lblCuarto2">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" + "<br>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Cuarto</label><br/>" +
-                                "<select class='form-control selectPizzaCuarto' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Pizza</label><br/>" +
-                                nombreSubmenu +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_cuarto1" autocomplete="off"><div id="lblCuarto1">Cuarto</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "<div class='col-md-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style='position:absolute;z-index:500;left: 0;right: 0;margin: 0 auto;'>" +
+                            "<center><img src='assets/img/pizzas/p_cuarto1.png' alt='pizza media' class='img-responsive imgCuarto1'></center>" +
+                            "</div>" +
+                            "<div class='col-md-12' style='padding-top: 33px;padding-right: 15px;'>" +
+                            "<center><img src='assets/img/pizzas/p_cuarto2.png' alt='pizza media' class='img-responsive imgCuarto2'></center>" +
+                            "<br>" + "<br>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:100%">' +
+                            '<label class="btn btn-primary btn-block">' +
+                            '<input type="checkbox" class="inp_cuarto2" autocomplete="off"><div id="lblCuarto2">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" + "<br>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Cuarto</label><br/>" +
+                            "<select class='form-control selectPizzaCuarto' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Pizza</label><br/>" +
+                            nombreSubmenu +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" disabled="disabled" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -2025,11 +1959,11 @@
 
                     });
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -2044,147 +1978,147 @@
                     nombreProducto: nombre,
                 },
                 dataType: "json",
-                success: function (pizzas) {
+                success: function(pizzas) {
                     var htmlselectPizzas = "<option value=''>Seleccione ..</option>";
                     $.when(
-                            $(pizzas).each(function (index, value) {
-                        if (nombreSubmenu != value.nombreSubmenu) {
-                            htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
-                        }
-                    })
-                            ).then(function () {
+                        $(pizzas).each(function(index, value) {
+                            if (nombreSubmenu != value.nombreSubmenu) {
+                                htmlselectPizzas += "<option value='" + value.idProducto + "'>" + value.nombreSubmenu + "</option>";
+                            }
+                        })
+                    ).then(function() {
                         $("#contentSeleccion").html(
-                                "<div class='grid'>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
-                                '<label class="btn btn-primary" style="width: 50%;">' +
-                                '<input type="checkbox" class="inp_personalizado1" autocomplete="off"><div id="lblPersonalizado1">' + nombreSubmenu + '</div>' +
-                                ' </label>' +
-                                '<label class="btn btn-primary" style="width: 50%;">' +
-                                '<input type="checkbox" class="inp_personalizado2" autocomplete="off"><div id="lblPersonalizado2">Personalizada 2</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "<div class='col-md-12 col-sm-12 col-xs-12' style='padding: 40px 0px;'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12' style='position: absolute;top:4px;left: 8px;'>" +
-                                "<img src='img/pizzas/p_personalizado1.png' alt='pizza media' class='img-responsive imgPersonalizado1'>" +
-                                "</div>" +
-                                "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6' style='padding-bottom: 10px;'>" +
-                                "<div class='col-md-12' style='position: absolute;top:4px;right: 8px;'>" +
-                                "<img src='img/pizzas/p_personalizado2.png' alt='pizza media' class='img-responsive imgPersonalizado2'>" +
-                                "</div>" +
-                                "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12' style='position: absolute;bottom:4px;left: 8px;'>" +
-                                "<img src='img/pizzas/p_personalizado3.png' alt='pizza media' class='img-responsive imgPersonalizado3'>" +
-                                "</div>" +
-                                "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12' style='position: absolute;bottom:4px;right: 8px;'>" +
-                                "<img src='img/pizzas/p_personalizado4.png' alt='pizza media' class='img-responsive imgPersonalizado4'>" +
-                                "</div>" +
-                                "<img src='img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
-                                "</div>" +
-                                "</div>" +
-                                '<center>' +
-                                '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
-                                '<label class="btn btn-primary" style="width: 50%;">' +
-                                '<input type="checkbox" class="inp_personalizado3" autocomplete="off"><div id="lblPersonalizado3">Personalizada 3</div>' +
-                                ' </label>' +
-                                '<label class="btn btn-primary" style="width: 50%;">' +
-                                '<input type="checkbox" class="inp_personalizado4" autocomplete="off"><div id="lblPersonalizado4">Personalizada 4</div>' +
-                                ' </label>' +
-                                "</div>" +
-                                '</center>' +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Personalizada 1</label><br/>" +
-                                nombreSubmenu +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Personalizada 2</label><br/>" +
-                                "<select class='form-control selectPizzaPersonalizado2' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Personalizada 3</label><br/>" +
-                                "<select class='form-control selectPizzaPersonalizado3' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "</div>" +
-                                "<div class='col-md-12 col-sm-12 col-xs-12'>" +
-                                "<br>" +
-                                "<div class='form-group'>" +
-                                "<label for=''>Personalizada 4</label><br/>" +
-                                "<select class='form-control selectPizzaPersonalizado4' >" +
-                                htmlselectPizzas +
-                                "</select>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
+                            "<div class='grid'>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='row row-space' style='border: 1px solid; border-radius: 6px; border-color: #b64645;'>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
+                            '<label class="btn btn-primary" style="width: 50%;">' +
+                            '<input type="checkbox" class="inp_personalizado1" autocomplete="off"><div id="lblPersonalizado1">' + nombreSubmenu + '</div>' +
+                            ' </label>' +
+                            '<label class="btn btn-primary" style="width: 50%;">' +
+                            '<input type="checkbox" class="inp_personalizado2" autocomplete="off"><div id="lblPersonalizado2">Personalizada 2</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "<div class='col-md-12 col-sm-12 col-xs-12' style='padding: 40px 0px;'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12' style='position: absolute;top:4px;left: 8px;'>" +
+                            "<img src='assets/img/pizzas/p_personalizado1.png' alt='pizza media' class='img-responsive imgPersonalizado1'>" +
+                            "</div>" +
+                            "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6' style='padding-bottom: 10px;'>" +
+                            "<div class='col-md-12' style='position: absolute;top:4px;right: 8px;'>" +
+                            "<img src='assets/img/pizzas/p_personalizado2.png' alt='pizza media' class='img-responsive imgPersonalizado2'>" +
+                            "</div>" +
+                            "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12' style='position: absolute;bottom:4px;left: 8px;'>" +
+                            "<img src='assets/img/pizzas/p_personalizado3.png' alt='pizza media' class='img-responsive imgPersonalizado3'>" +
+                            "</div>" +
+                            "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12' style='position: absolute;bottom:4px;right: 8px;'>" +
+                            "<img src='assets/img/pizzas/p_personalizado4.png' alt='pizza media' class='img-responsive imgPersonalizado4'>" +
+                            "</div>" +
+                            "<img src='assets/img/pizzas/fondopersonalizado.png' class='img-responsive'>" +
+                            "</div>" +
+                            "</div>" +
+                            '<center>' +
+                            '<div class="btn-group" data-toggle="buttons" style="width:101%">' +
+                            '<label class="btn btn-primary" style="width: 50%;">' +
+                            '<input type="checkbox" class="inp_personalizado3" autocomplete="off"><div id="lblPersonalizado3">Personalizada 3</div>' +
+                            ' </label>' +
+                            '<label class="btn btn-primary" style="width: 50%;">' +
+                            '<input type="checkbox" class="inp_personalizado4" autocomplete="off"><div id="lblPersonalizado4">Personalizada 4</div>' +
+                            ' </label>' +
+                            "</div>" +
+                            '</center>' +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Personalizada 1</label><br/>" +
+                            nombreSubmenu +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Personalizada 2</label><br/>" +
+                            "<select class='form-control selectPizzaPersonalizado2' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Personalizada 3</label><br/>" +
+                            "<select class='form-control selectPizzaPersonalizado3' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "</div>" +
+                            "<div class='col-md-12 col-sm-12 col-xs-12'>" +
+                            "<br>" +
+                            "<div class='form-group'>" +
+                            "<label for=''>Personalizada 4</label><br/>" +
+                            "<select class='form-control selectPizzaPersonalizado4' >" +
+                            htmlselectPizzas +
+                            "</select>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>"
 
 
-                                );
+                        );
 
                         $("#contentSeleccion").append(
-                                '<br><div class="row">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-5">' +
-                                '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
-                                '</div>' +
-                                '<div class="col-md-7">' +
-                                '<div class="col-md-9 col-md-offset-3">' +
-                                '<div class="form-group">' +
-                                '<div class="center">' +
-                                '<p></p>' +
-                                '<div class="input-group">' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-minus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
-                                '<span class="input-group-btn">' +
-                                '<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">' +
-                                '<span class="glyphicon glyphicon-plus"></span>' +
-                                '</button>' +
-                                '</span>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<br>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="col-md-12">' +
-                                '<div class="form-group">' +
-                                '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
-                                '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            '<br><div class="row">' +
+                            '<div class="col-md-12">' +
+                            '<div class="col-md-5">' +
+                            '<h4 style="color: #b64645;padding-top: 12px;" class="tituloCantidad">Cantidad producto :</h4>' +
+                            '</div>' +
+                            '<div class="col-md-7">' +
+                            '<div class="col-md-9 col-md-offset-3">' +
+                            '<div class="form-group">' +
+                            '<div class="center">' +
+                            '<p></p>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" disabled="disabled" data-type="minus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-minus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '<input type="number" name="quant[1]" class="form-control input-number" value="1" min="1" max="100" style="color:black;font-weight: bold;text-align:center;" disabled>' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-primary btn-number btnflat" data-type="plus" data-field="quant[1]">' +
+                            '<span class="glyphicon glyphicon-plus"></span>' +
+                            '</button>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<br>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="col-md-12">' +
+                            '<div class="form-group">' +
+                            '<h4 style="color: #b64645;">Observación del pedido :</h4>' +
+                            '<textarea class="form-control observacionProducto" rows="3" id="comment" style="resize: none;border-color: #b64645;" placeholder="Ingrese aquí la observación del pedido actual."></textarea>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
                         funcionalidadCantidad();
 
@@ -2210,11 +2144,11 @@
 
                     });
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -2245,8 +2179,6 @@
         }
     }
 
-
-
     function verificaSelectPersonalizado() {
         if (($('.selectPizzaPersonalizado2').val() != "") && ($('.selectPizzaPersonalizado3').val() != "") && ($('.selectPizzaPersonalizado4').val() != "")) {
             $(".btnEnviaSeleccion").show();
@@ -2255,9 +2187,9 @@
         }
     }
 
-//VERIFICACION DE SELECTS CUANDO ESTA EN LA SECCION PIZZA Y VERIFICANDO LOS INGREDIENTES:
+    //VERIFICACION DE SELECTS CUANDO ESTA EN LA SECCION PIZZA Y VERIFICANDO LOS INGREDIENTES:
 
-    $(document).on('change', '.selectPizzaMedio', function () {
+    $(document).on('change', '.selectPizzaMedio', function() {
         pizzaTemporal.ingredientesMedio = [];
         if ($(this).val() == "") {
             $("#lblMitad1").text("Mitad");
@@ -2273,7 +2205,7 @@
         verificaSelectMedio();
     });
 
-    $(document).on('change', '.selectPizzaCuarto', function () {
+    $(document).on('change', '.selectPizzaCuarto', function() {
         pizzaTemporal.ingredientesCuarto = [];
         if ($(this).val() == "") {
             $("#lblCuarto1").html("Cuarto");
@@ -2288,8 +2220,7 @@
         verificaSelectCuarto();
     });
 
-
-    $(document).on('change', '.selectPizzaPersonalizado1', function () {
+    $(document).on('change', '.selectPizzaPersonalizado1', function() {
         pizzaTemporal.ingredientesPizza1 = [];
         if ($(this).val() == "") {
             $("#lblPersonalizado1").html("Ingrediente 1");
@@ -2302,7 +2233,7 @@
         verificaSelectPersonalizado();
     });
 
-    $(document).on('change', '.selectPizzaPersonalizado2', function () {
+    $(document).on('change', '.selectPizzaPersonalizado2', function() {
         pizzaTemporal.ingredientesPizza2 = [];
         if ($(this).val() == "") {
             $("#lblPersonalizado2").html("Ingrediente 2");
@@ -2314,7 +2245,7 @@
         verificaSelectPersonalizado();
     });
 
-    $(document).on('change', '.selectPizzaPersonalizado3', function () {
+    $(document).on('change', '.selectPizzaPersonalizado3', function() {
         pizzaTemporal.ingredientesPizza3 = [];
         if ($(this).val() == "") {
             $("#lblPersonalizado3").html("Ingrediente 3");
@@ -2326,7 +2257,7 @@
         verificaSelectPersonalizado();
     });
 
-    $(document).on('change', '.selectPizzaPersonalizado4', function () {
+    $(document).on('change', '.selectPizzaPersonalizado4', function() {
         pizzaTemporal.ingredientesPizza4 = [];
         if ($(this).val() == "") {
             $("#lblPersonalizado4").html("Ingrediente 4");
@@ -2338,65 +2269,64 @@
         verificaSelectPersonalizado();
     });
 
-//PIZZA ENTERA
+    //PIZZA ENTERA
 
-    $(document).on('click', '.imgEntera', function () {
+    $(document).on('click', '.imgEntera', function() {
         if ($(".inp_entera").is(":checked")) {
             //Regreso a la normalidad
             $(".contentIngredientes").html("");
             $(".contentIngredientes").hide();
-            $('.imgEntera').attr('src', 'img/pizzas/p_entera.png');
+            $('.imgEntera').attr('src', 'assets/img/pizzas/p_entera.png');
             $(".inp_entera").prop('checked', false);
             $(".inp_entera").parent().removeClass("active");
         } else {
             //Asigna ingredientes Pizza
-            $('.imgEntera').attr('src', 'img/pizzas/p_entera_s.png');
+            $('.imgEntera').attr('src', 'assets/img/pizzas/p_entera_s.png');
             $(".inp_entera").prop('checked', true);
             $(".inp_entera").parent().addClass("active");
             asignaIngredientesPizza($("#lblEntera").html(), "Entera");
         }
     });
 
-    $(document).on('change', '.inp_entera', function () {
+    $(document).on('change', '.inp_entera', function() {
         if ($(".inp_entera").is(":checked")) {
-            $('.imgEntera').attr('src', 'img/pizzas/p_entera_s.png');
+            $('.imgEntera').attr('src', 'assets/img/pizzas/p_entera_s.png');
             asignaIngredientesPizza($("#lblEntera").html());
         } else {
-            $('.imgEntera').attr('src', 'img/pizzas/p_entera.png');
+            $('.imgEntera').attr('src', 'assets/img/pizzas/p_entera.png');
             $(".contentIngredientes").html("");
             $(".contentIngredientes").hide();
         }
     });
 
+    //PARA PIZZA 1/2
 
-//PARA PIZZA 1/2
-
-    $(document).on('click', '.imgMedio1', function () {
+    $(document).on('click', '.imgMedio1', function() {
         deschekaMedio2();
         if ($(".inp_medio1").is(":checked")) {
             deschekaMedio1();
         } else {
             asignaIngredientesPizza($("#lblMitad1").html(), "Medio2");
-            $('.imgMedio1').attr('src', 'img/pizzas/p_medio1_s.png');
+            $('.imgMedio1').attr('src', 'assets/img/pizzas/p_medio1_s.png');
             $(".inp_medio1").prop('checked', true);
             $(".inp_medio1").parent().addClass("active");
         }
     });
 
-    $(document).on('change', '.inp_medio1', function () {
+    $(document).on('change', '.inp_medio1', function() {
         deschekaMedio2();
         if ($(".inp_medio1").is(":checked")) {
-            $('.imgMedio1').attr('src', 'img/pizzas/p_medio1_s.png');
+            $('.imgMedio1').attr('src', 'assets/img/pizzas/p_medio1_s.png');
             asignaIngredientesPizza($("#lblMitad1").html(), "Medio2");
         } else {
-            $('.imgMedio1').attr('src', 'img/pizzas/p_medio1.png');
+            $('.imgMedio1').attr('src', 'assets/img/pizzas/p_medio1.png');
         }
     });
 
     function deschekaMedio1() {
         $(".contentIngredientes").html("");
         $(".contentIngredientes").hide();
-        $('.imgMedio1').attr('src', 'img/pizzas/p_medio1.png');
+        $('.imgMedio1').attr('src', 'assets/img/pizzas/p_medio1.png');
         $(".inp_medio1").prop('checked', false);
         $(".inp_medio1").parent().removeClass("active");
     }
@@ -2404,63 +2334,61 @@
     function deschekaMedio2() {
         $(".contentIngredientes").html("");
         $(".contentIngredientes").hide();
-        $('.imgMedio2').attr('src', 'img/pizzas/p_medio2.png');
+        $('.imgMedio2').attr('src', 'assets/img/pizzas/p_medio2.png');
         $(".inp_medio2").prop('checked', false);
         $(".inp_medio2").parent().removeClass("active");
     }
 
-
-    $(document).on('change', '.inp_medio2', function () {
+    $(document).on('change', '.inp_medio2', function() {
         deschekaMedio1();
         if ($(".inp_medio2").is(":checked")) {
-            $('.imgMedio2').attr('src', 'img/pizzas/p_medio2_s.png');
+            $('.imgMedio2').attr('src', 'assets/img/pizzas/p_medio2_s.png');
             asignaIngredientesPizza($("#lblMitad2").html(), "Medio1");
         } else {
-            $('.imgMedio2').attr('src', 'img/pizzas/p_medio2.png');
+            $('.imgMedio2').attr('src', 'assets/img/pizzas/p_medio2.png');
         }
     });
 
-
-    $(document).on('click', '.imgMedio2', function () {
+    $(document).on('click', '.imgMedio2', function() {
         deschekaMedio1();
         if ($(".inp_medio2").is(":checked")) {
             deschekaMedio2();
         } else {
             asignaIngredientesPizza($("#lblMitad2").html(), "Medio1");
-            $('.imgMedio2').attr('src', 'img/pizzas/p_medio2_s.png');
+            $('.imgMedio2').attr('src', 'assets/img/pizzas/p_medio2_s.png');
             $(".inp_medio2").prop('checked', true);
             $(".inp_medio2").parent().addClass("active");
 
         }
     });
 
-//PARA PIZZA 1/4
-    $(document).on('click', '.imgCuarto1', function () {
+    //PARA PIZZA 1/4
+    $(document).on('click', '.imgCuarto1', function() {
         deschekaCuarto2();
         if ($(".inp_cuarto1").is(":checked")) {
             deschekaCuarto1();
         } else {
             asignaIngredientesPizza($("#lblCuarto1").html(), "Cuarto2");
-            $('.imgCuarto1').attr('src', 'img/pizzas/p_cuarto1_s.png');
+            $('.imgCuarto1').attr('src', 'assets/img/pizzas/p_cuarto1_s.png');
             $(".inp_cuarto1").prop('checked', true);
             $(".inp_cuarto1").parent().addClass("active");
         }
     });
 
-    $(document).on('change', '.inp_cuarto1', function () {
+    $(document).on('change', '.inp_cuarto1', function() {
         deschekaCuarto2();
         if ($(".inp_cuarto1").is(":checked")) {
             asignaIngredientesPizza($("#lblCuarto1").html(), "Cuarto2");
-            $('.imgCuarto1').attr('src', 'img/pizzas/p_cuarto1_s.png');
+            $('.imgCuarto1').attr('src', 'assets/img/pizzas/p_cuarto1_s.png');
         } else {
-            $('.imgCuarto1').attr('src', 'img/pizzas/p_cuarto1.png');
+            $('.imgCuarto1').attr('src', 'assets/img/pizzas/p_cuarto1.png');
         }
     });
 
     function deschekaCuarto1() {
         $(".contentIngredientes").html("");
         $(".contentIngredientes").hide();
-        $('.imgCuarto1').attr('src', 'img/pizzas/p_cuarto1.png');
+        $('.imgCuarto1').attr('src', 'assets/img/pizzas/p_cuarto1.png');
         $(".inp_cuarto1").prop('checked', false);
         $(".inp_cuarto1").parent().removeClass("active");
     }
@@ -2468,90 +2396,88 @@
     function deschekaCuarto2() {
         $(".contentIngredientes").html("");
         $(".contentIngredientes").hide();
-        $('.imgCuarto2').attr('src', 'img/pizzas/p_cuarto2.png');
+        $('.imgCuarto2').attr('src', 'assets/img/pizzas/p_cuarto2.png');
         $(".inp_cuarto2").prop('checked', false);
         $(".inp_cuarto2").parent().removeClass("active");
     }
 
-
-    $(document).on('change', '.inp_cuarto2', function () {
+    $(document).on('change', '.inp_cuarto2', function() {
         deschekaCuarto1();
         if ($(".inp_cuarto2").is(":checked")) {
             asignaIngredientesPizza($("#lblCuarto2").html(), "Cuarto1");
-            $('.imgCuarto2').attr('src', 'img/pizzas/p_cuarto2_s.png');
+            $('.imgCuarto2').attr('src', 'assets/img/pizzas/p_cuarto2_s.png');
         } else {
-            $('.imgCuarto2').attr('src', 'img/pizzas/p_cuarto2.png');
+            $('.imgCuarto2').attr('src', 'assets/img/pizzas/p_cuarto2.png');
         }
     });
 
-
-    $(document).on('click', '.imgCuarto2', function () {
+    $(document).on('click', '.imgCuarto2', function() {
         deschekaCuarto1();
         if ($(".inp_cuarto2").is(":checked")) {
             deschekaCuarto2();
         } else {
             asignaIngredientesPizza($("#lblCuarto2").html(), "Cuarto1");
-            $('.imgCuarto2').attr('src', 'img/pizzas/p_cuarto2_s.png');
+            $('.imgCuarto2').attr('src', 'assets/img/pizzas/p_cuarto2_s.png');
             $(".inp_cuarto2").prop('checked', true);
             $(".inp_cuarto2").parent().addClass("active");
 
         }
     });
 
-//PARA PIZZA PERSONALIZADA
-//
-    $(document).on('click', '.imgPersonalizado1', function () {
+    //PARA PIZZA PERSONALIZADA
+    //
+    $(document).on('click', '.imgPersonalizado1', function() {
         deschekaPersonalizados(1);
         if ($(".inp_personalizado1").is(":checked")) {
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1.png');
             $(".inp_personalizado1").prop('checked', false);
             $(".inp_personalizado1").parent().removeClass("active");
         } else {
             asignaIngredientesPizza($("#lblPersonalizado1").html(), "Personalizado1");
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1_s.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1_s.png');
             $(".inp_personalizado1").prop('checked', true);
             $(".inp_personalizado1").parent().addClass("active");
         }
     });
 
-    $(document).on('click', '.imgPersonalizado2', function () {
+    $(document).on('click', '.imgPersonalizado2', function() {
         deschekaPersonalizados(2);
         if ($(".inp_personalizado2").is(":checked")) {
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2.png');
             $(".inp_personalizado2").prop('checked', false);
             $(".inp_personalizado2").parent().removeClass("active");
         } else {
             asignaIngredientesPizza($("#lblPersonalizado2").html(), "Personalizado2");
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2_s.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2_s.png');
             $(".inp_personalizado2").prop('checked', true);
             $(".inp_personalizado2").parent().addClass("active");
         }
     });
 
-    $(document).on('click', '.imgPersonalizado3', function () {
+    $(document).on('click', '.imgPersonalizado3', function() {
         deschekaPersonalizados(3);
         if ($(".inp_personalizado3").is(":checked")) {
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3.png');
             $(".inp_personalizado3").prop('checked', false);
             $(".inp_personalizado3").parent().removeClass("active");
         } else {
             asignaIngredientesPizza($("#lblPersonalizado3").html(), "Personalizado3");
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3_s.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3_s.png');
             $(".inp_personalizado3").prop('checked', true);
             $(".inp_personalizado3").parent().addClass("active");
         }
     });
 
-    $(document).on('click', '.imgPersonalizado4', function () {
+    $(document).on('click', '.imgPersonalizado4', function() {
         deschekaPersonalizados(4);
 
         if ($(".inp_personalizado4").is(":checked")) {
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4.png');
             $(".inp_personalizado4").prop('checked', false);
             $(".inp_personalizado4").parent().removeClass("active");
         } else {
             asignaIngredientesPizza($("#lblPersonalizado4").html(), "Personalizado4");
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4_s.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4_s.png');
             $(".inp_personalizado4").prop('checked', true);
             $(".inp_personalizado4").parent().addClass("active");
         }
@@ -2563,60 +2489,60 @@
         $(".contentIngredientes").hide();
 
         if (numero == 1) {
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2.png');
             $(".inp_personalizado2").prop('checked', false);
             $(".inp_personalizado2").parent().removeClass("active");
 
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3.png');
             $(".inp_personalizado3").prop('checked', false);
             $(".inp_personalizado3").parent().removeClass("active");
 
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4.png');
             $(".inp_personalizado4").prop('checked', false);
             $(".inp_personalizado4").parent().removeClass("active");
 
         } else
         if (numero == 2) {
 
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1.png');
             $(".inp_personalizado1").prop('checked', false);
             $(".inp_personalizado1").parent().removeClass("active");
 
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3.png');
             $(".inp_personalizado3").prop('checked', false);
             $(".inp_personalizado3").parent().removeClass("active");
 
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4.png');
             $(".inp_personalizado4").prop('checked', false);
             $(".inp_personalizado4").parent().removeClass("active");
 
         } else
         if (numero == 3) {
 
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2.png');
             $(".inp_personalizado2").prop('checked', false);
             $(".inp_personalizado2").parent().removeClass("active");
 
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1.png');
             $(".inp_personalizado1").prop('checked', false);
             $(".inp_personalizado1").parent().removeClass("active");
 
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4.png');
             $(".inp_personalizado4").prop('checked', false);
             $(".inp_personalizado4").parent().removeClass("active");
 
         } else
         if (numero == 4) {
 
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2.png');
             $(".inp_personalizado2").prop('checked', false);
             $(".inp_personalizado2").parent().removeClass("active");
 
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3.png');
             $(".inp_personalizado3").prop('checked', false);
             $(".inp_personalizado3").parent().removeClass("active");
 
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1.png');
             $(".inp_personalizado1").prop('checked', false);
             $(".inp_personalizado1").parent().removeClass("active");
 
@@ -2624,52 +2550,52 @@
 
     }
 
-    $(document).on('change', '.inp_personalizado1', function () {
+    $(document).on('change', '.inp_personalizado1', function() {
         deschekaPersonalizados(1);
         if ($(".inp_personalizado1").is(":checked")) {
             asignaIngredientesPizza($("#lblPersonalizado1").html(), "Personalizado1");
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1_s.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1_s.png');
         } else {
-            $('.imgPersonalizado1').attr('src', 'img/pizzas/p_personalizado1.png');
+            $('.imgPersonalizado1').attr('src', 'assets/img/pizzas/p_personalizado1.png');
         }
     });
 
-    $(document).on('change', '.inp_personalizado2', function () {
+    $(document).on('change', '.inp_personalizado2', function() {
         deschekaPersonalizados(2);
         if ($(".inp_personalizado2").is(":checked")) {
             asignaIngredientesPizza($("#lblPersonalizado2").html(), "Personalizado2");
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2_s.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2_s.png');
         } else {
-            $('.imgPersonalizado2').attr('src', 'img/pizzas/p_personalizado2.png');
+            $('.imgPersonalizado2').attr('src', 'assets/img/pizzas/p_personalizado2.png');
         }
     });
 
-    $(document).on('change', '.inp_personalizado3', function () {
+    $(document).on('change', '.inp_personalizado3', function() {
         deschekaPersonalizados(3);
         if ($(".inp_personalizado3").is(":checked")) {
             asignaIngredientesPizza($("#lblPersonalizado3").html(), "Personalizado3");
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3_s.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3_s.png');
         } else {
-            $('.imgPersonalizado3').attr('src', 'img/pizzas/p_personalizado3.png');
+            $('.imgPersonalizado3').attr('src', 'assets/img/pizzas/p_personalizado3.png');
         }
     });
 
-    $(document).on('change', '.inp_personalizado4', function () {
+    $(document).on('change', '.inp_personalizado4', function() {
         deschekaPersonalizados(4);
         if ($(".inp_personalizado4").is(":checked")) {
             asignaIngredientesPizza($("#lblPersonalizado4").html(), "Personalizado4");
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4_s.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4_s.png');
         } else {
-            $('.imgPersonalizado4').attr('src', 'img/pizzas/p_personalizado4.png');
+            $('.imgPersonalizado4').attr('src', 'assets/img/pizzas/p_personalizado4.png');
         }
     });
 
-    $('#ModalSeleccionPizza').on('hidden.bs.modal', function () {
+    $('#ModalSeleccionPizza').on('hidden.bs.modal', function() {
         $(".contentIngredientes").html("");
         $(".contentIngredientes").hide();
     })
 
-    $('#ModalSeleccionPizza').on('hidden.bs.modal', function () {
+    $('#ModalSeleccionPizza').on('hidden.bs.modal', function() {
         $(".btnEnviaSeleccion").hide();
     })
 
@@ -2777,12 +2703,12 @@
                 nombreProducto: nombre,
                 nombreSubmenu: nombrePizza
             },
-            success: function (ingredientes) {
+            success: function(ingredientes) {
 
                 var htmlselectIngredientesE = "";
                 $.when(
-                        $(ingredientes).each(function (index, value) {
-                    htmlselectIngredientesE += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
+                    $(ingredientes).each(function(index, value) {
+                        htmlselectIngredientesE += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
                             '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
                             value.nombreIngrediente +
                             "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
@@ -2790,114 +2716,114 @@
                             '</div>' +
                             '</div>';
 
-                    if (tipoPizza == "Entera" || tipoPizza == "Medio1" || tipoPizza == "Cuarto1" || tipoPizza == "Personalizado1") {
-                        pizzaTemporal.ingredientes.push({
-                            nombreIngrediente: value.nombreIngrediente,
-                            idIngrediente: value.idIngrediente
-                        });
+                        if (tipoPizza == "Entera" || tipoPizza == "Medio1" || tipoPizza == "Cuarto1" || tipoPizza == "Personalizado1") {
+                            pizzaTemporal.ingredientes.push({
+                                nombreIngrediente: value.nombreIngrediente,
+                                idIngrediente: value.idIngrediente
+                            });
 
-                    } else
-                    if (tipoPizza == "Medio2") {
+                        } else
+                        if (tipoPizza == "Medio2") {
 
-                        pizzaTemporal.ingredientesMedio.push({
-                            nombreIngrediente: value.nombreIngrediente,
-                            idIngrediente: value.idIngrediente
-                        });
+                            pizzaTemporal.ingredientesMedio.push({
+                                nombreIngrediente: value.nombreIngrediente,
+                                idIngrediente: value.idIngrediente
+                            });
 
-                    } else
-                    if (tipoPizza == "Cuarto2") {
+                        } else
+                        if (tipoPizza == "Cuarto2") {
 
-                        pizzaTemporal.ingredientesCuarto.push({
-                            nombreIngrediente: value.nombreIngrediente,
-                            idIngrediente: value.idIngrediente
-                        });
+                            pizzaTemporal.ingredientesCuarto.push({
+                                nombreIngrediente: value.nombreIngrediente,
+                                idIngrediente: value.idIngrediente
+                            });
 
-                    } else
-                    if (tipoPizza == "Personalizado2") {
+                        } else
+                        if (tipoPizza == "Personalizado2") {
 
-                        pizzaTemporal.ingredientesPizza2.push({
-                            nombreIngrediente: value.nombreIngrediente,
-                            idIngrediente: value.idIngrediente
-                        });
+                            pizzaTemporal.ingredientesPizza2.push({
+                                nombreIngrediente: value.nombreIngrediente,
+                                idIngrediente: value.idIngrediente
+                            });
 
-                    } else
-                    if (tipoPizza == "Personalizado3") {
+                        } else
+                        if (tipoPizza == "Personalizado3") {
 
-                        pizzaTemporal.ingredientesPizza3.push({
-                            nombreIngrediente: value.nombreIngrediente,
-                            idIngrediente: value.idIngrediente
-                        });
+                            pizzaTemporal.ingredientesPizza3.push({
+                                nombreIngrediente: value.nombreIngrediente,
+                                idIngrediente: value.idIngrediente
+                            });
 
-                    } else
-                    if (tipoPizza == "Personalizado4") {
+                        } else
+                        if (tipoPizza == "Personalizado4") {
 
-                        pizzaTemporal.ingredientesPizza4.push({
-                            nombreIngrediente: value.nombreIngrediente,
-                            idIngrediente: value.idIngrediente
-                        });
+                            pizzaTemporal.ingredientesPizza4.push({
+                                nombreIngrediente: value.nombreIngrediente,
+                                idIngrediente: value.idIngrediente
+                            });
 
-                    }
+                        }
 
 
-                })
-                        ).then(function () {
+                    })
+                ).then(function() {
 
                     $.ajax({
                         // COnsulta de ingredientes de pizza generales
                         url: 'assets/hacerpedido/consultaIngredientesPizzaG.php',
                         type: 'POST',
                         dataType: "json",
-                        success: function (ingredientes) {
+                        success: function(ingredientes) {
 
 
                             var htmlselectIngredientesG = "";
                             $.when(
-                                    $(ingredientes).each(function (index, value) {
-                                htmlselectIngredientesG += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
+                                $(ingredientes).each(function(index, value) {
+                                    htmlselectIngredientesG += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
                                         '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
                                         value.nombreIngrediente +
                                         "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
                                         "<div class='idingrediente' style='display: none;'>" + value.idIngrediente + "</div>" +
                                         '</div>' +
                                         '</div>';
-                            })
-                                    ).then(function () {
+                                })
+                            ).then(function() {
 
                                 $(".contentIngredientes").html(
-                                        "<br><center><h4 style='color:white;'>Ingredientes Pizza " + nombrePizza + "</h4></center><br>" +
-                                        "<div class='row'>" +
-                                        "<div class='col-md-12'>" +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<p style='color:white;text-align:center;'>Ingredientes</p>" +
-                                        "<div class='col-md-12 rightIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
-                                        htmlselectIngredientesE +
-                                        '</div>' +
-                                        '</div>' +
-                                        "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                        "<p style='color:white;text-align:center;'>Ingredientes Extras</p>" +
-                                        "<div class='col-md-12 leftIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
-                                        htmlselectIngredientesG +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>'
-                                        );
+                                    "<br><center><h4 style='color:white;'>Ingredientes Pizza " + nombrePizza + "</h4></center><br>" +
+                                    "<div class='row'>" +
+                                    "<div class='col-md-12'>" +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<p style='color:white;text-align:center;'>Ingredientes</p>" +
+                                    "<div class='col-md-12 rightIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
+                                    htmlselectIngredientesE +
+                                    '</div>' +
+                                    '</div>' +
+                                    "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                                    "<p style='color:white;text-align:center;'>Ingredientes Extras</p>" +
+                                    "<div class='col-md-12 leftIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
+                                    htmlselectIngredientesG +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>'
+                                );
 
 
                                 dragula([document.querySelector('.leftIng'), document.querySelector('.rightIng')], {
-                                    isContainer: function (el) {
+                                    isContainer: function(el) {
                                         return false; // only elements in drake.containers will be taken into account
                                     },
-                                    moves: function (el, source, handle, sibling) {
+                                    moves: function(el, source, handle, sibling) {
                                         return true; // elements are always draggable by default
                                     },
-                                    accepts: function (el, target, source, sibling) {
+                                    accepts: function(el, target, source, sibling) {
                                         return true; // elements can be dropped in any of the `containers` by default
                                     },
-                                    invalid: function (el, handle) {
+                                    invalid: function(el, handle) {
                                         return false; // don't prevent any drags from initiating by default
                                     },
                                     direction: 'vertical', // Y axis is considered when determining where an element would be dropped
-                                    copy: function (el, handle) {
+                                    copy: function(el, handle) {
                                         return true;
                                     }, // elements are moved by default, not copied
                                     copySortSource: false, // elements in copy-source containers can be reordered
@@ -2909,12 +2835,12 @@
 
                                 dragula([document.querySelector('.rightIng')], {
                                     removeOnSpill: true, // spilling will `.remove` the element, if this is true
-                                    accepts: function (el, target, source, sibling) {
+                                    accepts: function(el, target, source, sibling) {
                                         return false; // elements can be dropped in any of the `containers` by default
                                     },
                                 });
 
-                                $('.rightIng').bind("DOMSubtreeModified", function () {
+                                $('.rightIng').bind("DOMSubtreeModified", function() {
 
 
 
@@ -2922,7 +2848,7 @@
                                     if (tipoPizza == "Entera" || tipoPizza == "Medio1" || tipoPizza == "Cuarto1" || tipoPizza == "Personalizado1") {
 
                                         pizzaTemporal.ingredientes = [];
-                                        $(".rightIng .contenedorIngrediente").each(function (index) {
+                                        $(".rightIng .contenedorIngrediente").each(function(index) {
                                             pizzaTemporal.ingredientes.push({
                                                 nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                                 idIngrediente: $(this).find(".idingrediente").html()
@@ -2933,7 +2859,7 @@
                                     if (tipoPizza == "Medio2") {
 
                                         pizzaTemporal.ingredientesMedio = [];
-                                        $(".rightIng .contenedorIngrediente").each(function (index) {
+                                        $(".rightIng .contenedorIngrediente").each(function(index) {
                                             pizzaTemporal.ingredientesMedio.push({
                                                 nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                                 idIngrediente: $(this).find(".idingrediente").html()
@@ -2944,7 +2870,7 @@
                                     if (tipoPizza == "Cuarto2") {
 
                                         pizzaTemporal.ingredientesCuarto = [];
-                                        $(".rightIng .contenedorIngrediente").each(function (index) {
+                                        $(".rightIng .contenedorIngrediente").each(function(index) {
                                             pizzaTemporal.ingredientesCuarto.push({
                                                 nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                                 idIngrediente: $(this).find(".idingrediente").html()
@@ -2955,7 +2881,7 @@
                                     if (tipoPizza == "Personalizado2") {
 
                                         pizzaTemporal.ingredientesPizza2 = [];
-                                        $(".rightIng .contenedorIngrediente").each(function (index) {
+                                        $(".rightIng .contenedorIngrediente").each(function(index) {
                                             pizzaTemporal.ingredientesPizza2.push({
                                                 nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                                 idIngrediente: $(this).find(".idingrediente").html()
@@ -2966,7 +2892,7 @@
                                     if (tipoPizza == "Personalizado3") {
 
                                         pizzaTemporal.ingredientesPizza3 = [];
-                                        $(".rightIng .contenedorIngrediente").each(function (index) {
+                                        $(".rightIng .contenedorIngrediente").each(function(index) {
                                             pizzaTemporal.ingredientesPizza3.push({
                                                 nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                                 idIngrediente: $(this).find(".idingrediente").html()
@@ -2977,7 +2903,7 @@
                                     if (tipoPizza == "Personalizado4") {
 
                                         pizzaTemporal.ingredientesPizza4 = [];
-                                        $(".rightIng .contenedorIngrediente").each(function (index) {
+                                        $(".rightIng .contenedorIngrediente").each(function(index) {
                                             pizzaTemporal.ingredientesPizza4.push({
                                                 nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                                 idIngrediente: $(this).find(".idingrediente").html()
@@ -2991,22 +2917,22 @@
 
                             })
                         },
-                        error: function (error) {
+                        error: function(error) {
                             console.log('Disculpe, existió un problema');
                             console.log(error);
                         },
-                        complete: function (xhr, status) {
+                        complete: function(xhr, status) {
                             console.log('Petición realizada');
                         }
                     });
 
                 });
             },
-            error: function (error) {
+            error: function(error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function (xhr, status) {
+            complete: function(xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -3016,69 +2942,69 @@
 
         var htmlselectIngredientesE = "";
         $.when(
-                $(ingredientes).each(function (index, value) {
-            htmlselectIngredientesE += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
+            $(ingredientes).each(function(index, value) {
+                htmlselectIngredientesE += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
                     '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
                     value.nombreIngrediente +
                     "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
                     "<div class='idingrediente' style='display: none;'>" + value.idIngrediente + "</div>" +
                     '</div>' +
                     '</div>';
-        })
-                ).then(function () {
+            })
+        ).then(function() {
 
             $.ajax({
                 // COnsulta de ingredientes de pizza generales
                 url: 'assets/hacerpedido/consultaIngredientesPizzaG.php',
                 type: 'POST',
                 dataType: "json",
-                success: function (ingredientes) {
+                success: function(ingredientes) {
 
 
                     var htmlselectIngredientesG = "";
                     $.when(
-                            $(ingredientes).each(function (index, value) {
-                        htmlselectIngredientesG += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
+                        $(ingredientes).each(function(index, value) {
+                            htmlselectIngredientesG += '<div class="col-md-12 contenedorIngrediente" style="padding:5px;">' +
                                 '<div class="col-md-12 btn-primary" style="text-align: center;font-size: 12px;padding: 5px;word-wrap: break-word;color: white;border: 0.5px solid;border-radius: 4px;">' +
                                 value.nombreIngrediente +
                                 "<div class='nombreingrediente' style='display: none;'>" + value.nombreIngrediente + "</div>" +
                                 "<div class='idingrediente' style='display: none;'>" + value.idIngrediente + "</div>" +
                                 '</div>' +
                                 '</div>';
-                    })
-                            ).then(function () {
+                        })
+                    ).then(function() {
 
                         $(".contentIngredientes").html(
-                                "<br><center><h4 style='color:white;'>Ingredientes Pizza " + nombrePizza + "</h4></center><br>" +
-                                "<div class='row'>" +
-                                "<div class='col-md-12'>" +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<p style='color:white;text-align:center;'>Ingredientes</p>" +
-                                "<div class='col-md-12 rightIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
-                                htmlselectIngredientesE +
-                                '</div>' +
-                                '</div>' +
-                                "<div class='col-md-6 col-sm-6 col-xs-6'>" +
-                                "<p style='color:white;text-align:center;'>Ingredientes Extras</p>" +
-                                "<div class='col-md-12 leftIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
-                                htmlselectIngredientesG +
-                                '</div>' +
-                                '</div>' +
-                                '</div>'
-                                );
+                            "<br><center><h4 style='color:white;'>Ingredientes Pizza " + nombrePizza + "</h4></center><br>" +
+                            "<div class='row'>" +
+                            "<div class='col-md-12'>" +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<p style='color:white;text-align:center;'>Ingredientes</p>" +
+                            "<div class='col-md-12 rightIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
+                            htmlselectIngredientesE +
+                            '</div>' +
+                            '</div>' +
+                            "<div class='col-md-6 col-sm-6 col-xs-6'>" +
+                            "<p style='color:white;text-align:center;'>Ingredientes Extras</p>" +
+                            "<div class='col-md-12 leftIng' style='background: white;height:250px; overflow: auto ;border: 1px solid; border-radius: 6px; border-color: #b64645;padding: 15px;'>" +
+                            htmlselectIngredientesG +
+                            '</div>' +
+                            '</div>' +
+                            '</div>'
+                        );
 
 
                         dragula([document.querySelector('.leftIng'), document.querySelector('.rightIng')], {
-                            isContainer: function (el) {
+                            isContainer: function(el) {
                                 return false; // only elements in drake.containers will be taken into account
                             },
-                            moves: function (el, source, handle, sibling) {
+                            moves: function(el, source, handle, sibling) {
                                 return true; // elements are always draggable by default
                             },
-                            accepts: function (el, target, source, sibling) {
+                            accepts: function(el, target, source, sibling) {
                                 return true; // elements can be dropped in any of the `containers` by default
                             },
-                            invalid: function (el, handle) {
+                            invalid: function(el, handle) {
                                 return false; // don't prevent any drags from initiating by default
                             },
                             direction: 'vertical', // Y axis is considered when determining where an element would be dropped
@@ -3092,17 +3018,17 @@
 
                         dragula([document.querySelector('.rightIng')], {
                             removeOnSpill: true, // spilling will `.remove` the element, if this is true
-                            accepts: function (el, target, source, sibling) {
+                            accepts: function(el, target, source, sibling) {
                                 return false; // elements can be dropped in any of the `containers` by default
                             }
                         });
 
-                        $('.rightIng').bind("DOMSubtreeModified", function () {
+                        $('.rightIng').bind("DOMSubtreeModified", function() {
 
                             if (tipoPizza == "Entera" || tipoPizza == "Medio1" || tipoPizza == "Cuarto1" || tipoPizza == "Personalizado1") {
 
                                 pizzaTemporal.ingredientes = [];
-                                $(".rightIng .contenedorIngrediente").each(function (index) {
+                                $(".rightIng .contenedorIngrediente").each(function(index) {
                                     pizzaTemporal.ingredientes.push({
                                         nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                         idIngrediente: $(this).find(".idingrediente").html()
@@ -3113,7 +3039,7 @@
                             if (tipoPizza == "Medio2") {
 
                                 pizzaTemporal.ingredientesMedio = [];
-                                $(".rightIng .contenedorIngrediente").each(function (index) {
+                                $(".rightIng .contenedorIngrediente").each(function(index) {
                                     pizzaTemporal.ingredientesMedio.push({
                                         nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                         idIngrediente: $(this).find(".idingrediente").html()
@@ -3124,7 +3050,7 @@
                             if (tipoPizza == "Cuarto2") {
 
                                 pizzaTemporal.ingredientesCuarto = [];
-                                $(".rightIng .contenedorIngrediente").each(function (index) {
+                                $(".rightIng .contenedorIngrediente").each(function(index) {
                                     pizzaTemporal.ingredientesCuarto.push({
                                         nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                         idIngrediente: $(this).find(".idingrediente").html()
@@ -3135,7 +3061,7 @@
                             if (tipoPizza == "Personalizado2") {
 
                                 pizzaTemporal.ingredientesPizza2 = [];
-                                $(".rightIng .contenedorIngrediente").each(function (index) {
+                                $(".rightIng .contenedorIngrediente").each(function(index) {
                                     pizzaTemporal.ingredientesPizza2.push({
                                         nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                         idIngrediente: $(this).find(".idingrediente").html()
@@ -3146,7 +3072,7 @@
                             if (tipoPizza == "Personalizado3") {
 
                                 pizzaTemporal.ingredientesPizza3 = [];
-                                $(".rightIng .contenedorIngrediente").each(function (index) {
+                                $(".rightIng .contenedorIngrediente").each(function(index) {
                                     pizzaTemporal.ingredientesPizza3.push({
                                         nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                         idIngrediente: $(this).find(".idingrediente").html()
@@ -3157,7 +3083,7 @@
                             if (tipoPizza == "Personalizado4") {
 
                                 pizzaTemporal.ingredientesPizza4 = [];
-                                $(".rightIng .contenedorIngrediente").each(function (index) {
+                                $(".rightIng .contenedorIngrediente").each(function(index) {
                                     pizzaTemporal.ingredientesPizza4.push({
                                         nombreIngrediente: $(this).find(".nombreingrediente").html(),
                                         idIngrediente: $(this).find(".idingrediente").html()
@@ -3171,11 +3097,11 @@
                         $(".contentIngredientes").show();
                     })
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function (xhr, status) {
+                complete: function(xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -3186,7 +3112,7 @@
 
     function funcionalidadCantidad() {
         //PARA LA FUNCIONALIDAD DE LA CANTIDAD DEL PRODUCTO
-        $('.btn-number').click(function (e) {
+        $('.btn-number').click(function(e) {
             e.preventDefault();
 
             fieldName = $(this).attr('data-field');
@@ -3218,10 +3144,10 @@
 
 
         });
-        $('.input-number').focusin(function () {
+        $('.input-number').focusin(function() {
             $(this).data('oldValue', $(this).val());
         });
-        $('.input-number').change(function () {
+        $('.input-number').change(function() {
 
             minValue = parseInt($(this).attr('min'));
             maxValue = parseInt($(this).attr('max'));
@@ -3243,21 +3169,21 @@
 
 
         });
-        $(".input-number").keydown(function (e) {
+        $(".input-number").keydown(function(e) {
             // Allow: backspace, delete, tab, escape, enter and .
             if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
-                    // Allow: Ctrl+A
-                            (e.keyCode == 65 && e.ctrlKey === true) ||
-                            // Allow: home, end, left, right
-                                    (e.keyCode >= 35 && e.keyCode <= 39)) {
-                        // let it happen, don't do anything
-                        return;
-                    }
-                    // Ensure that it is a number and stop the keypress
-                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                        e.preventDefault();
-                    }
-                });
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
 
         //FIN ----FUNCIONALIDAD DE LA CANTIDAD DEL PRODUCTO
     }

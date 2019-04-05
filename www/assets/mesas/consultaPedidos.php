@@ -1,4 +1,4 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 

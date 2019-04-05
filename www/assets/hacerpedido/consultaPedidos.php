@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 //RECOPILACION DE PEDIDOS PARA COCINA
 //ANALISIS CONCRETO PARA PEDIDOS QUE TIENEN O NO BEBIDAS

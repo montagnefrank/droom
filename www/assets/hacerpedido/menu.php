@@ -1,6 +1,6 @@
 <?php
 
-require ("../conn.php");
+require ("../scripts/database.php");
 
 $query="SELECT * FROM menu where estadoMenu='ACTIVO'";
 $result = $conn->query($query);
