@@ -5,7 +5,7 @@ $(document).ready(function() {
             type: 'POST',
             success: function (respuesta) {
                 if(respuesta){                    
-                    window.location.href = "login.php";
+                    window.location.href = "/";
                 }
             },
             error: function (error) {

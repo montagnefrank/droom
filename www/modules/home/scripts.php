@@ -36,7 +36,7 @@
 <script>
     //       ACTIVAMOS EL MENU LATERAL       //
     $(".menuItem").removeClass("active");
-    $(".pedidos").addClass("active");
+    $(".newpedido").addClass("active");
 
     //          CARGAMOS LAS MESAS Y LOS PEDIDOS           //
     cargarMesasNiveles();
@@ -70,7 +70,7 @@
                 processData: false,
                 data: formData,
                 success: function(data) {
-                    window.location.replace("/?show=hacerpedido#autoscroll");
+                    window.location.replace("/?show=pedido");
                 },
                 error: function(error) {
                     console.log("Hubo un error de internet, intente de nuevo");

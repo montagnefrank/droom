@@ -48,11 +48,16 @@ require ("assets/scripts/config.php");
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="assets/node_modules/dragula/dist/dragula.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/reset.css">
         <link rel="stylesheet" href="assets/css/supersized.css">
         <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
-        <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" type="text/css" id="theme" href="assets/css/custom.css"/>
+        <?php
+        if ($page == 'login') {
+            echo '<link rel="stylesheet" href="assets/css/style.css">';
+        }
+        ?>
     </head>
     <body>
         <?php
@@ -73,7 +78,7 @@ require ("assets/scripts/config.php");
             <?php
         } else {
 
-            if ($module == "cocina.php") {
+            if ($module == "cocina") {
                 echo '<div class="page-container page-navigation-top-fixed page-navigation-toggled page-container-wide">';
             } else {
                 echo '<div class="page-container page-navigation-top-fixed">';

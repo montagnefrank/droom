@@ -118,7 +118,6 @@
             <div class="modal-footer label-primary">
                 <button type="button" class="btn btn-primary pedido_imprimir"><i class="fa fa-print" aria-hidden="true"></i> Imprimir</button>
                 <button type="button" class="btn btn-primary btnAnadirPedido"><i class="fa fa-plus" aria-hidden="true"></i> Añadir Pedido</button>
-                <button type="button" class="btn btn-primary"><i class="fas fa-stop-circle" aria-hidden="true"></i> Mesa habilitada</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

@@ -112,7 +112,7 @@ $(function() {
                     if($(this).data("placeholder") != ''){
                         var dt = $(this).data("placeholder");
                     }else
-                        var dt = 'add a tag';
+                        var dt = 'separado por coma';
                                                             
                     $(this).tagsInput({width: '100%',height:'auto',defaultText: dt});
                 });

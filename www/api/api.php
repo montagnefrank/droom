@@ -36,9 +36,8 @@
 
 
 //  DEBUG EN PANTALLA   //
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 //  HABILITAMOS EL ACCESO PUBLICO PARA REALIZAR LLAMADAS AJAX DESDE DOMINIOS PUBLICOS   //
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Credentials: true');
@@ -326,7 +325,7 @@ if ($_POST) {
 
 
             if ($producto["nombreMenu"] == "Pizzas") {
-                $htmlPedido .= '<div class="list-group-item btn-' . $estado . '" style="font-weight:bold;border: 2px solid #7a7a7a; color:#434a54;">' .
+                $htmlPedido .= '<div class="list-group-item btn-' . $estado . ' pedidoSingleModal" >' .
                         "<p style='font-size:25px;'>" . $producto["nombreProducto"] . "</p>" .
                         "<p style='font-size:15px;font-weight:bold;'>" . $producto["descripcionPedidoproducto"] . "</p>" .
                         "<p style='position:absolute;top:12px;right:10px;'>" . $icon . "</p>";
@@ -458,7 +457,7 @@ if ($_POST) {
                 }
             } elseif ($producto["nombreMenu"] == "Ensaladas y Bocaditos" || $producto["nombreMenu"] == "Pastas" || $producto["nombreMenu"] == "Carnes" || $producto["nombreMenu"] == "Crepes y Postres") {
 
-                $htmlPedido .= '<div class="list-group-item btn-' . $estado . '" style="border: 2px solid #7a7a7a;color:#434a54;">' .
+                $htmlPedido .= '<div class="list-group-item btn-' . $estado . ' pedidoSingleModal">' .
                         "<p style='font-size:25px;font-weight:bold;'>" . $producto["nombreProducto"] . "</p>" .
                         "<p style='position:absolute;top:12px;right:10px;'>" . $icon . "</p>";
 
@@ -852,10 +851,1017 @@ if ($_POST) {
         echo json_encode($json);
         return;
     }
+
+    //                  CARGAMOS LOS PEDIDOS DEL MENU        //
+    if ($method == 'loadMenu') {
+
+        $query = "SELECT * FROM productos pro "
+                . "INNER JOIN menu me ON (pro.idMenu = me.idMenu) "
+                . "WHERE pro.estadoProducto = 'ACTIVO' "
+                . "AND me.estadoMenu = 'ACTIVO'";
+        $result = $conn->query($query);
+        if (!$result)
+            die($conn->error);
+
+        $rows = $result->num_rows;
+        $menu = array();
+        $categs = array();
+
+        for ($i = 0; $i < $rows; $i++) {
+            $result->data_seek($i);
+            $menu[] = $result->fetch_array(MYSQLI_ASSOC);
+            $last = end($menu);
+            $categs[] = $last['nombreMenu'];
+        }
+
+        if ($rows != 0) {
+            $json['menu'] = $menu;
+            $json['categ'] = array_unique($categs);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+        return;
+    }
+
+    //                  CARGAMOS LOS DATOS DEL PRODUCTO        //
+    if ($method == 'loadProdutSpecs') {
+
+        $idProducto = $_POST['id'];
+        $query = "SELECT * FROM productos pro "
+                . "INNER JOIN menu me ON (pro.idMenu = me.idMenu) "
+                . "WHERE pro.idProducto = '$idProducto' ";
+        $result = $conn->query($query);
+        if (!$result)
+            die(json_encode($query));
+        $product = $result->fetch_array(MYSQLI_ASSOC);
+
+        $ings = $product['ingsProducto'];
+        $query2 = "SELECT * FROM ingrediente ing WHERE ing.idIngrediente IN ($ings) ";
+        $result2 = $conn->query($query2);
+        if (!$result2)
+            die(json_encode($query2));
+        $rows = $result2->num_rows;
+        $allIngs = array();
+        for ($i = 0; $i < $rows; $i++) {
+            $result2->data_seek($i);
+            $allIngs[] = $result2->fetch_array(MYSQLI_ASSOC);
+        }
+
+        if ($rows != 0) {
+            $json['producto'] = $product;
+            $json['ings'] = $allIngs;
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+        return;
+    }
+
+    //                  NUEVA IMAGEN DE USUARIO       //
+    if ($method == 'imagenNueva') {
+        session_start();
+        $data = $_POST["imagenNueva"];
+        $target_dir = "assets/img/users/";
+        file_put_contents($target_dir . $_SESSION["usuario"]["idUsuario"] . '.jpg', base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data)));
+        $_SESSION["usuario"]['userImg'] = 'api/' . $target_dir . $_SESSION["usuario"]["idUsuario"] . '.jpg';
+        echo true;
+        return;
+    }
+
+    //                  NUEVA PASS POR EL USUARIO     //
+    if ($method == 'submitnewpass') {
+        session_start();
+        $user = $_SESSION["usuario"]["nombreUsuario"];
+        $query = "SELECT passwordUsuario FROM usuario WHERE nombreUsuario = '" . $user . "'";
+        $result = $conn->query($query);
+        if (!$result)
+            die(json_encode($query));
+        $row_compare = $result->fetch_array(MYSQLI_ASSOC);
+        $compare = $row_compare[0];
+        if ($_POST["oldpass"] == $compare) {
+            $update_pass = mysqli_query($conn, "UPDATE usuario SET passwordUsuario = '" . $_POST['newpass'] . "' WHERE nombreUsuario = '" . $user . "'");
+            $msg_pass .= " Contraseña cambiada con éxito. ";
+            $box = "primary";
+        } else {
+            $msg_pass .= " No pudimos validar su contraseña anterior, por favor ingresela nuevamente. ";
+            $box = "danger";
+        }
+
+        $_SESSION['msg'] = $msg_pass;
+        $_SESSION['box'] = $box;
+        echo true;
+        return;
+    }
+
+    //                  OBTENEMOS LAS MESAS     //
+    if ($method == 'getMesasNiveles') {
+        $query = "SELECT * FROM mesa WHERE idEstablecimiento = '1'";
+        $result = $conn->query($query) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            if ($row['numeroMesa'] == '999') {
+                continue;
+            }
+            if ($row['estadoMesa'] == 'HABILITADA') {
+                $checked = 'checked="checked"';
+            } else {
+                $checked = '';
+            }
+            echo ' 
+                <div class="col-md-3 hidethis mesaItemBlock">   
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><span> Mesa #' . $row['numeroMesa'] . '</span></h3>   
+                            <ul class="panel-controls">
+                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                            </ul>       
+                            <label class="switch pull-right">
+                                <input type="checkbox" class="switch disabledswitch" name="1_check"  value="1" ' . $checked . ' />
+                                <span></span>
+                            </label>                            
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-md-6 control-label">Descripcion:</label>
+                                <div class="col-md-6">
+                                    <span class="label label-primary label-form titleJob_container">&nbsp;' . $row['textoMesa'] . '</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-6 control-label">Nivel / Ubicación:</label>
+                                <div class="col-md-6">
+                                    <span class="label label-primary label-form titleJob_container">&nbsp;' . $row['nivelMesa'] . '</span>
+                                </div>
+                            </div>
+                            <div class="hidethis_force idMesaCont">' . $row['idMesa'] . '</div>
+                            <div class="hidethis_force textoMesaCont">' . $row['textoMesa'] . '</div>
+                            <div class="hidethis_force nivelMesaCont">' . $row['nivelMesa'] . '</div>
+                            <div class="hidethis_force numeroMesaCont">' . $row['numeroMesa'] . '</div>
+                            <div class="hidethis_force statusMesa">' . $row['estadoMesa'] . '</div>
+                        </div>
+                        <div class="panel-footer text-muted">
+                            <button class="pull-right btn btn-success editjobbtn"  type="submit" data-toggle="tooltip" data-placement="right" title="Editar Mesa">
+                                <span class="beforeLoad" ><span class="fa fa-edit"></span> Editar Mesa </span>
+                                <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+           ';
+        }
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  EDITAMOS LA MESA             //
+    if ($method == 'editMesa') {
+        $val_select = "UPDATE mesa SET "
+                . "numeroMesa = '" . $_POST['numeroMesa'] . "', "
+                . "nivelMesa = '" . $_POST['nivelMesa'] . "', "
+                . "textoMesa = '" . $_POST['textoMesa'] . "' "
+                . " WHERE idMesa = '" . $_POST['idMesa'] . "'";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  AGREGAMOS NUEVA MESA             //
+    if ($method == 'addnewMesa') {
+
+        $val_select = "INSERT INTO mesa(idEstablecimiento,estadoMesa,numeroMesa,nivelMesa,textoMesa) "
+                . "VALUES ('1','HABILITADA','" . $_POST['numeroMesa'] . "',"
+                . "'" . $_POST['nivelMesa'] . "',"
+                . "'" . $_POST['textoMesa'] . "')";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  ELIMINAMOS LA MESA             //
+    if ($method == 'deleteMesa') {
+
+        $val_select = "DELETE FROM mesa WHERE idMesa = '" . $_POST['deleteid'] . "'";
+        $val_result = $conn->query($val_select); //or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  CAMBIAMOS EL ESTATUS LA MESA             //
+    if ($method == 'changestatusMesa') {
+        if ($_POST['statusJob'] == '1') {
+            $estadoMesa = "HABILITADA";
+        }
+        if ($_POST['statusJob'] == '0') {
+            $estadoMesa = "OCUPADA";
+        }
+        $val_select = "UPDATE mesa SET estadoMesa = '" . $estadoMesa . "' WHERE idMesa = '" . $_POST['idMesa'] . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  OBTENEMOS LOS PRODUCTOS     //
+    if ($method == 'getProductosMenu') {
+        $query = "SELECT * FROM productos";
+        $result = $conn->query($query) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            if ($row['estadoProducto'] == 'ACTIVO') {
+                $checked = 'on';
+                $awe = 'fa-check';
+            } else {
+                $checked = 'off';
+                $awe = 'fa-times';
+            }
+            echo ' 
+            <div class="col-md-6">
+                <div class="panel panel-default">                            
+                    <div class="panel-body panel-body-image">
+                        <img src="api/assets/img/productos/' . $row['idProducto'] . '.jpg" alt="Slide1" style="height: 300px;"/>
+                        <a href="#" class="panel-body-inform panel-body-inform-' . $checked . '">
+                            <span class="fa ' . $awe . '"></span>
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <h3>' . $row['nombreProducto'] . ' &mdash; ' . $row['descProducto'] . '</h3>
+                        <div class="hidethis_force idProducto">' . $row['idProducto'] . '</div>
+                        <div class="hidethis_force idMenu">' . $row['idMenu'] . '</div>
+                        <div class="hidethis_force nombreProducto">' . $row['nombreProducto'] . '</div>
+                        <div class="hidethis_force descProducto">' . $row['descProducto'] . '</div>
+                        <div class="hidethis_force precioProducto">' . $row['precioProducto'] . '</div>
+                        <div class="hidethis_force skuProducto">' . $row['skuProducto'] . '</div>
+                        <div class="hidethis_force varsProducto">' . $row['varsProducto'] . '</div>
+                        <div class="hidethis_force ingsProducto">' . $row['ingsProducto'] . '</div>
+                        <div class="hidethis_force tamProducto">' . $row['tamProducto'] . '</div>
+                        <div class="hidethis_force estadoProducto">' . $row['estadoProducto'] . '</div>
+                    </div>
+                    <div class="panel-footer text-muted">
+                        <button class="pull-right btn btn-success editarProductoBtn"  type="submit" data-toggle="tooltip" data-placement="right" title="Editar Portafolio">
+                            <span class="beforeLoad"> Editar Producto</span>
+                            <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+           ';
+        }
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  REEMPLAZAMOS LA IMAGEN DE LOS PEDIDOS     //
+    if ($method == 'newimgcustom') {
+
+        //** CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "assets/img/";
+        $target_file = $target_dir . basename($_FILES["imgcustom"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgcustom"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgcustom"]["size"] > 500000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . "tableitem.jpg";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgcustom"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
+
+    //                  OBTENEMOS LA LISTA DE TODOS LSO INGREDINETES     //
+    if ($method == 'getIngFullTable') {
+
+        $query = "SELECT * FROM ingrediente WHERE estadoIngrediente = '1'";
+        $result = $conn->query($query) or die($conn->error);
+        $json['echo'] = '<select class="form-control select ingFullListSelect" data-live-search="true" data-style="btn-primary">';
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $json['echo'] .= ' <option value="' . $row['idIngrediente'] . '">' . $row['nombreIngrediente'] . '</option>';
+            $json['ings'][] = $row;
+        }
+        $json['echo'] .= '</select>';
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  OBTENEMOS LA LISTA DE TODOS LSO INGREDINETES SIN FILTRO     //
+    if ($method == 'getIngFullTableNew') {
+
+        $query = "SELECT * FROM ingrediente WHERE estadoIngrediente = '1'";
+        $result = $conn->query($query) or die($conn->error);
+        $json['echo'] = '<select class="form-control select ingFullListSelectNew" data-live-search="true" data-style="btn-primary">';
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $json['echo'] .= ' <option value="' . $row['idIngrediente'] . '">' . $row['nombreIngrediente'] . '</option>';
+            $json['ings'][] = $row;
+        }
+        $json['echo'] .= '</select>';
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  OBTENEMOS LA LISTA DE TODOS LOS MENU     //
+    if ($method == 'getMenuFullTable') {
+
+        $query = "SELECT * FROM menu";
+        $result = $conn->query($query) or die($conn->error);
+        $json['echo'] = '<select class="form-control select menuFullCont" id="menuFullCont" data-live-search="true" data-style="btn-primary">';
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            if ($row['idMenu'] == $_POST['idMenu']) {
+                $json['echo'] .= ' <option value="' . $row['idMenu'] . '">' . $row['nombreMenu'] . '</option>';
+                $json['men'][] = $row;
+            }
+        }
+        $result = $conn->query($query) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            if ($row['idMenu'] != $_POST['idMenu']) {
+                $json['echo'] .= ' <option value="' . $row['idMenu'] . '">' . $row['nombreMenu'] . '</option>';
+                $json['men'][] = $row;
+            }
+        }
+        $json['echo'] .= '</select>';
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  OBTENEMOS LA LISTA DE TODOS LOS MENU PARA CREAR EL PRODUCTO     //
+    if ($method == 'getMenuFullTableNew') {
+
+        $query = "SELECT * FROM menu";
+        $result = $conn->query($query) or die($conn->error);
+        $json['echo'] = '<select class="form-control select menuFullContNew" id="menuFullContNew" data-live-search="true" data-style="btn-primary">';
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $json['echo'] .= ' <option value="' . $row['idMenu'] . '">' . $row['nombreMenu'] . '</option>';
+            $json['men'][] = $row;
+        }
+        $json['echo'] .= '</select>';
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  EDITAMOS EL PRODUCTO             //
+    if ($method == 'editProducto') {
+
+        $query = "SELECT * FROM ingrediente WHERE estadoIngrediente = '1'";
+        $result = $conn->query($query) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $ingNames = explode(',', $_POST['ingsProducto']);
+            if (in_array($row['nombreIngrediente'], $ingNames)) {
+                $json['ingIds'][] = $row['idIngrediente'];
+            }
+        }
+
+        $val_select = "UPDATE productos SET "
+                . "idMenu = '" . $_POST['idMenu'] . "', "
+                . "nombreProducto = '" . $_POST['nombreProducto'] . "', "
+                . "descProducto = '" . $_POST['descProducto'] . "', "
+                . "precioProducto = '" . $_POST['precioProducto'] . "', "
+                . "skuProducto = '" . $_POST['skuProducto'] . "', "
+                . "varsProducto = '" . $_POST['varsProducto'] . "', "
+                . "ingsProducto = '" . implode(',', $json['ingIds']) . "' "
+                . " WHERE idProducto = '" . $_POST['idProducto'] . "'";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['query'] = $val_select;
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  EDITAMOS LA IMAGEN DLE PRODUCTO            //
+    if ($method == 'newimgheaderPort') {
+
+        //** CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "assets/img/productos/";
+        $target_file = $target_dir . basename($_FILES["imgheaderPort"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgheaderPort"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgheaderPort"]["size"] > 500000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . $_POST['idProducto'] . ".jpg";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgheaderPort"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
+
+    //                  CAMBIAMOS EL ESTATUS AL PRODUCTO             //
+    if ($method == 'changestatusProducto') {
+        if ($_POST['statusJob'] == '1') {
+            $estadoMesa = "ACTIVO";
+        }
+        if ($_POST['statusJob'] == '0') {
+            $estadoMesa = "INACTIVO";
+        }
+        $val_select = "UPDATE productos SET estadoProducto = '" . $estadoMesa . "' WHERE idProducto = '" . $_POST['idProducto'] . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  ELIMINAMOS EL PRODUCTO             //
+    if ($method == 'deleteProd') {
+
+        $val_select = "DELETE FROM productos WHERE idProducto = '" . $_POST['deleteid'] . "'";
+        $val_result = $conn->query($val_select); //or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  AGREGAMOS NUEVO PRODUCTO            //
+    if ($method == 'addnewProd') {
+
+        $query = "SELECT * FROM ingrediente WHERE estadoIngrediente = '1'";
+        $result = $conn->query($query) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $ingNames = explode(',', $_POST['ingsProducto']);
+            if (in_array($row['nombreIngrediente'], $ingNames)) {
+                $json['ingIds'][] = $row['idIngrediente'];
+            }
+        }
+
+
+        $val_select = "INSERT INTO productos(idMenu,nombreProducto,descProducto,precioProducto,estadoProducto,skuProducto,imgProducto,varsProducto,ingsProducto,tamProducto) "
+                . "VALUES ('" . $_POST['idMenu'] . "',"
+                . "'" . $_POST['nombreProducto'] . "',"
+                . "'" . $_POST['descProducto'] . "',"
+                . "'" . $_POST['precioProducto'] . "',"
+                . "'ACTIVO',"
+                . "'" . $_POST['skuProducto'] . "',"
+                . "'01',"
+                . "'" . $_POST['varsProducto'] . "',"
+                . "'" . implode(',', $json['ingIds']) . "',"
+                . "'Pequeña:0,Mediana:5.0,Grande:8')";
+        $val_result = $conn->query($val_select);
+
+        // CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "assets/img/productos/";
+        $target_file = $target_dir . basename($_FILES["imgheaderPortNew"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgheaderPortNew"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgheaderPortNew"]["size"] > 500000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . $conn->insert_id . ".jpg";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgheaderPortNew"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['debug'] = 'imgSaved';
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+    
+    //                  REEMPLAZAMOS LA IMAGEN DEL LOGO     //
+    if ($method == 'newLogo') {
+
+        //** CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "../assets/img/";
+        $target_file = $target_dir . basename($_FILES["imgcustom"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgcustom"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgcustom"]["size"] > 500000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "png") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . "logo_rec.png";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgcustom"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
+    
+    //                  REEMPLAZAMOS PRIMER SLIDE    //
+    if ($method == 'newSlide1') {
+
+        //** CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "../assets/img/backgrounds/";
+        $target_file = $target_dir . basename($_FILES["imgcustom"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgcustom"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgcustom"]["size"] > 50000000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . "1.jpg";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgcustom"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
+    
+    //                  REEMPLAZAMOS PRIMER SLIDE    //
+    if ($method == 'newSlide2') {
+
+        //** CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "../assets/img/backgrounds/";
+        $target_file = $target_dir . basename($_FILES["imgcustom"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgcustom"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgcustom"]["size"] > 50000000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . "2.jpg";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgcustom"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
+    
+    //                  REEMPLAZAMOS PRIMER SLIDE    //
+    if ($method == 'newSlide3') {
+
+        //** CARGAMOS LA IMAGEN DE BANNER
+        $target_dir = "../assets/img/backgrounds/";
+        $target_file = $target_dir . basename($_FILES["imgcustom"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["imgcustom"]["tmp_name"]);
+        if ($check == false) {
+            $json['debug'] = 'notImg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Check file size
+        if ($_FILES["imgcustom"]["size"] > 50000000) {
+            $json['debug'] = 'tooBig';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg") {
+            $json['debug'] = 'notJpg';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+
+        $target_file = $target_dir . "3.jpg";
+        $newbannername = $filename;
+        if (move_uploaded_file($_FILES["imgcustom"]["tmp_name"], $target_file)) {
+            chmod($target_file, 0666);
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $json['debug'] = 'notSaved';
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
 }
 
 if ($_GET) {
     $method = broom('reg', $_GET['meth']);
+
+    /////////////////////////////////////////////////////////
+    //       GENERAMOS LOS REPORTES DE LA PLATAFORMA       //
+    /////////////////////////////////////////////////////////
+    if ($method == 'report') {
+        $type = broom('num', $_GET["print"]);
+
+        ////////////////////    REPORTE MASTER DE TODOS LOS PRODUCTOS       ////////////////////
+        if ($type == '1') {
+
+            $query = "SELECT * FROM producto pro
+                INNER JOIN submenu su ON (pro.idSubmenu = su.idSubmenu)
+                INNER JOIN menu me ON (su.idMenu = me.idMenu)
+                WHERE pro.tipoProducto = 'ACTIVO'
+                AND su.estadoSubmenu = 'ACTIVO'
+								AND me.estadoMenu = 'ACTIVO'
+								ORDER BY su.idSubmenu";
+
+            $result = $conn->query($query);
+            if (!$result)
+                die('Couldn\'t fetch records');
+            $num_fields = mysqli_num_fields($result);
+
+            $fp = fopen('php://output', 'w');
+            if ($fp && $result) {
+                fputcsv($fp, $headers, ';');
+                while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                    $row['Precio'] = number_format($row['Precio'], 2, ',', '');
+                    $row['Precio2'] = number_format(($row['Precio2'] * 1.12), 2, ',', '');
+                    $row['Costo'] = number_format($row['Costo'], 2, ',', '.');
+                    $row['Alto'] = number_format($row['Alto'], 2, ',', '.');
+                    $row['Ancho'] = number_format($row['Ancho'], 2, ',', '.');
+                    $row['Profundo'] = number_format($row['Profundo'], 2, ',', '.');
+                    $row['Peso'] = number_format($row['Peso'], 2, ',', '.');
+                    fputcsv($fp, $row, ';');
+                }
+                header('Content-Type: text/csv; charset=utf-8');
+                header("Content-Disposition: attachment; filename=todoslosproductos" . date('Ymd-His') . ".csv");
+                return;
+            }
+        }
+    }
 }
 
 //   Si no se llamó ningún método de la API     //

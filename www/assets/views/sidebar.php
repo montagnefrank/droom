@@ -73,12 +73,19 @@
             if ($perfil == "1" || $perfil == "6" || $perfil == "7") {
                 echo '
                 <li class="dashboard menuItem"><a href="/?show=dashboard#autoscroll"><i class="fas fa-tachometer-alt"></i><span class="xn-text"> Dashboard</span></a></li> 
-                <li class="pedidos menuItem"><a href="/?show=home#autoscroll"><i class="fas fa-clipboard-list"></i><span class="xn-text"> Pedidos</span></a></li> 
+                <li class="newpedido menuItem xn-openable">
+                    <a><i class="fas fa-scroll"></i></i><span class="xn-text"> Pedidos</span></a>
+                    <ul>
+                        <li><a href="/?show=home"><span class="fa fa-list"></span> Ver Todos</a></li>
+                        <li><a href="/?show=pedido/mesas"><i class="fa fa-table"></i> Mesas</a></li>
+                        <li><a href="/?show=pedido/productos">&nbsp;&nbsp;<i class="fas fa-pizza-slice"></i> &nbsp;&nbsp;&nbsp;&nbsp;Productos</a></li>
+                    </ul>
+                </li>
                 <li class="cocina menuItem"><a href="/?show=cocina#autoscroll"><i class="fas fa-fire"></i><span class="xn-text"> Cocina</span></a></li>
                 <li class="caja menuItem"><a href="/?show=caja#autoscroll"><i class="fas fa-credit-card"></i><span class="xn-text"> Caja</span></a></li> 
                 <li class="inventario menuItem"><a href="/?show=inventory"><i class="fas fa-sort-amount-up"></i><span class="xn-text"> Inventario</span></a></li> 
                 <li class="reporte menuItem"><a href="/?show=reportes"><i class="fas fa-chart-pie"></i><span class="xn-text"> Reportes</span></a></li>
-                <li class="entregas menuItem"><a href="/?show=users#autoscroll"><i class="fa fa-users"></i><span class="xn-text"> Usuarios</span></a></li>
+                <li class="usuarios menuItem"><a href="/?show=users#autoscroll"><i class="fa fa-users"></i><span class="xn-text"> Usuarios</span></a></li>
                 ';
             }
             if ($perfil == "2") {

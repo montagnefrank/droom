@@ -16,7 +16,7 @@
     <li class="xn-icon-button pull-right last">
         <a href="#"><span class="fa fa-power-off"></span></a>
         <ul class="xn-drop-left animated zoomIn">
-            <li><a href="index.php?panel=user_config.php" class="" data-box="#mb-signout"><span class="fa fa fa-cog"></span> Configurar</a></li>
+            <li><a href="/?show=config" class="" data-box="#mb-signout"><span class="fa fa fa-cog"></span> Configurar</a></li>
             <li><a href="#" class="mb-control" data-box="#mb-signout"><i class="fas fa-plug"></i> Salir</a></li>
         </ul>                        
     </li> 

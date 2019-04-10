@@ -24,8 +24,8 @@ if(isset($_POST["imagenNueva"])){
 
     session_start();
     $data = $_POST["imagenNueva"];
-    $target_dir = "../../img/users/";
-    file_put_contents($target_dir.$_SESSION["usuario"]["nombreUsuario"].'.jpg', base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data)));
+    $target_dir = "/api/assets/img/users/";
+    file_put_contents($target_dir.$_SESSION["usuario"]["idUsuario"].'.jpg', base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data)));
     echo true;
 }
 

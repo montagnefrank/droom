@@ -2,6 +2,7 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,500,600,700&subset=latin,latin-ext);
 @import "jquery/jquery-ui.min.css";
 @import "bootstrap/bootstrap.min.css";
+@import "fontawesome/font-awesome.min.css";
 @import "font-awesome/css/fontawesome.min.css";
 @import "summernote/summernote.css";
 @import "codemirror/codemirror.css";
@@ -3991,7 +3992,7 @@ a.list-group-item:focus {
     position: absolute;
     bottom: -15px;
     left: 50%;
-    background: #3fbae4;
+    background: #e43f3f;
     color: #FFF;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;

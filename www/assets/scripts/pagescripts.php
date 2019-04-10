@@ -79,15 +79,17 @@
 <script type='text/javascript' src='assets/node_modules/dragula/dist/dragula.min.js'></script>
 <script type='text/javascript' src='assets/node_modules/easy-autocomplete/dist/jquery.easy-autocomplete.min.js'></script>
 <script type='text/javascript' src='assets/js/plugins/filestyle/bootstrap-filestyle.min.js'></script>
+<script type="text/javascript" src="assets/js/plugins/fileinput/fileinput.min.js"></script> 
 <script type='text/javascript' src='assets/js/modalMultiple.js'></script>
 <script type='text/javascript' src='assets/salir/script_salir.js'></script>
 <script type="text/javascript" src="//cdn.rawgit.com/icons8/bower-webicon/v0.10.7/jquery-webicon.min.js"></script>
 <script src='assets/js/velocity.min.js'></script>
 <script src='assets/js/velocity.ui.min.js'></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.js"></script>
 <script>
 
     $(document).ready(function () {
-        $('.page-container form').submit(function (e) {
+        $('.page-container.login form').submit(function (e) {
             e.preventDefault();
             var username = $(this).find('.username').val();
             var password = $(this).find('.password').val();
@@ -147,9 +149,8 @@
     });
 
 ////////////////////////CERRAMOS LA VENTNA DE NOTIFICACION CON CLIC EN CUALQUIER PARTE DE LA PAGINA
-    $(document).on('click', function (e) {
-        $('#message-box-success,#message-box-danger').hide();
-        $(".notificactionbox,.customalert").animate({width: 'hide'}, 600);
+    $(document).on("click", function () {
+        $(".customalert").animate({width: 'hide'}, 600);
     });
 
     $('.numonly').bind('keyup blur', function () {
@@ -167,28 +168,17 @@
         node.val(node.val().replace(/[^a-zA-Z\-\s]/g, ''));
     });
 </script>
-<?php require ("modules/" . $module . "/scripts.php"); ?> 
-
 <?php
+
+require ("modules/" . $module . "/scripts.php");
 
 //
 //switch ($panel) {///////////////////////////////////////////////////////////////SELECTOR DE PANEL, DEPENDIENDO DEL PANEL HACE LAS LLAMADAS A LOS ARCHIVOS CORRESPONDINETES
-//    case "index.php":
-//        echo "<script type='text/javascript' src='assets/js/script_mesas.js'></script>";
-//        echo "<script type='text/javascript' src='assets/js/script_consultapedido.js'></script>";
-//        echo "<script type='text/javascript' src='assets/js/script_editapedido.js'></script>";
-//        break;
 //    case "cocina.php":
 //        echo "<script type='text/javascript' src='assets/cocina/scriptcocina.js'></script>";
 //        break;
 //    case "procesos.php":
 //        require ("assets/procesos/model.php");
-//        break;
-//    case "hacerpedido.php":
-//        echo "<script type='text/javascript' src='assets/js/script_hacerpedido.js'></script>";
-//        //estos scripts son los que inicializan el menu y el que lo crea y maneja
-//        //echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
-//        //echo "<script type='text/javascript' src='assets/js/script_start_menu_pedido.js'></script>";
 //        break;
 //    case "anadirpedido.php":
 //        echo "<script type='text/javascript' src='assets/js/script_anadirpedido.js'></script>";

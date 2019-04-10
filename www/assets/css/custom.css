@@ -31,8 +31,8 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
- 
- .wizard .btn-men{ 
+
+.wizard .btn-men{ 
     margin-top: 16px;
     margin-left: 16px;
     margin-right: 16px;
@@ -363,12 +363,10 @@ li{
 
 .fontx2 {
     font-size: 200%;
-    margin-bottom: 32px;
 }
 
 .fontx1-5 {
     font-size: 150%;
-    margin-bottom: 32px;
 }
 
 .top1 {
@@ -642,6 +640,10 @@ html, body {
     margin-top: 6px;
 }
 
+.pushdown8 {
+    margin-bottom: 8px;
+}
+
 .list_box {
     height:300px;
     overflow:auto;
@@ -676,14 +678,63 @@ html, body {
 
 .tile.tile-selected,.tile.tile-selected:hover {
     box-shadow: 10px 10px #3f79e4;
+    text-shadow: 2px 2px #480e56;
     background: #8db153;
     border-color: #79964b;
     color: #FFFFFF;
-    text-shadow: 2px 2px #480e56;
 }
 button {
     margin-top: 0px;
 }
 .btnflat{
-        height: 50%;
+    height: 50%;
+}
+.pedidoSingleModal{
+    font-weight: bold;
+    border: 2px solid #7a7a7a;
+    color: #434a54;
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 32px;
+    margin-top: 32px;
+    border-radius: 15px;
+}
+.menuPanel{
+    box-shadow: 10px 10px #a27a7a69;
+    text-shadow: 1px 1px #0f0e5652;
+}
+.menuPanel .panel-heading{
+    background-color: #ed4444;
+}
+.menuPanel .panel-footer{
+    background-color: #ed4444;
+}
+.menuPanel .panel-heading .panel-title{
+    color: white;
+}
+.menublockBtn button{
+    margin: 8px 0px 8px 0px;
+    box-shadow: 3px 3px #a27a7a69;
+    text-shadow: 2px 2px #0f0e5652;
+    width:100%
+}
+.menublockBtn button.selected{
+    background: #8db153;
+    border-color: #79964b;
+    color: #FFFFFF;
+}
+.menuitemImgSmall{
+ border: 2px solid #F5F5F5; 
+ border-radius: 50%; 
+ width: 40px; 
+ margin-right: 10px;
+}
+.itemMenuBg{
+    background: url('../../api/assets/img/tableitem.jpg') center center no-repeat;
+}
+.redbg{
+    background: #8c2828;
+}
+.panel .panel-body.panel-body-image .panel-body-inform-on {
+    background: #95b75d;
 }
