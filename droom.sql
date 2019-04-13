@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 100023
 File Encoding         : 65001
 
-Date: 2019-03-30 10:27:56
+Date: 2019-04-10 09:45:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -460,140 +460,142 @@ CREATE TABLE `mesa` (
   `idEstablecimiento` int(11) DEFAULT NULL,
   `numeroMesa` int(11) DEFAULT NULL,
   `estadoMesa` varchar(100) DEFAULT NULL,
+  `nivelMesa` varchar(255) DEFAULT NULL,
+  `textoMesa` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idMesa`) USING BTREE,
   KEY `idEstablecimiento` (`idEstablecimiento`) USING BTREE,
   CONSTRAINT `mesa_ibfk_1` FOREIGN KEY (`idEstablecimiento`) REFERENCES `establecimiento` (`idEstablecimiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of mesa
 -- ----------------------------
-INSERT INTO `mesa` VALUES ('1', '1', '1', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('2', '1', '2', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('3', '1', '3', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('4', '1', '4', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('5', '1', '5', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('6', '1', '6', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('7', '1', '7', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('8', '1', '8', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('9', '1', '9', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('10', '1', '10', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('11', '1', '11', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('12', '1', '12', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('13', '1', '13', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('14', '1', '14', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('15', '1', '15', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('16', '1', '16', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('17', '1', '17', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('18', '1', '18', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('19', '1', '19', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('20', '1', '20', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('21', '1', '21', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('22', '1', '22', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('23', '1', '23', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('24', '1', '24', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('25', '1', '25', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('26', '1', '26', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('27', '1', '27', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('28', '1', '28', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('29', '1', '29', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('30', '1', '30', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('31', '1', '31', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('32', '1', '32', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('33', '1', '33', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('34', '1', '34', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('35', '1', '35', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('36', '1', '36', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('37', '1', '37', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('38', '1', '38', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('39', '1', '39', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('40', '1', '40', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('41', '2', '1', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('42', '2', '2', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('43', '2', '3', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('44', '2', '4', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('45', '2', '5', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('46', '2', '6', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('47', '2', '7', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('48', '2', '8', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('49', '2', '9', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('50', '2', '10', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('51', '2', '11', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('52', '2', '12', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('53', '2', '13', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('54', '2', '14', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('55', '2', '15', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('56', '2', '16', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('57', '2', '17', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('58', '2', '18', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('59', '2', '19', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('60', '2', '20', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('61', '2', '21', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('62', '2', '22', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('63', '2', '23', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('64', '2', '24', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('65', '2', '25', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('66', '2', '26', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('67', '2', '27', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('68', '2', '28', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('69', '2', '29', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('70', '2', '30', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('71', '2', '31', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('72', '2', '32', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('73', '2', '33', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('74', '2', '34', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('75', '2', '35', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('76', '2', '36', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('77', '2', '37', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('78', '2', '38', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('79', '2', '39', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('80', '2', '40', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('81', '3', '1', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('82', '3', '2', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('83', '3', '3', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('84', '3', '4', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('85', '3', '5', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('86', '3', '6', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('87', '3', '7', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('88', '3', '8', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('89', '3', '9', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('90', '3', '10', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('91', '3', '11', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('92', '3', '12', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('93', '3', '13', 'OCUPADA');
-INSERT INTO `mesa` VALUES ('94', '3', '14', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('95', '3', '15', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('96', '3', '16', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('97', '3', '17', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('98', '3', '18', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('99', '3', '19', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('100', '3', '20', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('101', '3', '21', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('102', '3', '22', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('103', '3', '23', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('104', '3', '24', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('105', '3', '25', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('106', '3', '26', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('107', '3', '27', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('108', '3', '28', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('109', '3', '29', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('110', '3', '30', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('111', '3', '31', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('112', '3', '32', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('113', '3', '33', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('114', '3', '34', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('115', '3', '35', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('116', '3', '36', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('117', '3', '37', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('118', '3', '38', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('119', '3', '39', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('120', '3', '40', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('992', '2', '999', 'DOMICILIO');
-INSERT INTO `mesa` VALUES ('993', '3', '999', 'HABILITADA');
-INSERT INTO `mesa` VALUES ('994', '2', '999', 'PARA LLEVAR');
-INSERT INTO `mesa` VALUES ('995', '3', '999', 'PARA LLEVAR');
-INSERT INTO `mesa` VALUES ('996', '1', '999', 'PARA LLEVAR');
-INSERT INTO `mesa` VALUES ('999', '1', '999', 'DOMICILIO');
+INSERT INTO `mesa` VALUES ('1', '1', '1', 'OCUPADA', 'Piso 1', ' Mesa color verde');
+INSERT INTO `mesa` VALUES ('2', '1', '2', 'OCUPADA', 'Piso 2', ' Mesa 4 personas');
+INSERT INTO `mesa` VALUES ('3', '1', '3', 'HABILITADA', 'Piso 2', ' Mesa Redonda');
+INSERT INTO `mesa` VALUES ('4', '1', '4', 'HABILITADA', 'Piso 1', ' Mesa Cuadrada');
+INSERT INTO `mesa` VALUES ('5', '1', '5', 'HABILITADA', 'Piso 1', ' Mesa de la Derecha');
+INSERT INTO `mesa` VALUES ('6', '1', '6', 'OCUPADA', 'Piso 1', ' Mesa de la Izquierda roja');
+INSERT INTO `mesa` VALUES ('7', '1', '7', 'HABILITADA', 'Piso 2', ' ');
+INSERT INTO `mesa` VALUES ('8', '1', '8', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('9', '1', '9', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('10', '1', '10', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('11', '1', '11', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('12', '1', '12', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('13', '1', '13', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('14', '1', '14', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('15', '1', '15', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('16', '1', '16', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('17', '1', '17', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('18', '1', '18', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('19', '1', '19', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('20', '1', '20', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('21', '1', '21', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('22', '1', '22', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('23', '1', '23', 'HABILITADA', 'Exterior', ' ');
+INSERT INTO `mesa` VALUES ('24', '1', '24', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('25', '1', '25', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('26', '1', '26', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('27', '1', '27', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('28', '1', '28', 'HABILITADA', 'Terraza', ' ');
+INSERT INTO `mesa` VALUES ('29', '1', '29', 'HABILITADA', 'Terraza', ' ');
+INSERT INTO `mesa` VALUES ('30', '1', '30', 'HABILITADA', 'Terraza', ' ');
+INSERT INTO `mesa` VALUES ('31', '1', '31', 'HABILITADA', 'Terraza', ' ');
+INSERT INTO `mesa` VALUES ('32', '1', '32', 'HABILITADA', 'Terraza', ' ');
+INSERT INTO `mesa` VALUES ('33', '1', '33', 'HABILITADA', 'Terraza', ' ');
+INSERT INTO `mesa` VALUES ('34', '1', '34', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('35', '1', '35', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('36', '1', '36', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('37', '1', '37', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('38', '1', '38', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('39', '1', '39', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('40', '1', '40', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('41', '2', '1', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('42', '2', '2', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('43', '2', '3', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('44', '2', '4', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('45', '2', '5', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('46', '2', '6', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('47', '2', '7', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('48', '2', '8', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('49', '2', '9', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('50', '2', '10', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('51', '2', '11', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('52', '2', '12', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('53', '2', '13', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('54', '2', '14', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('55', '2', '15', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('56', '2', '16', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('57', '2', '17', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('58', '2', '18', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('59', '2', '19', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('60', '2', '20', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('61', '2', '21', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('62', '2', '22', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('63', '2', '23', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('64', '2', '24', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('65', '2', '25', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('66', '2', '26', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('67', '2', '27', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('68', '2', '28', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('69', '2', '29', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('70', '2', '30', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('71', '2', '31', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('72', '2', '32', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('73', '2', '33', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('74', '2', '34', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('75', '2', '35', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('76', '2', '36', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('77', '2', '37', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('78', '2', '38', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('79', '2', '39', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('80', '2', '40', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('81', '3', '1', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('82', '3', '2', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('83', '3', '3', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('84', '3', '4', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('85', '3', '5', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('86', '3', '6', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('87', '3', '7', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('88', '3', '8', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('89', '3', '9', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('90', '3', '10', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('91', '3', '11', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('92', '3', '12', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('93', '3', '13', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('94', '3', '14', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('95', '3', '15', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('96', '3', '16', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('97', '3', '17', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('98', '3', '18', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('99', '3', '19', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('100', '3', '20', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('101', '3', '21', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('102', '3', '22', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('103', '3', '23', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('104', '3', '24', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('105', '3', '25', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('106', '3', '26', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('107', '3', '27', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('108', '3', '28', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('109', '3', '29', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('110', '3', '30', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('111', '3', '31', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('112', '3', '32', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('113', '3', '33', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('114', '3', '34', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('115', '3', '35', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('116', '3', '36', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('117', '3', '37', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('118', '3', '38', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('119', '3', '39', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('120', '3', '40', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('992', '2', '999', 'DOMICILIO', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('993', '3', '999', 'HABILITADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('994', '2', '999', 'PARA LLEVAR', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('995', '3', '999', 'PARA LLEVAR', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('996', '1', '999', 'PARA LLEVAR', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('999', '1', '999', 'DOMICILIO', 'Piso 1', ' ');
 
 -- ----------------------------
 -- Table structure for pedido
@@ -610,7 +612,7 @@ CREATE TABLE `pedido` (
   KEY `idUsuario` (`idUsuario`) USING BTREE,
   CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`idMesa`) REFERENCES `mesa` (`idMesa`),
   CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=486 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=488 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of pedido
@@ -799,7 +801,7 @@ INSERT INTO `pedido` VALUES ('446', '95', '1', 'ENTREGADO', 'PAGADO');
 INSERT INTO `pedido` VALUES ('447', '15', '1', 'ENTREGADO', 'PAGADO');
 INSERT INTO `pedido` VALUES ('448', '57', '1', 'SOLICITADO', 'SIN PAGAR');
 INSERT INTO `pedido` VALUES ('449', '48', '1', 'SOLICITADO', 'SIN PAGAR');
-INSERT INTO `pedido` VALUES ('450', '10', '1', 'EN PROCESO', 'SIN PAGAR');
+INSERT INTO `pedido` VALUES ('450', '10', '1', 'SOLICITADO', 'SIN PAGAR');
 INSERT INTO `pedido` VALUES ('451', '994', '1', 'SOLICITADO', 'PAGADO');
 INSERT INTO `pedido` VALUES ('452', '994', '1', 'SOLICITADO', 'PAGADO');
 INSERT INTO `pedido` VALUES ('453', '993', '2', 'SOLICITADO', 'PAGADO');
@@ -827,6 +829,8 @@ INSERT INTO `pedido` VALUES ('482', '93', '33', 'SOLICITADO', 'SIN PAGAR');
 INSERT INTO `pedido` VALUES ('483', '89', '33', 'SOLICITADO', 'SIN PAGAR');
 INSERT INTO `pedido` VALUES ('484', '85', '33', 'SOLICITADO', 'SIN PAGAR');
 INSERT INTO `pedido` VALUES ('485', '86', '1', 'SOLICITADO', 'SIN PAGAR');
+INSERT INTO `pedido` VALUES ('486', '6', '1', 'SOLICITADO', 'SIN PAGAR');
+INSERT INTO `pedido` VALUES ('487', '1', '1', 'SOLICITADO', 'SIN PAGAR');
 
 -- ----------------------------
 -- Table structure for pedido_repartidor
@@ -872,7 +876,7 @@ CREATE TABLE `pedidoproducto` (
   KEY `idProducto` (`idProducto`) USING BTREE,
   CONSTRAINT `pedidoproducto_ibfk_1` FOREIGN KEY (`idPedido`) REFERENCES `pedido` (`idPedido`),
   CONSTRAINT `pedidoproducto_ibfk_2` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`idProducto`)
-) ENGINE=InnoDB AUTO_INCREMENT=938 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=946 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of pedidoproducto
@@ -1282,11 +1286,6 @@ INSERT INTO `pedidoproducto` VALUES ('864', '448', '15', 'Personalizada', 'SOLIC
 INSERT INTO `pedidoproducto` VALUES ('866', '449', '51', 'Combinada 1/4', 'SOLICITADO', '1', '');
 INSERT INTO `pedidoproducto` VALUES ('867', '449', '80', 'Unitario', 'SOLICITADO', '1', '');
 INSERT INTO `pedidoproducto` VALUES ('868', '428', '152', 'Unitario', 'SOLICITADO', '1', '');
-INSERT INTO `pedidoproducto` VALUES ('869', '450', '75', 'Unitario', 'EN PROCESO', '1', '');
-INSERT INTO `pedidoproducto` VALUES ('870', '450', '106', 'Unitario', 'ENTREGADO', '1', '');
-INSERT INTO `pedidoproducto` VALUES ('871', '450', '138', 'Unitario', 'ENTREGADO', '1', '');
-INSERT INTO `pedidoproducto` VALUES ('872', '450', '18', 'entera', 'EN PROCESO', '1', '');
-INSERT INTO `pedidoproducto` VALUES ('873', '450', '128', 'Unitario', 'EN PROCESO', '1', '');
 INSERT INTO `pedidoproducto` VALUES ('874', '451', '129', 'Unitario', 'ENTREGADO', '3', '');
 INSERT INTO `pedidoproducto` VALUES ('875', '452', '143', 'Unitario', 'ENTREGADO', '4', '');
 INSERT INTO `pedidoproducto` VALUES ('876', '453', '136', 'Unitario', 'ENTREGADO', '1', '');
@@ -1339,6 +1338,11 @@ INSERT INTO `pedidoproducto` VALUES ('934', '483', '142', 'Unitario', 'ENTREGADO
 INSERT INTO `pedidoproducto` VALUES ('935', '484', '68', 'Unitario', 'SOLICITADO', '1', '');
 INSERT INTO `pedidoproducto` VALUES ('936', '484', '133', 'Unitario', 'ENTREGADO', '1', '');
 INSERT INTO `pedidoproducto` VALUES ('937', '485', '71', 'Unitario', 'SOLICITADO', '4', '');
+INSERT INTO `pedidoproducto` VALUES ('939', '450', '18', 'Combinada 1/2', 'SOLICITADO', '5', '');
+INSERT INTO `pedidoproducto` VALUES ('942', '450', '128', 'Unitario', 'SOLICITADO', '6', ' chocolate vainilla mora\n');
+INSERT INTO `pedidoproducto` VALUES ('943', '486', '12', 'Personalizada', 'SOLICITADO', '1', '');
+INSERT INTO `pedidoproducto` VALUES ('944', '450', '88', 'Unitario', 'SOLICITADO', '1', '');
+INSERT INTO `pedidoproducto` VALUES ('945', '487', '86', 'Unitario', 'SOLICITADO', '1', '');
 
 -- ----------------------------
 -- Table structure for pedidoproductocombinado
@@ -1355,7 +1359,7 @@ CREATE TABLE `pedidoproductocombinado` (
   KEY `idProducto` (`idProducto`) USING BTREE,
   CONSTRAINT `pedidoproductocombinado_ibfk_1` FOREIGN KEY (`idPedidoproducto`) REFERENCES `pedidoproducto` (`idPedidoproducto`),
   CONSTRAINT `pedidoproductocombinado_ibfk_2` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`idProducto`)
-) ENGINE=InnoDB AUTO_INCREMENT=321 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=324 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of pedidoproductocombinado
@@ -1465,6 +1469,9 @@ INSERT INTO `pedidoproductocombinado` VALUES ('317', '884', '8', 'Personalizada'
 INSERT INTO `pedidoproductocombinado` VALUES ('318', '884', '12', 'Personalizada', 'SOLICITADO');
 INSERT INTO `pedidoproductocombinado` VALUES ('319', '891', '27', 'Combinada 1/2', 'SOLICITADO');
 INSERT INTO `pedidoproductocombinado` VALUES ('320', '931', '16', 'Combinada 1/2', 'SOLICITADO');
+INSERT INTO `pedidoproductocombinado` VALUES ('321', '943', '51', 'Personalizada', 'SOLICITADO');
+INSERT INTO `pedidoproductocombinado` VALUES ('322', '943', '39', 'Personalizada', 'SOLICITADO');
+INSERT INTO `pedidoproductocombinado` VALUES ('323', '943', '19', 'Personalizada', 'SOLICITADO');
 
 -- ----------------------------
 -- Table structure for pedprod_ing
@@ -1636,8 +1643,6 @@ INSERT INTO `pedprod_ing` VALUES ('624', '90', '848', 'agrega', '1');
 INSERT INTO `pedprod_ing` VALUES ('625', '2', '849', 'agrega', '1');
 INSERT INTO `pedprod_ing` VALUES ('626', '70', '850', 'agrega', '1');
 INSERT INTO `pedprod_ing` VALUES ('629', '6', '867', 'agrega', '1');
-INSERT INTO `pedprod_ing` VALUES ('630', '53', '870', 'agrega', '1');
-INSERT INTO `pedprod_ing` VALUES ('631', '98', '873', 'agrega', '1');
 INSERT INTO `pedprod_ing` VALUES ('632', '8', '881', 'agrega', '1');
 INSERT INTO `pedprod_ing` VALUES ('633', '22', '881', 'agrega', '1');
 INSERT INTO `pedprod_ing` VALUES ('634', '10', '882', 'agrega', '1');
@@ -1769,171 +1774,171 @@ CREATE TABLE `producto` (
 -- ----------------------------
 -- Records of producto
 -- ----------------------------
-INSERT INTO `producto` VALUES ('1', '11', 'Pizza Personal', '8.00', '10', null, '011');
-INSERT INTO `producto` VALUES ('2', '11', 'Pizza Mini', '13.49', '10', null, '012');
-INSERT INTO `producto` VALUES ('3', '11', 'Pizza Mediana', '16.79', '10', null, '013');
-INSERT INTO `producto` VALUES ('4', '11', 'Pizza Familiar', '21.38', '10', null, '014');
-INSERT INTO `producto` VALUES ('5', '12', 'Pizza Personal', '8.00', '10', null, '056');
-INSERT INTO `producto` VALUES ('6', '12', 'Pizza Mini', '13.49', '10', null, '057');
-INSERT INTO `producto` VALUES ('7', '12', 'Pizza Mediana', '16.79', '10', null, '058');
-INSERT INTO `producto` VALUES ('8', '12', 'Pizza Familiar', '21.38', '10', null, '059');
-INSERT INTO `producto` VALUES ('9', '13', 'Pizza Personal', '7.00', '10', null, '021');
-INSERT INTO `producto` VALUES ('10', '13', 'Pizza Mini', '13.23', '10', null, '022');
-INSERT INTO `producto` VALUES ('11', '13', 'Pizza Mediana', '16.29', '10', null, '023');
-INSERT INTO `producto` VALUES ('12', '13', 'Pizza Familiar', '20.36', '10', null, '024');
-INSERT INTO `producto` VALUES ('13', '14', 'Pizza Mini', '12.52', '10', null, '032');
-INSERT INTO `producto` VALUES ('14', '14', 'Pizza Mediana', '15.37', '10', null, '033');
-INSERT INTO `producto` VALUES ('15', '14', 'Pizza Familiar', '20.15', '10', null, '034');
-INSERT INTO `producto` VALUES ('16', '15', 'Pizza Personal', '6.21', '10', null, '041');
-INSERT INTO `producto` VALUES ('17', '15', 'Pizza Mini', '12.47', '10', null, '042');
-INSERT INTO `producto` VALUES ('18', '15', 'Pizza Mediana', '14.66', '10', null, '043');
-INSERT INTO `producto` VALUES ('19', '15', 'Pizza Familiar', '18.12', '10', null, '044');
-INSERT INTO `producto` VALUES ('20', '16', 'Pizza Personal', '6.21', '10', null, '091');
-INSERT INTO `producto` VALUES ('21', '16', 'Pizza Mini', '12.47', '10', null, '092');
-INSERT INTO `producto` VALUES ('22', '16', 'Pizza Mediana', '14.66', '10', null, '093');
-INSERT INTO `producto` VALUES ('23', '16', 'Pizza Familiar', '18.12', '10', null, '094');
-INSERT INTO `producto` VALUES ('24', '17', 'Pizza Personal', '6.62', '10', null, '025');
-INSERT INTO `producto` VALUES ('25', '17', 'Pizza Mini', '12.72', '10', null, '027');
-INSERT INTO `producto` VALUES ('26', '17', 'Pizza Mediana', '15.27', '10', null, '028');
-INSERT INTO `producto` VALUES ('27', '17', 'Pizza Familiar', '19.75', '10', null, '029');
-INSERT INTO `producto` VALUES ('28', '18', 'Pizza Personal', '6.62', '10', null, '016');
-INSERT INTO `producto` VALUES ('29', '18', 'Pizza Mini', '12.72', '10', null, '017');
-INSERT INTO `producto` VALUES ('30', '18', 'Pizza Mediana', '15.27', '10', null, '018');
-INSERT INTO `producto` VALUES ('31', '18', 'Pizza Familiar', '19.75', '10', null, '019');
-INSERT INTO `producto` VALUES ('32', '19', 'Pizza Personal', '6.61', '10', null, '061');
-INSERT INTO `producto` VALUES ('33', '19', 'Pizza Mini', '12.72', '10', null, '062');
-INSERT INTO `producto` VALUES ('34', '19', 'Pizza Mediana', '15.27', '10', null, '063');
-INSERT INTO `producto` VALUES ('35', '19', 'Pizza Familiar', '19.75', '10', null, '064');
-INSERT INTO `producto` VALUES ('36', '20', 'Pizza Personal', '6.61', '10', null, '046');
-INSERT INTO `producto` VALUES ('37', '20', 'Pizza Mini', '12.72', '10', null, '047');
-INSERT INTO `producto` VALUES ('38', '20', 'Pizza Mediana', '15.27', '10', null, '048');
-INSERT INTO `producto` VALUES ('39', '20', 'Pizza Familiar', '19.75', '10', null, '049');
-INSERT INTO `producto` VALUES ('40', '21', 'Pizza Personal', '6.61', '10', null, '071');
-INSERT INTO `producto` VALUES ('41', '21', 'Pizza Mini', '12.72', '10', null, '072');
-INSERT INTO `producto` VALUES ('42', '21', 'Pizza Mediana', '15.27', '10', null, '073');
-INSERT INTO `producto` VALUES ('43', '21', 'Pizza Familiar', '19.75', '10', null, '074');
-INSERT INTO `producto` VALUES ('44', '22', 'Pizza Personal', '6.61', '10', null, '036');
-INSERT INTO `producto` VALUES ('45', '22', 'Pizza Mini', '12.72', '10', null, '037');
-INSERT INTO `producto` VALUES ('46', '22', 'Pizza Mediana', '15.27', '10', null, '038');
-INSERT INTO `producto` VALUES ('47', '22', 'Pizza Familiar', '19.75', '10', null, '039');
-INSERT INTO `producto` VALUES ('48', '23', 'Pizza Personal', '6.51', '10', null, '051');
-INSERT INTO `producto` VALUES ('49', '23', 'Pizza Mini', '12.52', '10', null, '052');
-INSERT INTO `producto` VALUES ('50', '23', 'Pizza Mediana', '14.86', '10', null, '053');
-INSERT INTO `producto` VALUES ('51', '23', 'Pizza Familiar', '18.75', '10', null, '054');
-INSERT INTO `producto` VALUES ('52', '24', 'Pizza Personal', '6.51', '10', null, '081');
-INSERT INTO `producto` VALUES ('53', '24', 'Pizza Mini', '12.52', '10', null, '082');
-INSERT INTO `producto` VALUES ('54', '24', 'Pizza Mediana', '14.86', '10', null, '083');
-INSERT INTO `producto` VALUES ('55', '24', 'Pizza Familiar', '18.75', '10', null, '084');
-INSERT INTO `producto` VALUES ('56', '25', 'Pizza Personal', '6.51', '10', null, '101');
-INSERT INTO `producto` VALUES ('57', '25', 'Pizza Mini', '12.52', '10', null, '102');
-INSERT INTO `producto` VALUES ('58', '25', 'Pizza Mediana', '14.86', '10', null, '103');
-INSERT INTO `producto` VALUES ('59', '25', 'Pizza Familiar', '18.75', '10', null, '104');
-INSERT INTO `producto` VALUES ('60', '26', 'Pizza Personal', '5.60', '10', null, '111');
-INSERT INTO `producto` VALUES ('61', '26', 'Pizza Mini', '11.71', '10', null, '112');
-INSERT INTO `producto` VALUES ('62', '26', 'Pizza Mediana', '14.50', '10', null, '113');
-INSERT INTO `producto` VALUES ('63', '26', 'Pizza Familiar', '17.81', '10', null, '114');
-INSERT INTO `producto` VALUES ('64', '27', 'Pizza Personal', '4.58', '10', null, '121');
-INSERT INTO `producto` VALUES ('65', '27', 'Pizza Mini', '10.38', '10', null, '122');
-INSERT INTO `producto` VALUES ('66', '27', 'Pizza Mediana', '13.23', '10', null, '123');
-INSERT INTO `producto` VALUES ('67', '27', 'Pizza Familiar', '15.06', '10', null, '124');
-INSERT INTO `producto` VALUES ('68', '1', 'Di Rulo', '8.14', '10', null, '400');
-INSERT INTO `producto` VALUES ('69', '1', 'Verde', '5.09', '10', null, '161');
-INSERT INTO `producto` VALUES ('70', '1', 'Verde especial', '6.21', '10', null, '162');
-INSERT INTO `producto` VALUES ('71', '1', 'Cesar con pollo', '8.13', '10', null, '163');
-INSERT INTO `producto` VALUES ('72', '1', 'Ensalada Rusa', '5.70', '10', null, '164');
-INSERT INTO `producto` VALUES ('73', '1', 'Ensalada Capri', '7.13', '10', null, '165');
-INSERT INTO `producto` VALUES ('74', '2', 'Empanadas Colombianas', '1.73', '10', null, '174');
-INSERT INTO `producto` VALUES ('75', '2', 'Pan de ajo Di Rulo tradicional', '1.94', '10', null, '171');
-INSERT INTO `producto` VALUES ('76', '2', 'Pan de ajo Di Rulo con queso La Merced', '2.24', '10', null, '172');
-INSERT INTO `producto` VALUES ('77', '2', 'Porción de papas fritas', '2.85', '10', null, '181');
-INSERT INTO `producto` VALUES ('78', '2', 'Nuggets Dirulo', '5.50', '10', null, '179');
-INSERT INTO `producto` VALUES ('79', '2', 'Exquisito Chorizo Colombiano', '5.50', '10', null, '175');
-INSERT INTO `producto` VALUES ('80', '2', 'Hamburguesa Dirulo sencilla', '6.16', '10', null, '177');
-INSERT INTO `producto` VALUES ('81', '2', 'Hamburguesa Dirulo doble', '6.82', '10', null, '178');
-INSERT INTO `producto` VALUES ('82', '2', 'Picadita', '9.77', '10', null, '173');
-INSERT INTO `producto` VALUES ('83', '2', 'Sanduches de pernil ahumado', '3.56', '10', null, '401');
-INSERT INTO `producto` VALUES ('84', '2', 'Sanduches de Jamón', '3.05', '10', null, '402');
-INSERT INTO `producto` VALUES ('85', '3', 'Sopa del día', '6.21', '10', null, '403');
-INSERT INTO `producto` VALUES ('86', '4', 'Crema del día', '8.13', '10', null, '404');
-INSERT INTO `producto` VALUES ('87', '5', 'Alfredo', '7.38', '10', null, '151');
-INSERT INTO `producto` VALUES ('88', '5', 'Carbonara', '7.38', '10', null, '153');
-INSERT INTO `producto` VALUES ('89', '5', 'Bolognesa', '7.38', '10', null, '152');
-INSERT INTO `producto` VALUES ('90', '5', 'Camarón', '9.36', '10', null, '154');
-INSERT INTO `producto` VALUES ('91', '5', 'Al Pesto', '7.02', '10', null, '156');
-INSERT INTO `producto` VALUES ('92', '5', 'Vegetariano', '7.02', '10', null, '155');
-INSERT INTO `producto` VALUES ('93', '6', 'Lasaña Pollo', '7.38', '10', null, '141');
-INSERT INTO `producto` VALUES ('94', '6', 'Lasaña Carne', '7.38', '10', null, '142');
-INSERT INTO `producto` VALUES ('95', '6', 'Lasaña Mixta', '7.53', '10', null, '143');
-INSERT INTO `producto` VALUES ('96', '6', 'Lasaña de Camarones', '9.36', '10', null, '144');
-INSERT INTO `producto` VALUES ('97', '6', 'Lasaña Vegetariana', '7.02', '10', null, '145');
-INSERT INTO `producto` VALUES ('98', '7', 'Canelón de Carne', '6.84', '10', null, '405');
-INSERT INTO `producto` VALUES ('99', '7', 'Canelón de Pollo', '6.84', '10', null, '406');
-INSERT INTO `producto` VALUES ('100', '7', 'Canelón Mixto', '7.13', '10', null, '407');
-INSERT INTO `producto` VALUES ('101', '7', 'Canelón de Camarón', '9.11', '10', null, '408');
-INSERT INTO `producto` VALUES ('103', '8', 'Raviolis rellenos de Carne', '7.13', '10', null, '409');
-INSERT INTO `producto` VALUES ('104', '8', 'Raviolis Ricotta', '7.13', '10', null, '410');
-INSERT INTO `producto` VALUES ('105', '8', 'Raviolis de Hongos', '7.13', '10', null, '411');
-INSERT INTO `producto` VALUES ('106', '9', 'Fetuccini de Carne', '7.63', '10', null, '412');
-INSERT INTO `producto` VALUES ('107', '9', 'Fetuccini Vegetariano', '7.63', '10', null, '413');
-INSERT INTO `producto` VALUES ('108', '9', 'Fetuccini Al Pesto', '7.38', '10', null, '414');
-INSERT INTO `producto` VALUES ('109', '9', 'Fetuccini Carbonara', '7.38', '10', null, '415');
-INSERT INTO `producto` VALUES ('110', '10', 'Alitas BBQ', '7.02', '10', null, '176');
-INSERT INTO `producto` VALUES ('111', '10', 'Costillas BBQ', '12.21', '10', null, '180');
-INSERT INTO `producto` VALUES ('112', '10', 'Pernil de cerdo al horno', '8.14', '10', null, '416');
-INSERT INTO `producto` VALUES ('113', '10', 'Medallones de Pollo', '10.19', '10', null, '170');
-INSERT INTO `producto` VALUES ('114', '10', 'Piernitas BBQ', '8.04', '10', null, '417');
-INSERT INTO `producto` VALUES ('115', '10', 'Costillas ahumadas', '17.30', '10', null, '418');
-INSERT INTO `producto` VALUES ('116', '10', 'Chuletas de cerdo', '9.16', '10', null, '419');
-INSERT INTO `producto` VALUES ('117', '28', 'Crepes dulce con helado', '8.30', '10', null, '185');
-INSERT INTO `producto` VALUES ('118', '28', 'Crepes vegetariano', '6.41', '10', null, '186');
-INSERT INTO `producto` VALUES ('119', '28', 'Crepes de casa (champiñon)', '7.13', '10', null, '187');
-INSERT INTO `producto` VALUES ('120', '28', 'Crepes de Camarón', '9.36', '10', null, '188');
-INSERT INTO `producto` VALUES ('121', '29', 'Durazno con Crema', '8.30', '10', null, '190');
-INSERT INTO `producto` VALUES ('122', '29', 'Frutillas con Crema', '6.41', '10', null, '191');
-INSERT INTO `producto` VALUES ('123', '30', 'Ensalada de Frutas', '4.48', '10', null, '193');
-INSERT INTO `producto` VALUES ('124', '30', 'Ensalada de Frutas con Helado', '5.14', '10', null, '194');
-INSERT INTO `producto` VALUES ('125', '30', 'Ensalada de Frutas con Queso', '5.14', '10', null, '195');
-INSERT INTO `producto` VALUES ('126', '29', 'Banana Split', '6.16', '10', null, '192');
-INSERT INTO `producto` VALUES ('127', '31', 'Copa 2 sabores', '4.99', '10', null, '196');
-INSERT INTO `producto` VALUES ('128', '31', 'Copa 3 sabores', '5.50', '10', null, '197');
-INSERT INTO `producto` VALUES ('129', '32', 'Limonada vaso', '1.27', '10', null, '208');
-INSERT INTO `producto` VALUES ('130', '32', '1/2 Jarra de limonada vaso', '2.80', '10', null, '209');
-INSERT INTO `producto` VALUES ('131', '32', 'Jarra de limonada', '4.68', '10', null, '210');
-INSERT INTO `producto` VALUES ('132', '33', 'Té Botella', '1.28', '10', null, '420');
-INSERT INTO `producto` VALUES ('133', '33', 'Té hélado vaso', '1.22', '10', null, '211');
-INSERT INTO `producto` VALUES ('134', '33', '1/2 Jarra de Té', '2.95', '10', null, '212');
-INSERT INTO `producto` VALUES ('135', '33', 'Jarra de Té', '4.99', '10', null, '213');
-INSERT INTO `producto` VALUES ('136', '34', 'Milkshake', '2.75', '10', null, '223');
-INSERT INTO `producto` VALUES ('137', '35', 'Gaseosa pequeña', '1.12', '10', null, '421');
-INSERT INTO `producto` VALUES ('138', '35', 'Gaseosa 1/2 lts.', '1.43', '10', null, '422');
-INSERT INTO `producto` VALUES ('139', '35', 'Gaseosa 1/2 lts. diet', '1.53', '10', null, '423');
-INSERT INTO `producto` VALUES ('140', '35', 'Gaseosa 1.5 lts.', '2.39', '10', null, '424');
-INSERT INTO `producto` VALUES ('141', '35', 'Gaseosa 2.5 lts.', '2.95', '10', null, '425');
-INSERT INTO `producto` VALUES ('142', '36', 'Agua sin gas', '0.81', '10', null, '426');
-INSERT INTO `producto` VALUES ('143', '36', 'Agua con gas', '0.92', '10', null, '427');
-INSERT INTO `producto` VALUES ('144', '37', 'Cerveza pequeña', '1.83', '10', null, '428');
-INSERT INTO `producto` VALUES ('145', '37', 'Cerveza grande', '2.85', '10', null, '429');
-INSERT INTO `producto` VALUES ('146', '38', 'Agua Aromática', '1.12', '10', null, '230');
-INSERT INTO `producto` VALUES ('147', '39', 'Café', '1.43', '10', null, '227');
-INSERT INTO `producto` VALUES ('148', '39', 'Café con leche', '1.53', '10', null, '229');
-INSERT INTO `producto` VALUES ('149', '39', 'Capuchino', '2.39', '10', null, '228');
-INSERT INTO `producto` VALUES ('150', '40', 'Chocolate con queso', '2.95', '10', null, '231');
-INSERT INTO `producto` VALUES ('151', '41', 'Vaso de jugo', '1.83', '10', null, '205');
-INSERT INTO `producto` VALUES ('152', '41', '1/2 Jarra de jugo', '3.05', '10', null, '206');
-INSERT INTO `producto` VALUES ('153', '41', 'Jarra de jugo', '5.09', '10', null, '207');
-INSERT INTO `producto` VALUES ('154', '42', 'Batido vaso', '2.54', '10', null, '214');
-INSERT INTO `producto` VALUES ('155', '42', 'Batido 1/2 Jarra', '3.56', '10', null, '215');
-INSERT INTO `producto` VALUES ('156', '42', 'Batido Jarra', '6.11', '10', null, '216');
-INSERT INTO `producto` VALUES ('157', '43', 'Sangría Jarra', '13.94', '10', null, '241');
-INSERT INTO `producto` VALUES ('158', '43', 'Sangría 1/2 Jarra', '7.53', '10', null, '242');
-INSERT INTO `producto` VALUES ('159', '43', 'Champaña', '13.84', '10', null, '430');
-INSERT INTO `producto` VALUES ('160', '43', 'Vino', '23.21', '10', null, '431');
-INSERT INTO `producto` VALUES ('161', '43', '1/2 Vino', '13.84', '10', null, '432');
-INSERT INTO `producto` VALUES ('162', '43', '1/4 Vino', '9.16', '10', null, '433');
-INSERT INTO `producto` VALUES ('163', '43', 'Descorche', '5.70', '10', null, '434');
-INSERT INTO `producto` VALUES ('164', '44', 'Vaso de jugo', '2.04', '10', null, '435');
-INSERT INTO `producto` VALUES ('165', '44', '1/2 Jarra de jugo', '3.56', '10', null, '436');
-INSERT INTO `producto` VALUES ('166', '44', 'Jarra de jugo', '6.11', '10', null, '437');
+INSERT INTO `producto` VALUES ('1', '11', 'Pizza Personal', '8.00', '10', 'ACTIVO', '011');
+INSERT INTO `producto` VALUES ('2', '11', 'Pizza Mini', '13.49', '10', 'ACTIVO', '012');
+INSERT INTO `producto` VALUES ('3', '11', 'Pizza Mediana', '16.79', '10', 'ACTIVO', '013');
+INSERT INTO `producto` VALUES ('4', '11', 'Pizza Familiar', '21.38', '10', 'ACTIVO', '014');
+INSERT INTO `producto` VALUES ('5', '12', 'Pizza Personal', '8.00', '10', 'ACTIVO', '056');
+INSERT INTO `producto` VALUES ('6', '12', 'Pizza Mini', '13.49', '10', 'ACTIVO', '057');
+INSERT INTO `producto` VALUES ('7', '12', 'Pizza Mediana', '16.79', '10', 'ACTIVO', '058');
+INSERT INTO `producto` VALUES ('8', '12', 'Pizza Familiar', '21.38', '10', 'ACTIVO', '059');
+INSERT INTO `producto` VALUES ('9', '13', 'Pizza Personal', '7.00', '10', 'ACTIVO', '021');
+INSERT INTO `producto` VALUES ('10', '13', 'Pizza Mini', '13.23', '10', 'ACTIVO', '022');
+INSERT INTO `producto` VALUES ('11', '13', 'Pizza Mediana', '16.29', '10', 'ACTIVO', '023');
+INSERT INTO `producto` VALUES ('12', '13', 'Pizza Familiar', '20.36', '10', 'ACTIVO', '024');
+INSERT INTO `producto` VALUES ('13', '14', 'Pizza Mini', '12.52', '10', 'ACTIVO', '032');
+INSERT INTO `producto` VALUES ('14', '14', 'Pizza Mediana', '15.37', '10', 'ACTIVO', '033');
+INSERT INTO `producto` VALUES ('15', '14', 'Pizza Familiar', '20.15', '10', 'ACTIVO', '034');
+INSERT INTO `producto` VALUES ('16', '15', 'Pizza Personal', '6.21', '10', 'ACTIVO', '041');
+INSERT INTO `producto` VALUES ('17', '15', 'Pizza Mini', '12.47', '10', 'ACTIVO', '042');
+INSERT INTO `producto` VALUES ('18', '15', 'Pizza Mediana', '14.66', '10', 'ACTIVO', '043');
+INSERT INTO `producto` VALUES ('19', '15', 'Pizza Familiar', '18.12', '10', 'ACTIVO', '044');
+INSERT INTO `producto` VALUES ('20', '16', 'Pizza Personal', '6.21', '10', 'ACTIVO', '091');
+INSERT INTO `producto` VALUES ('21', '16', 'Pizza Mini', '12.47', '10', 'ACTIVO', '092');
+INSERT INTO `producto` VALUES ('22', '16', 'Pizza Mediana', '14.66', '10', 'ACTIVO', '093');
+INSERT INTO `producto` VALUES ('23', '16', 'Pizza Familiar', '18.12', '10', 'ACTIVO', '094');
+INSERT INTO `producto` VALUES ('24', '17', 'Pizza Personal', '6.62', '10', 'ACTIVO', '025');
+INSERT INTO `producto` VALUES ('25', '17', 'Pizza Mini', '12.72', '10', 'ACTIVO', '027');
+INSERT INTO `producto` VALUES ('26', '17', 'Pizza Mediana', '15.27', '10', 'ACTIVO', '028');
+INSERT INTO `producto` VALUES ('27', '17', 'Pizza Familiar', '19.75', '10', 'ACTIVO', '029');
+INSERT INTO `producto` VALUES ('28', '18', 'Pizza Personal', '6.62', '10', 'ACTIVO', '016');
+INSERT INTO `producto` VALUES ('29', '18', 'Pizza Mini', '12.72', '10', 'ACTIVO', '017');
+INSERT INTO `producto` VALUES ('30', '18', 'Pizza Mediana', '15.27', '10', 'ACTIVO', '018');
+INSERT INTO `producto` VALUES ('31', '18', 'Pizza Familiar', '19.75', '10', 'ACTIVO', '019');
+INSERT INTO `producto` VALUES ('32', '19', 'Pizza Personal', '6.61', '10', 'ACTIVO', '061');
+INSERT INTO `producto` VALUES ('33', '19', 'Pizza Mini', '12.72', '10', 'ACTIVO', '062');
+INSERT INTO `producto` VALUES ('34', '19', 'Pizza Mediana', '15.27', '10', 'ACTIVO', '063');
+INSERT INTO `producto` VALUES ('35', '19', 'Pizza Familiar', '19.75', '10', 'ACTIVO', '064');
+INSERT INTO `producto` VALUES ('36', '20', 'Pizza Personal', '6.61', '10', 'ACTIVO', '046');
+INSERT INTO `producto` VALUES ('37', '20', 'Pizza Mini', '12.72', '10', 'ACTIVO', '047');
+INSERT INTO `producto` VALUES ('38', '20', 'Pizza Mediana', '15.27', '10', 'ACTIVO', '048');
+INSERT INTO `producto` VALUES ('39', '20', 'Pizza Familiar', '19.75', '10', 'ACTIVO', '049');
+INSERT INTO `producto` VALUES ('40', '21', 'Pizza Personal', '6.61', '10', 'ACTIVO', '071');
+INSERT INTO `producto` VALUES ('41', '21', 'Pizza Mini', '12.72', '10', 'ACTIVO', '072');
+INSERT INTO `producto` VALUES ('42', '21', 'Pizza Mediana', '15.27', '10', 'ACTIVO', '073');
+INSERT INTO `producto` VALUES ('43', '21', 'Pizza Familiar', '19.75', '10', 'ACTIVO', '074');
+INSERT INTO `producto` VALUES ('44', '22', 'Pizza Personal', '6.61', '10', 'ACTIVO', '036');
+INSERT INTO `producto` VALUES ('45', '22', 'Pizza Mini', '12.72', '10', 'ACTIVO', '037');
+INSERT INTO `producto` VALUES ('46', '22', 'Pizza Mediana', '15.27', '10', 'ACTIVO', '038');
+INSERT INTO `producto` VALUES ('47', '22', 'Pizza Familiar', '19.75', '10', 'ACTIVO', '039');
+INSERT INTO `producto` VALUES ('48', '23', 'Pizza Personal', '6.51', '10', 'ACTIVO', '051');
+INSERT INTO `producto` VALUES ('49', '23', 'Pizza Mini', '12.52', '10', 'ACTIVO', '052');
+INSERT INTO `producto` VALUES ('50', '23', 'Pizza Mediana', '14.86', '10', 'ACTIVO', '053');
+INSERT INTO `producto` VALUES ('51', '23', 'Pizza Familiar', '18.75', '10', 'ACTIVO', '054');
+INSERT INTO `producto` VALUES ('52', '24', 'Pizza Personal', '6.51', '10', 'ACTIVO', '081');
+INSERT INTO `producto` VALUES ('53', '24', 'Pizza Mini', '12.52', '10', 'ACTIVO', '082');
+INSERT INTO `producto` VALUES ('54', '24', 'Pizza Mediana', '14.86', '10', 'ACTIVO', '083');
+INSERT INTO `producto` VALUES ('55', '24', 'Pizza Familiar', '18.75', '10', 'ACTIVO', '084');
+INSERT INTO `producto` VALUES ('56', '25', 'Pizza Personal', '6.51', '10', 'ACTIVO', '101');
+INSERT INTO `producto` VALUES ('57', '25', 'Pizza Mini', '12.52', '10', 'ACTIVO', '102');
+INSERT INTO `producto` VALUES ('58', '25', 'Pizza Mediana', '14.86', '10', 'ACTIVO', '103');
+INSERT INTO `producto` VALUES ('59', '25', 'Pizza Familiar', '18.75', '10', 'ACTIVO', '104');
+INSERT INTO `producto` VALUES ('60', '26', 'Pizza Personal', '5.60', '10', 'ACTIVO', '111');
+INSERT INTO `producto` VALUES ('61', '26', 'Pizza Mini', '11.71', '10', 'ACTIVO', '112');
+INSERT INTO `producto` VALUES ('62', '26', 'Pizza Mediana', '14.50', '10', 'ACTIVO', '113');
+INSERT INTO `producto` VALUES ('63', '26', 'Pizza Familiar', '17.81', '10', 'ACTIVO', '114');
+INSERT INTO `producto` VALUES ('64', '27', 'Pizza Personal', '4.58', '10', 'ACTIVO', '121');
+INSERT INTO `producto` VALUES ('65', '27', 'Pizza Mini', '10.38', '10', 'ACTIVO', '122');
+INSERT INTO `producto` VALUES ('66', '27', 'Pizza Mediana', '13.23', '10', 'ACTIVO', '123');
+INSERT INTO `producto` VALUES ('67', '27', 'Pizza Familiar', '15.06', '10', 'ACTIVO', '124');
+INSERT INTO `producto` VALUES ('68', '1', 'Di Rulo', '8.14', '10', 'ACTIVO', '400');
+INSERT INTO `producto` VALUES ('69', '1', 'Verde', '5.09', '10', 'ACTIVO', '161');
+INSERT INTO `producto` VALUES ('70', '1', 'Verde especial', '6.21', '10', 'ACTIVO', '162');
+INSERT INTO `producto` VALUES ('71', '1', 'Cesar con pollo', '8.13', '10', 'ACTIVO', '163');
+INSERT INTO `producto` VALUES ('72', '1', 'Ensalada Rusa', '5.70', '10', 'ACTIVO', '164');
+INSERT INTO `producto` VALUES ('73', '1', 'Ensalada Capri', '7.13', '10', 'ACTIVO', '165');
+INSERT INTO `producto` VALUES ('74', '2', 'Empanadas Colombianas', '1.73', '10', 'ACTIVO', '174');
+INSERT INTO `producto` VALUES ('75', '2', 'Pan de ajo Di Rulo tradicional', '1.94', '10', 'ACTIVO', '171');
+INSERT INTO `producto` VALUES ('76', '2', 'Pan de ajo Di Rulo con queso La Merced', '2.24', '10', 'ACTIVO', '172');
+INSERT INTO `producto` VALUES ('77', '2', 'Porción de papas fritas', '2.85', '10', 'ACTIVO', '181');
+INSERT INTO `producto` VALUES ('78', '2', 'Nuggets Dirulo', '5.50', '10', 'ACTIVO', '179');
+INSERT INTO `producto` VALUES ('79', '2', 'Exquisito Chorizo Colombiano', '5.50', '10', 'ACTIVO', '175');
+INSERT INTO `producto` VALUES ('80', '2', 'Hamburguesa Dirulo sencilla', '6.16', '10', 'ACTIVO', '177');
+INSERT INTO `producto` VALUES ('81', '2', 'Hamburguesa Dirulo doble', '6.82', '10', 'ACTIVO', '178');
+INSERT INTO `producto` VALUES ('82', '2', 'Picadita', '9.77', '10', 'ACTIVO', '173');
+INSERT INTO `producto` VALUES ('83', '2', 'Sanduches de pernil ahumado', '3.56', '10', 'ACTIVO', '401');
+INSERT INTO `producto` VALUES ('84', '2', 'Sanduches de Jamón', '3.05', '10', 'ACTIVO', '402');
+INSERT INTO `producto` VALUES ('85', '3', 'Sopa del día', '6.21', '10', 'ACTIVO', '403');
+INSERT INTO `producto` VALUES ('86', '4', 'Crema del día', '8.13', '10', 'ACTIVO', '404');
+INSERT INTO `producto` VALUES ('87', '5', 'Alfredo', '7.38', '10', 'ACTIVO', '151');
+INSERT INTO `producto` VALUES ('88', '5', 'Carbonara', '7.38', '10', 'ACTIVO', '153');
+INSERT INTO `producto` VALUES ('89', '5', 'Bolognesa', '7.38', '10', 'ACTIVO', '152');
+INSERT INTO `producto` VALUES ('90', '5', 'Camarón', '9.36', '10', 'ACTIVO', '154');
+INSERT INTO `producto` VALUES ('91', '5', 'Al Pesto', '7.02', '10', 'ACTIVO', '156');
+INSERT INTO `producto` VALUES ('92', '5', 'Vegetariano', '7.02', '10', 'ACTIVO', '155');
+INSERT INTO `producto` VALUES ('93', '6', 'Lasaña Pollo', '7.38', '10', 'ACTIVO', '141');
+INSERT INTO `producto` VALUES ('94', '6', 'Lasaña Carne', '7.38', '10', 'ACTIVO', '142');
+INSERT INTO `producto` VALUES ('95', '6', 'Lasaña Mixta', '7.53', '10', 'ACTIVO', '143');
+INSERT INTO `producto` VALUES ('96', '6', 'Lasaña de Camarones', '9.36', '10', 'ACTIVO', '144');
+INSERT INTO `producto` VALUES ('97', '6', 'Lasaña Vegetariana', '7.02', '10', 'ACTIVO', '145');
+INSERT INTO `producto` VALUES ('98', '7', 'Canelón de Carne', '6.84', '10', 'ACTIVO', '405');
+INSERT INTO `producto` VALUES ('99', '7', 'Canelón de Pollo', '6.84', '10', 'ACTIVO', '406');
+INSERT INTO `producto` VALUES ('100', '7', 'Canelón Mixto', '7.13', '10', 'ACTIVO', '407');
+INSERT INTO `producto` VALUES ('101', '7', 'Canelón de Camarón', '9.11', '10', 'ACTIVO', '408');
+INSERT INTO `producto` VALUES ('103', '8', 'Raviolis rellenos de Carne', '7.13', '10', 'ACTIVO', '409');
+INSERT INTO `producto` VALUES ('104', '8', 'Raviolis Ricotta', '7.13', '10', 'ACTIVO', '410');
+INSERT INTO `producto` VALUES ('105', '8', 'Raviolis de Hongos', '7.13', '10', 'ACTIVO', '411');
+INSERT INTO `producto` VALUES ('106', '9', 'Fetuccini de Carne', '7.63', '10', 'ACTIVO', '412');
+INSERT INTO `producto` VALUES ('107', '9', 'Fetuccini Vegetariano', '7.63', '10', 'ACTIVO', '413');
+INSERT INTO `producto` VALUES ('108', '9', 'Fetuccini Al Pesto', '7.38', '10', 'ACTIVO', '414');
+INSERT INTO `producto` VALUES ('109', '9', 'Fetuccini Carbonara', '7.38', '10', 'ACTIVO', '415');
+INSERT INTO `producto` VALUES ('110', '10', 'Alitas BBQ', '7.02', '10', 'ACTIVO', '176');
+INSERT INTO `producto` VALUES ('111', '10', 'Costillas BBQ', '12.21', '10', 'ACTIVO', '180');
+INSERT INTO `producto` VALUES ('112', '10', 'Pernil de cerdo al horno', '8.14', '10', 'ACTIVO', '416');
+INSERT INTO `producto` VALUES ('113', '10', 'Medallones de Pollo', '10.19', '10', 'ACTIVO', '170');
+INSERT INTO `producto` VALUES ('114', '10', 'Piernitas BBQ', '8.04', '10', 'ACTIVO', '417');
+INSERT INTO `producto` VALUES ('115', '10', 'Costillas ahumadas', '17.30', '10', 'ACTIVO', '418');
+INSERT INTO `producto` VALUES ('116', '10', 'Chuletas de cerdo', '9.16', '10', 'ACTIVO', '419');
+INSERT INTO `producto` VALUES ('117', '28', 'Crepes dulce con helado', '8.30', '10', 'ACTIVO', '185');
+INSERT INTO `producto` VALUES ('118', '28', 'Crepes vegetariano', '6.41', '10', 'ACTIVO', '186');
+INSERT INTO `producto` VALUES ('119', '28', 'Crepes de casa (champiñon)', '7.13', '10', 'ACTIVO', '187');
+INSERT INTO `producto` VALUES ('120', '28', 'Crepes de Camarón', '9.36', '10', 'ACTIVO', '188');
+INSERT INTO `producto` VALUES ('121', '29', 'Durazno con Crema', '8.30', '10', 'ACTIVO', '190');
+INSERT INTO `producto` VALUES ('122', '29', 'Frutillas con Crema', '6.41', '10', 'ACTIVO', '191');
+INSERT INTO `producto` VALUES ('123', '30', 'Ensalada de Frutas', '4.48', '10', 'ACTIVO', '193');
+INSERT INTO `producto` VALUES ('124', '30', 'Ensalada de Frutas con Helado', '5.14', '10', 'ACTIVO', '194');
+INSERT INTO `producto` VALUES ('125', '30', 'Ensalada de Frutas con Queso', '5.14', '10', 'ACTIVO', '195');
+INSERT INTO `producto` VALUES ('126', '29', 'Banana Split', '6.16', '10', 'ACTIVO', '192');
+INSERT INTO `producto` VALUES ('127', '31', 'Copa 2 sabores', '4.99', '10', 'ACTIVO', '196');
+INSERT INTO `producto` VALUES ('128', '31', 'Copa 3 sabores', '5.50', '10', 'ACTIVO', '197');
+INSERT INTO `producto` VALUES ('129', '32', 'Limonada vaso', '1.27', '10', 'ACTIVO', '208');
+INSERT INTO `producto` VALUES ('130', '32', '1/2 Jarra de limonada vaso', '2.80', '10', 'ACTIVO', '209');
+INSERT INTO `producto` VALUES ('131', '32', 'Jarra de limonada', '4.68', '10', 'ACTIVO', '210');
+INSERT INTO `producto` VALUES ('132', '33', 'Té Botella', '1.28', '10', 'ACTIVO', '420');
+INSERT INTO `producto` VALUES ('133', '33', 'Té hélado vaso', '1.22', '10', 'ACTIVO', '211');
+INSERT INTO `producto` VALUES ('134', '33', '1/2 Jarra de Té', '2.95', '10', 'ACTIVO', '212');
+INSERT INTO `producto` VALUES ('135', '33', 'Jarra de Té', '4.99', '10', 'ACTIVO', '213');
+INSERT INTO `producto` VALUES ('136', '34', 'Milkshake', '2.75', '10', 'ACTIVO', '223');
+INSERT INTO `producto` VALUES ('137', '35', 'Gaseosa pequeña', '1.12', '10', 'ACTIVO', '421');
+INSERT INTO `producto` VALUES ('138', '35', 'Gaseosa 1/2 lts.', '1.43', '10', 'ACTIVO', '422');
+INSERT INTO `producto` VALUES ('139', '35', 'Gaseosa 1/2 lts. diet', '1.53', '10', 'ACTIVO', '423');
+INSERT INTO `producto` VALUES ('140', '35', 'Gaseosa 1.5 lts.', '2.39', '10', 'ACTIVO', '424');
+INSERT INTO `producto` VALUES ('141', '35', 'Gaseosa 2.5 lts.', '2.95', '10', 'ACTIVO', '425');
+INSERT INTO `producto` VALUES ('142', '36', 'Agua sin gas', '0.81', '10', 'ACTIVO', '426');
+INSERT INTO `producto` VALUES ('143', '36', 'Agua con gas', '0.92', '10', 'ACTIVO', '427');
+INSERT INTO `producto` VALUES ('144', '37', 'Cerveza pequeña', '1.83', '10', 'ACTIVO', '428');
+INSERT INTO `producto` VALUES ('145', '37', 'Cerveza grande', '2.85', '10', 'ACTIVO', '429');
+INSERT INTO `producto` VALUES ('146', '38', 'Agua Aromática', '1.12', '10', 'ACTIVO', '230');
+INSERT INTO `producto` VALUES ('147', '39', 'Café', '1.43', '10', 'ACTIVO', '227');
+INSERT INTO `producto` VALUES ('148', '39', 'Café con leche', '1.53', '10', 'ACTIVO', '229');
+INSERT INTO `producto` VALUES ('149', '39', 'Capuchino', '2.39', '10', 'ACTIVO', '228');
+INSERT INTO `producto` VALUES ('150', '40', 'Chocolate con queso', '2.95', '10', 'ACTIVO', '231');
+INSERT INTO `producto` VALUES ('151', '41', 'Vaso de jugo', '1.83', '10', 'ACTIVO', '205');
+INSERT INTO `producto` VALUES ('152', '41', '1/2 Jarra de jugo', '3.05', '10', 'ACTIVO', '206');
+INSERT INTO `producto` VALUES ('153', '41', 'Jarra de jugo', '5.09', '10', 'ACTIVO', '207');
+INSERT INTO `producto` VALUES ('154', '42', 'Batido vaso', '2.54', '10', 'ACTIVO', '214');
+INSERT INTO `producto` VALUES ('155', '42', 'Batido 1/2 Jarra', '3.56', '10', 'ACTIVO', '215');
+INSERT INTO `producto` VALUES ('156', '42', 'Batido Jarra', '6.11', '10', 'ACTIVO', '216');
+INSERT INTO `producto` VALUES ('157', '43', 'Sangría Jarra', '13.94', '10', 'ACTIVO', '241');
+INSERT INTO `producto` VALUES ('158', '43', 'Sangría 1/2 Jarra', '7.53', '10', 'ACTIVO', '242');
+INSERT INTO `producto` VALUES ('159', '43', 'Champaña', '13.84', '10', 'ACTIVO', '430');
+INSERT INTO `producto` VALUES ('160', '43', 'Vino', '23.21', '10', 'ACTIVO', '431');
+INSERT INTO `producto` VALUES ('161', '43', '1/2 Vino', '13.84', '10', 'ACTIVO', '432');
+INSERT INTO `producto` VALUES ('162', '43', '1/4 Vino', '9.16', '10', 'ACTIVO', '433');
+INSERT INTO `producto` VALUES ('163', '43', 'Descorche', '5.70', '10', 'ACTIVO', '434');
+INSERT INTO `producto` VALUES ('164', '44', 'Vaso de jugo', '2.04', '10', 'ACTIVO', '435');
+INSERT INTO `producto` VALUES ('165', '44', '1/2 Jarra de jugo', '3.56', '10', 'ACTIVO', '436');
+INSERT INTO `producto` VALUES ('166', '44', 'Jarra de jugo', '6.11', '10', 'ACTIVO', '437');
 
 -- ----------------------------
 -- Table structure for productoingrediente
@@ -2421,6 +2426,46 @@ INSERT INTO `productoingrediente` VALUES ('475', '116', '105');
 INSERT INTO `productoingrediente` VALUES ('476', '116', '68');
 
 -- ----------------------------
+-- Table structure for productos
+-- ----------------------------
+DROP TABLE IF EXISTS `productos`;
+CREATE TABLE `productos` (
+  `idProducto` int(11) NOT NULL AUTO_INCREMENT,
+  `idMenu` varchar(255) DEFAULT NULL,
+  `nombreProducto` varchar(255) DEFAULT NULL,
+  `descProducto` varchar(255) DEFAULT NULL,
+  `precioProducto` varchar(255) DEFAULT NULL,
+  `estadoProducto` varchar(255) DEFAULT NULL,
+  `skuProducto` varchar(255) DEFAULT NULL,
+  `imgProducto` varchar(255) DEFAULT NULL,
+  `varsProducto` varchar(255) DEFAULT NULL,
+  `ingsProducto` varchar(255) DEFAULT NULL,
+  `tamProducto` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`idProducto`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of productos
+-- ----------------------------
+INSERT INTO `productos` VALUES ('1', '1', 'Ensalada Verde', 'ensalada verde fresca', '12.55', 'ACTIVO', 'DJE2234', '01', 'Con nada', '3', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('2', '1', 'Ensalada Capri', 'Ensalada Italiana', '4.52', 'ACTIVO', 'DDD098', '01', 'Con Queso, Con Pan', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('3', '1', 'Ensalada Verde Especial', 'Ensalada con queso Bufalo', '15.23', 'ACTIVO', 'EERD34', '01', 'Con aceite de Oliva, Con aceite de almendra', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('4', '2', 'Nuggets Dirulo', '6 Unidades', '8.65', 'ACTIVO', 'ERFDEDF', '01', 'Con papas Fritas, Con Papas asadas', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('5', '2', 'Sanduches de pernil ahumado', 'Sanduche 15cm', '20', 'ACTIVO', 'ERE432', '01', 'Pan INtegral, Pan de Ajonjoli', '58,74,15,85', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('6', '2', 'Empanadas Colombianas', 'De carne y pollo', '2', 'ACTIVO', 'QASWE', '01', 'Con Lechuga,Con Berro', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('7', '3', 'Costillas ahumadas', 'En salsa barbacoa', '17.50', 'ACTIVO', 'AWD432', '01', 'Con Queso, Con Pan', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('8', '3', 'Piernitas BBQ', 'Piernas de Chancho', '8.20', 'ACTIVO', 'EE432', '01', 'Con aceite de Oliva, Con aceite de almendra', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('9', '4', 'Pizza MArgarita', 'Queso y salsa', '11', 'ACTIVO', 'PIZ123', '01', 'Con papas Fritas, Con Papas asadas', '58,74,15,85', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('10', '4', 'Pizza Hawaiana', 'Piña', '14', 'ACTIVO', 'RUN1092', '01', 'Pan INtegral, Pan de Ajonjoli', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('11', '4', 'Pizza 4 Estaciones', 'Queso, Carne, Pollo, Salchicha', '22', 'ACTIVO', 'REH432', '01', 'Con Lechuga,Con Berro', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('12', '4', 'Pizza Napolitana', 'Salsa especial', '18', 'ACTIVO', 'AWDAW12', '01', 'Con Queso, Con Pan', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('13', '5', 'Crepes dulce con helado', 'Crepe postre', '6', 'ACTIVO', 'AAASD', '01', 'Con aceite de Oliva, Con aceite de almendra', '58,74,15,85', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('14', '5', 'Durazno con Crema', 'Crema chantilli', '7', 'ACTIVO', 'RUEJ4542', '01', 'Con papas Fritas, Con Papas asadas', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('15', '6', 'Gaseosa 1.5 lts.', 'Helada o al clima', '5', 'ACTIVO', 'ALDI654', '01', 'Pan INtegral, Pan de Ajonjoli', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('16', '6', 'Té Botella', 'De limon', '2', 'ACTIVO', 'ADJEU', '01', 'Con Lechuga,Con Berro', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('18', '4', 'Pizza Cuadrada', 'asombrosa', '22.45', 'ACTIVO', 'AAA', '01', 'Regular,y rectangular', '3,15,18', 'Pequeña:0,Mediana:5.0,Grande:8');
+
+-- ----------------------------
 -- Table structure for repartidores
 -- ----------------------------
 DROP TABLE IF EXISTS `repartidores`;
@@ -2607,32 +2652,32 @@ CREATE TABLE `usuario` (
 -- ----------------------------
 -- Records of usuario
 -- ----------------------------
-INSERT INTO `usuario` VALUES ('1', 'burton', 'Burton', '7', '154789', '2017-02-01', 'Frank', 'Cargua', '2', '1', 'green', null);
-INSERT INTO `usuario` VALUES ('2', 'Frank1234@', 'frank', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '3', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('3', 'burton', 'burton', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '3', '1', 'red', null);
-INSERT INTO `usuario` VALUES ('4', 'Luist1234@', 'luist', '1', '1547896548', '2017-02-01', 'Burton', 'Burton', '2', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('1', 'frankfrank', 'burton', '7', '154789', '2017-02-01', 'Frank', 'Montagne', '1', '1', 'green', '2019-04-10 09:42:38');
+INSERT INTO `usuario` VALUES ('2', 'Frank1234@', 'frank', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('3', 'burtontech', 'burtontech', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '1', '1', 'red', null);
+INSERT INTO `usuario` VALUES ('4', 'Luist1234@', 'luist', '1', '1547896548', '2017-02-01', 'Burton', 'Burton', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('6', 'Suschi1234@', 'suschi', '3', '1312855537', '2017-02-01', 'SUSANA ROCIO', 'CHINGA PONCE', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('7', 'Joscor1234@', 'joscor', '5', '0705670123', '2015-01-19', 'JOSE LUIS', 'CORDOVA CALERO', '1', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('8', 'Marflo1234@', 'marflo', '3', '0502799356', '2017-01-30', 'MARINA VERONICA', 'FLORES PUCUJI', '3', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('9', 'Adrher1234@', 'adrher', '2', '6102426159', '2016-07-18', 'ADRIANA MARIA ', 'HERNANDEZ GOZALES', '3', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('10', 'Jefgao1234@', 'jefgao', '2', '1104107592', '2016-09-01', 'JEFFERSON DAVID', 'GAONA ALVAREZ', null, '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('11', 'Oscgri1234@', 'oscgri', '2', '6102425870', '2016-07-18', 'OSCAR JULIAN  ', 'GRISALES SANCHEZ ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('8', 'Marflo1234@', 'marflo', '3', '0502799356', '2017-01-30', 'MARINA VERONICA', 'FLORES PUCUJI', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('9', 'Adrher1234@', 'adrher', '2', '6102426159', '2016-07-18', 'ADRIANA MARIA ', 'HERNANDEZ GOZALES', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('10', 'Jefgao1234@', 'jefgao', '2', '1104107592', '2016-09-01', 'JEFFERSON DAVID', 'GAONA ALVAREZ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('11', 'Oscgri1234@', 'oscgri', '2', '6102425870', '2016-07-18', 'OSCAR JULIAN  ', 'GRISALES SANCHEZ ', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('13', 'Pathor1234@', 'pathor', '3', '1727011940', '2011-11-01', 'PATRICIA VIVIANA', 'HORTA SANGACHA', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('14', 'Luzmar1234@', 'luzmar', '6', '1709472102', '2007-02-01', 'LUZ MERY', 'MARTINEZ RODRIGUEZ', '1', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('15', 'Milpuc1234@', 'milpuc', '4', '1720722576', '2017-04-01', 'MILTON IVAN', 'PUCHA DIAZ', '3', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('17', 'Marsan1234@', 'marsan', '2', '1725848913', '2011-04-11', 'MARIA ALTAGRACIA', 'SANTANA PIO', '2', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('18', 'Cartor1234@', 'cartor', '1', '1712918406', '2009-02-1', 'CARLOS ALBERTO', 'TORRES MARTINEZ', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('15', 'Milpuc1234@', 'milpuc', '4', '1720722576', '2017-04-01', 'MILTON IVAN', 'PUCHA DIAZ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('17', 'Marsan1234@', 'marsan', '2', '1725848913', '2011-04-11', 'MARIA ALTAGRACIA', 'SANTANA PIO', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('18', 'Cartor1234@', 'cartor', '1', '1712918406', '2009-02-1', 'CARLOS ALBERTO', 'TORRES MARTINEZ', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('19', 'Luitor1234@', 'luitor', '1', '1714444013', '2011-07-01', 'LUIS ALFONSO', 'TORRES MARTINEZ', '1', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('20', 'Martor1234@', 'martor', '1', '1716855901', '2009-02-01', 'MARCELA LILIANA', 'TORRES MARTINEZ ', null, '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('22', 'Martub1234@', 'martub', '2', '1721183968', '2009-01-30', 'MARIA CATALINA', 'TUBAY BRAVO', '2', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('23', 'Leiver1234@', 'leiver', '3', '1315673788', '2016-05-05', 'LEIDY IRENE', 'VERA LUZARDO', '2', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('24', 'Sulvin1234@', 'sulvin', '2', '1709042616', '2012-04-12', 'SULMIRA FLORIDALBA', 'VINUEZA ALCIVAR', null, '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('25', 'Andzuñ1234@', 'andzuñ', '2', '0925236770', '2016-06-01', 'ANDREA CAROLINA ', 'ZUÑIGA SANCHEZ ', null, '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('26', 'Galzam1234@', 'galzam', '4', '0705422517', '2013-05-01', 'GALO JULIAN', 'ZAMORA CARDONA', '3', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('27', 'Floavi1234@', 'floavi', '2', '2017', '2017-02-13', 'FLORA ANGELICA', 'AVILA JIMENEZ ', '2', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('28', 'Pauqui1234@', 'pauqui', '4', '2017', '2017-02-01', 'PAUL MAXIMILIANO', 'QUIJIJE QUINTANA', null, '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('29', 'Ronrey1234@', 'ronrey', '2', '2017', '2017-05-17', 'RONNY SEBASTIAN', 'REYES SANTAMARIA', null, '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('30', 'Danriv1234@', 'danriv', '2', '2017', '2017-02-17', 'DANNY JAVIER', 'RIVERA LOOR ', null, '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('20', 'Martor1234@', 'martor', '1', '1716855901', '2009-02-01', 'MARCELA LILIANA', 'TORRES MARTINEZ ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('22', 'Martub1234@', 'martub', '2', '1721183968', '2009-01-30', 'MARIA CATALINA', 'TUBAY BRAVO', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('23', 'Leiver1234@', 'leiver', '3', '1315673788', '2016-05-05', 'LEIDY IRENE', 'VERA LUZARDO', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('24', 'Sulvin1234@', 'sulvin', '2', '1709042616', '2012-04-12', 'SULMIRA FLORIDALBA', 'VINUEZA ALCIVAR', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('25', 'Andzuñ1234@', 'andzuñ', '2', '0925236770', '2016-06-01', 'ANDREA CAROLINA ', 'ZUÑIGA SANCHEZ ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('26', 'Galzam1234@', 'galzam', '4', '0705422517', '2013-05-01', 'GALO JULIAN', 'ZAMORA CARDONA', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('27', 'Floavi1234@', 'floavi', '2', '2017', '2017-02-13', 'FLORA ANGELICA', 'AVILA JIMENEZ ', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('28', 'Pauqui1234@', 'pauqui', '4', '2017', '2017-02-01', 'PAUL MAXIMILIANO', 'QUIJIJE QUINTANA', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('29', 'Ronrey1234@', 'ronrey', '2', '2017', '2017-05-17', 'RONNY SEBASTIAN', 'REYES SANTAMARIA', '1', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('30', 'Danriv1234@', 'danriv', '2', '2017', '2017-02-17', 'DANNY JAVIER', 'RIVERA LOOR ', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('32', 'Blaale1234@', 'blaale', '2', '1757157977', '2015-03-16', 'BLANDON HENAO', 'NUBIA ALEXANDRA', '1', '1', 'dark', null);
-INSERT INTO `usuario` VALUES ('33', 'dirulo1234', 'maular', '7', '12333', '2019-01-28', 'Miguel ', 'Aular', '3', '1', 'dark', null);
+INSERT INTO `usuario` VALUES ('33', 'dirulo1234', 'maular', '7', '12333', '2019-01-28', 'Miguel ', 'Aular', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('34', '123456789', 'gerardo', '7', '1846833425', '2019-01-29', 'Gerardo', 'Rovero', '1', '1', 'dark', null);

@@ -77,12 +77,8 @@ require ("assets/scripts/config.php");
             </div> 
             <?php
         } else {
-
-            if ($module == "cocina") {
-                echo '<div class="page-container page-navigation-top-fixed page-navigation-toggled page-container-wide">';
-            } else {
-                echo '<div class="page-container page-navigation-top-fixed">';
-            }
+            
+            echo '<div class="page-container page-navigation-top-fixed">';
             require ("assets/views/sidebar.php");
             ?>
             <div class="page-content" style="height: 100%;">
@@ -95,7 +91,7 @@ require ("assets/scripts/config.php");
         <div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
             <div class="mb-container">
                 <div class="mb-middle">
-                    <div class="mb-title"><span class="fas fa-sign-out-alt"></span> Salir de <strong>Di Rulo Pizzeria</strong> ?</div>
+                    <div class="mb-title"><span class="fas fa-sign-out-alt"></span> Salir de la <strong>App</strong> ?</div>
                     <div class="mb-content">
                         <p>¿Est&aacute; seguro que desea salir?</p>                    
                         <p>Presione No si desea continuar trabajando. Presione Si para salir.</p>

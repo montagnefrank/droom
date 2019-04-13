@@ -6,7 +6,7 @@
 //ini_set('display_errors', 1);
 
 
-require ("../../assets/conn.php");
+require ("../../assets/scripts/database.php");
 session_start();
 
 if (isset($_POST['deleteUser'])) {
@@ -71,11 +71,11 @@ if (isset($_POST['getUsers'])) {
         } else {
             $checked = '';
         }
-        $isavatar = "../../img/users/" . $menu_row['nombreUsuario'] . ".jpg";
+        $isavatar = "../../api/assets/img/users/" . $menu_row['idUsuario'] . ".jpg";
         if (file_exists($isavatar)) {
-            $imgusuario = "img/users/" . $menu_row['nombreUsuario'];
+            $imgusuario = "api/assets/img/users/" . $menu_row['idUsuario'];
         } else {
-            $imgusuario = "img/users/default";
+            $imgusuario = "api/assets/img/users/default";
         }
         $rol = getrol($menu_row['idPerfil']);
         echo '   
@@ -135,12 +135,12 @@ if (isset($_POST['statusUser'])) {
 }
 
 if (isset($_POST['restartPass'])){
-     $val_select = "UPDATE usuario SET passwordUsuario = 'dirulo1234' WHERE idUsuario = '" . $_POST['idUsuario'] . "'";
+     $val_select = "UPDATE usuario SET passwordUsuario = 'burtontech1234' WHERE idUsuario = '" . $_POST['idUsuario'] . "'";
     $val_result = $conn->query($val_select) or die($conn->error);
 
 
     if ($val_result) {
-        $msg_logo .= " Se ha restablesido la contraseña del usuario <b>" . $_POST['nombreUsuario'] . " exitosamente, la contraseña es ahora dirulo1234 </b>.";
+        $msg_logo .= " Se ha restablesido la contraseña del usuario <b>" . $_POST['nombreUsuario'] . " exitosamente, la contraseña es ahora burtontech1234 </b>.";
         echo $msg_logo;
     } else {
         echo " No pudimos restablecer la contraseña del usuario. Intente de nuevo ";

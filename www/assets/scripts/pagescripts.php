@@ -150,7 +150,7 @@
 
 ////////////////////////CERRAMOS LA VENTNA DE NOTIFICACION CON CLIC EN CUALQUIER PARTE DE LA PAGINA
     $(document).on("click", function () {
-        $(".customalert").animate({width: 'hide'}, 600);
+        $(".customalert,.message-box").animate({width: 'hide'}, 600);
     });
 
     $('.numonly').bind('keyup blur', function () {
