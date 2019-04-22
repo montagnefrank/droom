@@ -295,20 +295,25 @@
                             console.log(error);
                         }
                     });
-                    var tams = tamProducto.split(','), htmlTams = '';
+
+                    var tams = JSON.parse(tamProducto), htmlTams = '';
+                    $('#tamArrayEdit').html(tamProducto);
                     $.each(tams, function (i, n) {
-                        var Tamobj = n.split(':');
-                        htmlTams += '<div class="widget widget-primary widget-item-icon">' +
-                                '       <div class="widget-item-left">' +
-                                '            <span class="fa fa-save" data-toggle="tooltip" data-placement="right" title="Actualizar"></span>' +
-                                '        </div>' +
-                                '        <div class="widget-data">' +
-                                '            <div class="widget-int num-count">' + Tamobj[1] + ' $</div>' +
-                                '          <div class="widget-title">' + Tamobj[0] + '</div>' +
-                                '            <div class="widget-subtitle col-md-3"><input type="text" class="form-control" value="" placeholder="Actualizar" /></div>' +
-                                '      </div>  ' +
-                                '   </div>';
-                        console.log(Tamobj);
+                        if (i != 'Normal') {
+                            htmlTams += '<div class="widget widget-primary widget-item-icon">' +
+                                    '       <div class="widget-item-left editThisTam">' +
+                                    '            <span class="fa fa-save" data-toggle="tooltip" data-placement="top" title="Actualizar"></span>' +
+                                    '        </div>' +
+                                    '        <div class="widget-data">' +
+                                    '            <div class="widget-int num-count">' + n + ' $</div>' +
+                                    '            <div class="widget-title tamIndex">' + i + '</div>' +
+                                    '            <div class="widget-subtitle col-md-3"><input type="text" class="form-control tamNewValInput" value="" placeholder="Actualizar" /></div>' +
+                                    '      </div>  ' +
+                                    '      <div class="widget-controls deleteThisTam">' +
+                                    '           <a class="widget-control-right"><span class="fa fa-times"></span></a>' +
+                                    '      </div>     ' +
+                                    '   </div>';
+                        }
                     });
                     $(".tamsListcont").html(htmlTams);
                     $(".headerimage").html('<img src="api/assets/img/productos/' + idProducto + '.jpg" style="width: 100%;" />');
@@ -318,6 +323,174 @@
                                 ).then(function () {
                             $(".editjob,.showlistbtn").slideDown("slow");
                             $(self).find(".beforeLoad, .loading_img").toggle("slow");
+                        });
+                    }, 1000);
+                });
+    });
+
+    $(document).on("click", ".editThisTam", function (event) {
+        event.preventDefault();
+        var self,
+                idProducto = $('#editIdProdCont').html(),
+                tamArray = JSON.parse($('#tamArrayEdit').html()),
+                tamIndex = $(this).parent().find(".tamIndex").html(),
+                tamNewVal = $(this).parent().find(".tamNewValInput").val();
+        self = this;
+
+        $.when(
+                $(self).parent().css("opacity", "0.4"))
+                .then(function () {
+
+                    tamArray[tamIndex] = tamNewVal;
+
+                    var formData = new FormData();
+                    formData.append('meth', 'updateTams');
+                    formData.append('idProducto', idProducto);
+                    formData.append('tams', JSON.stringify(tamArray));
+                    $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                        success: function (data) {
+                            setTimeout(function () {
+                                $.when(
+                                        $(".editjob,.showlistbtn").slideUp("slow"),
+                                        updateProductos()
+                                        ).then(function () {
+                                    $(".joblist").slideDown("slow");
+                                    $(self).parent().css("opacity", "1");
+                                });
+                            }, 1000);
+                        },
+                        error: function (error) {
+                            $(self).parent().css("opacity", "1");
+                            console.log("Hubo un error de internet, intente de nuevo");
+                            console.log(error);
+                        }
+                    });
+                });
+    });
+
+    $(document).on("click", ".saveNewTam", function (event) {
+        event.preventDefault();
+        var self,
+                idProducto = $('#editIdProdCont').html(),
+                tamArray = JSON.parse($('#tamArrayEdit').html()),
+                tamTitle = $('#nombreNewTam').val(),
+                tamNewVal = $('#impactoNewTam').val();
+        self = this;
+        if (tamTitle != '' && tamNewVal != '') {
+            $.when(
+                    $(self).find(".beforeLoad, .loading_img").toggle())
+                    .then(function () {
+
+                        tamArray[tamTitle] = tamNewVal;
+
+                        var formData = new FormData();
+                        formData.append('meth', 'updateTams');
+                        formData.append('idProducto', idProducto);
+                        formData.append('tams', JSON.stringify(tamArray));
+                        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                            success: function (data) {
+                                setTimeout(function () {
+                                    $.when(
+                                            $(".editjob,.showlistbtn").slideUp("slow"),
+                                            updateProductos()
+                                            ).then(function () {
+                                        $(".joblist").slideDown("slow");
+                                        $(self).find(".beforeLoad, .loading_img").toggle();
+                                        setTimeout(function () {
+                                            $.when(
+                                                    $(".addNewTamPanel,.showTamList").slideUp("slow")
+                                                    ).then(function () {
+                                                $(".tamsListcont,.addNewTamBtn").slideDown("slow");
+                                                $(self).find(".beforeLoad, .loading_img").toggle();
+                                            });
+                                        }, 1000);
+                                    });
+                                }, 1000);
+                            },
+                            error: function (error) {
+                                $(self).parent().css("opacity", "1");
+                                console.log("Hubo un error de internet, intente de nuevo");
+                                console.log(error);
+                            }
+                        });
+                    });
+        } else {
+            setTimeout(function () {
+
+                $(".customalert_text").html("No puedes dejar los campos en blanco");
+                $(".customalert").animate({width: 'toggle'}, 600);
+            }, 650);
+        }
+
+    });
+
+    $(document).on("click", ".deleteThisTam", function (event) {
+        event.preventDefault();
+        var self,
+                idProducto = $('#editIdProdCont').html(),
+                tamArray = JSON.parse($('#tamArrayEdit').html()),
+                tamIndex = $(this).parent().find(".tamIndex").html();
+        self = this;
+        $.when(
+                $(self).parent().css("opacity", "0.4"))
+                .then(function () {
+
+                    delete tamArray[tamIndex];
+
+                    var formData = new FormData();
+                    formData.append('meth', 'updateTams');
+                    formData.append('idProducto', idProducto);
+                    formData.append('tams', JSON.stringify(tamArray));
+                    $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                        success: function (data) {
+                            setTimeout(function () {
+                                $.when(
+                                        $(".editjob,.showlistbtn").slideUp("slow"),
+                                        updateProductos()
+                                        ).then(function () {
+                                    $(".joblist").slideDown("slow");
+                                    $(self).parent().css("opacity", "1");
+                                });
+                            }, 1000);
+                        },
+                        error: function (error) {
+                            $(self).parent().css("opacity", "1");
+                            console.log("Hubo un error de internet, intente de nuevo");
+                            console.log(error);
+                        }
+                    });
+                });
+    });
+
+    $(document).on("click", ".addNewTamBtn", function (event) {
+        event.preventDefault();
+        var self = this;
+        $.when(
+                $(self).find(".beforeLoad, .loading_img").toggle())
+                .then(function () {
+                    setTimeout(function () {
+                        $.when(
+                                $(".tamsListcont,.addNewTamBtn").slideUp("slow")
+                                ).then(function () {
+                            $(".addNewTamPanel,.showTamList").slideDown("slow");
+                            $(self).find(".beforeLoad, .loading_img").toggle();
+                        });
+                    }, 1000);
+                });
+    });
+
+    $(document).on("click", ".showTamList", function (event) {
+        event.preventDefault();
+        var self = this;
+        $.when(
+                $(self).find(".beforeLoad, .loading_img").toggle())
+                .then(function () {
+                    setTimeout(function () {
+                        $.when(
+                                $(".addNewTamPanel,.showTamList").slideUp("slow")
+                                ).then(function () {
+                            $(".tamsListcont,.addNewTamBtn").slideDown("slow");
+                            $(self).find(".beforeLoad, .loading_img").toggle();
                         });
                     }, 1000);
                 });
@@ -564,7 +737,7 @@
         $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
             success: function (data) {
                 $('.joblist').html(data.output);
-                $(document).find(".mesaItemBlock").delay(500).velocity("transition.slideUpBigIn", {stagger: 100});
+                $(document).find(".boxProductItem").delay(500).velocity("transition.slideUpBigIn", {stagger: 10});
                 console.log(data);
             },
             error: function (error) {

@@ -87,7 +87,7 @@
             </div>
         </div>
         <div class="col-md-4 editarImagenFondo">
-            <div class="panel panel-default">     
+            <div class="panel panel-default panel-toggled">     
                 <div class="panel-heading">
                     <h3>
                         <span class="fa fa-picture-o"></span> 
@@ -198,7 +198,7 @@
                         </div>
                         <div class="col-md-4">
                             <h4>
-                                Imagen de Cabecera: 
+                                Imagen de Producto: 
                                 <span data-toggle="tooltip" data-placement="top" title="800px * 800px" class="pull-right fa fa-exclamation-circle"></span></h4>
                             <div class="block push-up-10 headerimage">
                                 <img src="api/assets/img/productos/1.jpg" style="width: 100%;" />
@@ -207,7 +207,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-body">                                   
                                         <input name="newheaderimgPort" type="file" id="newheaderimgPort"/>
-                                        <button class="pull-right btn btn-success" name="newheaderimgPortbtn"  type="button"  id="newheaderimgPortbtn" data-toggle="tooltip" data-placement="right" title="Cambiar Imagen de Cabecera">
+                                        <button class="pull-right btn btn-success" name="newheaderimgPortbtn"  type="button"  id="newheaderimgPortbtn" data-toggle="tooltip" data-placement="right" title="Cambiar Imagen de Producto">
                                             <span class="beforeLoad" ><span class="fa fa-upload"></span> Subir </span>
                                             <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
                                         </button>
@@ -233,23 +233,40 @@
                     <div class="col-md-6">
                         <h2><span class="fa fa-edit"></span> Tamaños</h2>
                     </div>
+                    <div class="col-md-4 pull-right">                        
+                        <button class="pull-right btn btn-success addNewTamBtn" data-toggle="tooltip" data-placement="top" title="Agregar nuevo tamaño ">
+                            <span class="beforeLoad" ><span class="fa fa-plus"></span> Nuevo </span>
+                            <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
+                        </button>                     
+                        <button class="pull-right btn btn-danger showTamList hidethis" data-toggle="tooltip" data-placement="top" title="Agregar nuevo tamaño ">
+                            <span class="beforeLoad" ><span class="fa fa-backward"></span> Regresar </span>
+                            <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
+                        </button>                     
+                    </div> 
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12 pushtop_16">
                             <div class="col-md-12 tamsListcont">
-                                <div class="widget widget-primary widget-item-icon">
-                                    <div class="widget-item-left">
-                                        <span class="fa fa-save" data-toggle="tooltip" data-placement="right" title="Actualizar"></span>
-                                    </div>
-                                    <div class="widget-data">
-                                        <div class="widget-int num-count">Impacto</div>
-                                        <div class="widget-title">Nombre</div>
-                                        <div class="widget-subtitle col-md-3"><input type="text" class="form-control" value="" placeholder="Actualizar" /></div>
-                                    </div>                           
+
+                            </div>
+                            <div class="col-md-12 addNewTamPanel hidethis">
+                                <div class="col-md-12 push5">
+                                    <h4>Nombre:</h4>
+                                    <input name="nombreNewTam" id="nombreNewTam" type="text" class="form-control" value="" placeholder="Ingresa el texto" />   
                                 </div>
+                                <hr />
+                                <div class="col-md-12 push5">
+                                    <h4>Impacto</h4>
+                                    <input name="impactoNewTam" id="impactoNewTam" type="text" class="form-control" value="" placeholder="Ingresa el monto" />   
+                                </div>
+                                <button class="pull-right btn btn-success saveNewTam push5" data-toggle="tooltip" data-placement="top" title="Agregar nuevo tamaño ">
+                                    <span class="beforeLoad" ><span class="fa fa-plus-square"></span> Agregar </span>
+                                    <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
+                                </button>   
                             </div>
                         </div>
+                        <div class="hidethis_force" id="tamArrayEdit"></div>
                     </div>
                 </div>
             </div>
@@ -326,7 +343,7 @@
                         </div>
                         <div class="col-md-4">
                             <h4>
-                                Imagen de Cabecera: 
+                                Imagen de Producto: 
                                 <span data-toggle="tooltip" data-placement="top" title="800px * 800px" class="pull-right fa fa-exclamation-circle"></span></h4>
                             <div class="block push-up-10 headerimageNew">
                                 <img src="api/assets/img/productos/default.jpg" style="width: 100%;" />

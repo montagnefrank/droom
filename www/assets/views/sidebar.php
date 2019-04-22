@@ -77,8 +77,9 @@
                     <a><i class="fas fa-scroll"></i></i><span class="xn-text"> Pedidos</span></a>
                     <ul>
                         <li><a href="/?show=home"><span class="fa fa-list"></span> Ver Todos</a></li>
+                        <li><a href="/?show=pedido/productos">&nbsp;&nbsp;<i class="fas fa-pizza-slice"></i>&nbsp;&nbsp;&nbsp;&nbsp;Productos</a></li>
                         <li><a href="/?show=pedido/mesas"><i class="fa fa-table"></i> Mesas</a></li>
-                        <li><a href="/?show=pedido/productos">&nbsp;&nbsp;<i class="fas fa-pizza-slice"></i> &nbsp;&nbsp;&nbsp;&nbsp;Productos</a></li>
+                        <li><a href="/?show=pedido/menus">&nbsp;&nbsp;<i class="fas fa-clipboard-list"></i>&nbsp;&nbsp;&nbsp;&nbsp;Menu</a></li>
                     </ul>
                 </li>
                 <li class="cocina menuItem"><a href="/?show=cocina#autoscroll"><i class="fas fa-fire"></i><span class="xn-text"> Cocina</span></a></li>

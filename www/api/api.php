@@ -1145,7 +1145,7 @@ if ($_POST) {
                 $awe = 'fa-times';
             }
             echo ' 
-            <div class="col-md-6">
+            <div class="hidethis boxProductItem col-md-6">
                 <div class="panel panel-default">                            
                     <div class="panel-body panel-body-image">
                         <img src="api/assets/img/productos/' . $row['idProducto'] . '.jpg" alt="Slide1" style="height: 300px;"/>
@@ -1502,7 +1502,7 @@ if ($_POST) {
                 . "'01',"
                 . "'" . $_POST['varsProducto'] . "',"
                 . "'" . implode(',', $json['ingIds']) . "',"
-                . "'Pequeña:0,Mediana:5.0,Grande:8')";
+                . "'{\"Normal\":\"0\"}')";
         $val_result = $conn->query($val_select);
 
         // CARGAMOS LA IMAGEN DE BANNER
@@ -1814,6 +1814,170 @@ if ($_POST) {
             $json['output'] = $output;
             echo json_encode($json);
             return;
+        }
+    }
+    
+    //                  OBTENEMOS LOS MENU   //
+    if ($method == 'getMenuList') {
+        $query = "SELECT * FROM menu ";
+        $result = $conn->query($query) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            if ($row['estadoMenu'] == 'ACTIVO') {
+                $checked = 'checked="checked"';
+                $icon = 'fa-check';
+                $status = 'success';
+            } else {
+                $checked = '';
+                $icon = 'fa-times';
+                $status = 'danger';
+            }
+            echo ' 
+                <div class="col-md-3 hidethis menuItemBlock">
+                    <div class="widget widget-' . $status . ' widget-item-icon">
+                        <div class="widget-item-left">
+                            <span class="fa ' . $icon . '"></span>
+                        </div>
+                        <div class="widget-data">
+                            <div class="widget-int num-count">Categoría:</div>
+                            <div class="widget-title">' . $row['nombreMenu'] . '</div>
+                            <div class="hidethis_force idMenuCont">' . $row['idMenu'] . '</div>
+                            <div class="hidethis_force nombreMenuCont">' . $row['nombreMenu'] . '</div>
+                            <div class="hidethis_force statusMenu">' . $row['estadoMenu'] . '</div>
+                            <div class="widget-subtitle">
+                                <button class="btn btn-info editjobbtn"  type="submit" data-toggle="tooltip" data-placement="right" title="Editar">
+                                    <span class="beforeLoad" ><span class="fa fa-edit"></span> Editar </span>
+                                    <img class="loading_img" src="assets/img/loadingbar.gif" width="80" style="display: none;" />
+                                </button>
+                            </div>
+                        </div>                          
+                    </div>
+                </div>
+           ';
+        }
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+    
+    //                  EDITAMOS EL MENU          //
+    if ($method == 'editMenu') {
+        $val_select = "UPDATE menu SET "
+                . "nombreMenu = '" . $_POST['nombreMenu'] . "' "
+                . " WHERE idMenu = '" . $_POST['idMenu'] . "'";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $json['query'] = $val_select;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+    
+    //                  AGREGAMOS NUEVA MESA             //
+    if ($method == 'addnewMenu') {
+
+        $val_select = "INSERT INTO menu(nombreMenu,estadoMenu) "
+                . "VALUES ('" . $_POST['nombreMenu'] . "',"
+                . "'ACTIVO')";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  ELIMINAMOS LA MESA             //
+    if ($method == 'deleteMenu') {
+
+        $val_select = "DELETE FROM menu WHERE idMenu = '" . $_POST['deleteid'] . "'";
+        $val_result = $conn->query($val_select); //or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  CAMBIAMOS EL ESTATUS LA MESA             //
+    if ($method == 'changestatusMenu') {
+        if ($_POST['statusJob'] == '1') {
+            $estadoMenu = "ACTIVO";
+        }
+        if ($_POST['statusJob'] == '0') {
+            $estadoMenu = "INACTIVO";
+        }
+        $val_select = "UPDATE menu SET estadoMenu = '" . $estadoMenu . "' WHERE idMenu = '" . $_POST['idMenu'] . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  ACTUALIZAMOS LOS TAMAñOS           //
+    if ($method == 'updateTams') {
+        
+        $val_select = "UPDATE productos SET tamProducto = '" . $_POST['tams'] . "' WHERE idProducto = '" . $_POST['idProducto'] . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $json['q'] = $val_select;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
         }
     }
 }

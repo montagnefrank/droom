@@ -42,30 +42,26 @@
     $(".newpedido").addClass("active");
 
     $(document).ready(function () {
-        updateMesas();
+        updateMenu();
     });
 
     $(document).on("click", ".editjobbtn", function (event) {
         event.preventDefault();
         var self, idJob, typeJob, iconJob, catJob, titleJob, statusJob, commpanyJob, fromJob, toJob, descJob;
         self = this;
-        idMesa = $(this).parent().parent().find(".idMesaCont").html();
-        textoMesa = $(this).parent().parent().find(".textoMesaCont").html();
-        nivelMesa = $(this).parent().parent().find(".nivelMesaCont").html();
-        numeroMesa = $(this).parent().parent().find(".numeroMesaCont").html();
-        statusMesa = $(this).parent().parent().find(".statusMesa").html();
+        idMenu = $(this).parent().parent().find(".idMenuCont").html();
+        nombreMenu = $(this).parent().parent().find(".nombreMenuCont").html();
+        statusMenu = $(this).parent().parent().find(".statusMenu").html();
         $.when(
                 $(self).find(".beforeLoad, .loading_img").toggle("slow"))
                 .then(function () {
-                    if (statusMesa == 'HABILITADA') {
+                    if (statusMenu == 'ACTIVO') {
                         $(".editjobcheckbox").html('<input type="checkbox" class="switch" name=""  value="1" checked="checked" /><span></span>');
                     } else {
                         $(".editjobcheckbox").html('<input type="checkbox" class="switch" name=""  value="0" /><span></span>');
                     }
-                    $("#editcompanyJob").val(numeroMesa);
-                    $("#editdescJob").val(textoMesa);
-                    $("#edittitleJob").val(nivelMesa);
-                    $("#editidJobContainer").html(idMesa);
+                    $("#editcompanyJob").val(nombreMenu);
+                    $("#editidJobContainer").html(idMenu);
                     setTimeout(function () {
                         $.when(
                                 $(".joblist,.newjob").slideUp("slow")
@@ -83,19 +79,15 @@
         $(self).find("span, img").toggle("slow");
         setTimeout(function () {
             var formData = new FormData(),
-                    numeroMesa = $("#editcompanyJob").val(),
-                    nivelMesa = $("#edittitleJob").val(),
-                    textoMesa = $("#newdescJob").val();
-            if (numeroMesa != '' && nivelMesa != '') {
-                formData.append('meth', 'editMesa');
-                formData.append('idMesa', $("#editidJobContainer").html());
-                formData.append('numeroMesa', $("#editcompanyJob").val());
-                formData.append('textoMesa', $("#editdescJob").val());
-                formData.append('nivelMesa', $("#edittitleJob").val());
+                    nombreMenu = $("#editcompanyJob").val();
+            if (nombreMenu != '') {
+                formData.append('meth', 'editMenu');
+                formData.append('idMenu', $("#editidJobContainer").html());
+                formData.append('nombreMenu', nombreMenu);
                 $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
                     success: function (data) {
                         if (data.status == 'yes') {
-                            $(".customalert_text").html("Mesa editada exitosamente");
+                            $(".customalert_text").html("Menu editado exitosamente");
                             $(".customalert").animate({width: 'toggle'}, 600);
                             $(self).find("span, img").toggle("slow");
                             $.when(
@@ -103,10 +95,12 @@
                                     ).then(function () {
                                 $(".joblist").slideDown("slow");
                             });
-                            updateMesas();
+                            updateMenu();
                         } else {
-                            $(".customalert_text").html("No pudimos editar la mesa, intente de nuevo");
+                            $(".customalert_text").html("No pudimos editar el menu, intente de nuevo");
                             $(".customalert").animate({width: 'toggle'}, 600);
+                            $(self).find("span, img").toggle("slow");
+                            console.log(data);
                         }
                     },
                     error: function (error) {
@@ -140,17 +134,17 @@
                 status = '0';
             }
             var formData = new FormData();
-            formData.append('meth', 'changestatusMesa');
+            formData.append('meth', 'changestatusMenu');
             formData.append('statusJob', status);
-            formData.append('idMesa', $('#editidJobContainer').html());
+            formData.append('idMenu', $('#editidJobContainer').html());
             $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
                 success: function (data) {
                     if (data.status == 'yes') {
-                        $(".customalert_text").html("Mesa actualizada exitosamente");
+                        $(".customalert_text").html("Menu actualizada exitosamente");
                         $(".customalert").animate({width: 'toggle'}, 600);
-                        updateMesas();
+                        updateMenu();
                     } else {
-                        $(".customalert_text").html("No pudimos actualizar la mesa, intente de nuevo");
+                        $(".customalert_text").html("No pudimos actualizar el menu, intente de nuevo");
                         $(".customalert").animate({width: 'toggle'}, 600);
                         console.log(data);
                     }
@@ -169,20 +163,20 @@
         var id = $("#editidJobContainer").html();
         var self = this;
         noty({
-            text: 'Seguro que quieres eliminar la Mesa?',
+            text: 'Seguro que quieres eliminar el Menu?',
             layout: 'topRight',
             buttons: [
                 {addClass: 'btn btn-success btn-clean', text: 'Si', onClick: function ($noty) {
                         $(self).find("span, img").toggle("slow");
                         setTimeout(function () {
                             var formData = new FormData();
-                            formData.append('meth', 'deleteMesa');
+                            formData.append('meth', 'deleteMenu');
                             formData.append('deleteid', id);
 
                             $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
                                 success: function (data) {
                                     if (data.status == 'yes') {
-                                        $(".customalert_text").html("Mesa eliminada exitosamente");
+                                        $(".customalert_text").html("Menu eliminado exitosamente");
                                         $(".customalert").animate({width: 'toggle'}, 600);
                                         $(self).find("span, img").toggle("slow");
                                         $.when(
@@ -190,10 +184,10 @@
                                                 ).then(function () {
                                             $(".joblist").slideDown("slow");
                                         });
-                                        updateMesas();
+                                        updateMenu();
                                     } else {
                                         $(self).find("span, img").toggle("slow");
-                                        $(".customalert_text").html("No pudimos eliminar la mesa, intente de nuevo");
+                                        $(".customalert_text").html("No pudimos eliminar el menu, intente de nuevo");
                                         $(".customalert").animate({width: 'toggle'}, 600);
                                         console.log(data);
                                     }
@@ -221,19 +215,15 @@
         $(self).find(" span, img").toggle("slow");
         setTimeout(function () {
             var formData = new FormData(),
-                    numeroMesa = $("#newcompanyJob").val(),
-                    nivelMesa = $("#newtitleJob").val(),
-                    textoMesa = $("#newdescJob").val();
+                    nombreMenu = $("#newcompanyJob").val();
 
-            if (numeroMesa != '' && nivelMesa != '') {
-                formData.append('meth', 'addnewMesa');
-                formData.append('numeroMesa', numeroMesa);
-                formData.append('nivelMesa', nivelMesa);
-                formData.append('textoMesa', textoMesa);
+            if (nombreMenu != '') {
+                formData.append('meth', 'addnewMenu');
+                formData.append('nombreMenu', nombreMenu);
                 $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
                     success: function (data) {
                         if (data.status == 'yes') {
-                            $(".customalert_text").html("Mesa agregada exitosamente");
+                            $(".customalert_text").html("Menu agregado exitosamente");
                             $(".customalert").animate({width: 'toggle'}, 600);
                             $(self).find("span, img").toggle("slow");
                             $.when(
@@ -241,10 +231,10 @@
                                     ).then(function () {
                                 $(".joblist").slideDown("slow");
                             });
-                            updateMesas();
+                            updateMenu();
                         } else {
                             $(self).find("span, img").toggle("slow");
-                            $(".customalert_text").html("No pudimos agregar la mesa, intente de nuevo");
+                            $(".customalert_text").html("No pudimos agregar el menu, intente de nuevo");
                             $(".customalert").animate({width: 'toggle'}, 600);
                             console.log(data);
                         }
@@ -285,13 +275,13 @@
         });
     });
 
-    function updateMesas() {
+    function updateMenu() {
         var formData = new FormData();
-        formData.append('meth', 'getMesasNiveles');
+        formData.append('meth', 'getMenuList');
         $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
             success: function (data) {
                 $('.joblist').html(data.output);
-                $(document).find(".mesaItemBlock").delay(500).velocity("transition.slideUpBigIn", {stagger: 10});
+                $(document).find(".menuItemBlock").delay(500).velocity("transition.slideUpBigIn", {stagger: 100});
                 console.log(data);
             },
             error: function (error) {

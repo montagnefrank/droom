@@ -94,7 +94,7 @@ require ("assets/scripts/config.php");
                     <div class="mb-title"><span class="fas fa-sign-out-alt"></span> Salir de la <strong>App</strong> ?</div>
                     <div class="mb-content">
                         <p>¿Est&aacute; seguro que desea salir?</p>                    
-                        <p>Presione No si desea continuar trabajando. Presione Si para salir.</p>
+                        <p>Presione No para continuar trabajando. Presione Si para salir.</p>
                     </div>
                     <div class="mb-footer">
                         <div class="pull-right">

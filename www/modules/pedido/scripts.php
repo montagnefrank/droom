@@ -70,6 +70,77 @@
         });
     });
 
+    //      Ver Editar Ingredientes  //
+    $(document).on("click", ".editCurrentIngs", function () {
+        event.preventDefault();
+        var self, idProducto = $(this).find(".editIngIdProd").html();
+        self = this;
+
+        $.when($(document).find(".menuPanelContainer").velocity("transition.slideUpBigOut", 400))
+                .then(function () {
+                    
+                    var formData = new FormData();
+                    formData.append('meth', 'getIngFullTable');
+                    $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                        success: function (data) {
+                            var htmlThisProd = '', htmlAllIngs = '',
+                                    ingsThisProd = $('.ingsProductoCurrentView').html().split(','),
+                                    thisIdMenuCurrent = $('.idMenuProductoCurrentView').html();
+                            $.each(data.ings, function (i, n) {
+                                if (ingsThisProd.includes(n.idIngrediente)){
+                                    htmlThisProd += '<div class="col-md-12 push5 handleThisIng currentIng"><button class="col-md-12 btn btn-info"><i class="fas fa-pepper-hot"></i>  '+ n.nombreIngrediente +'</a></button></div>'
+                                }
+                                if (n.tipoIngrediente == thisIdMenuCurrent){
+                                    htmlAllIngs += '<div class="col-md-12 push5 handleThisIng newIng">'+
+                                            '   <button class="col-md-12 btn btn-success">'+
+                                            '       <i class="fas fa-pepper-hot"></i>  '+ n.nombreIngrediente +
+                                            '       <span class="hidethis"></i>  '+
+                                            '   </button>'+
+                                            '</div>'
+                                }
+                            });
+                            $('.itemIngsBox').html(htmlThisProd);
+                            $('.fullIngBox').html(htmlAllIngs);
+                            console.log(data);
+                        },
+                        error: function (error) {
+                            $(self).find("span, img").toggle("slow");
+                            console.log("Hubo un error de internet, intente de nuevo");
+                            console.log(error);
+                        }
+                    });
+                    
+                    dragula([document.querySelector('.itemIngsBox'), document.querySelector('.fullIngBox')], {
+                        isContainer: function (el) {
+                            return false; // only elements in drake.containers will be taken into account
+                        },
+                        moves: function (el, source, handle, sibling) {
+                            return true; // elements are always draggable by default
+                        },
+                        accepts: function (el, target, source, sibling) {
+                            return true; // elements can be dropped in any of the `containers` by default
+                        },
+                        invalid: function (el, handle) {
+                            return false; // don't prevent any drags from initiating by default
+                        },
+                        direction: 'vertical', // Y axis is considered when determining where an element would be dropped
+                        copy: true, // elements are moved by default, not copied
+                        copySortSource: false, // elements in copy-source containers can be reordered
+                        revertOnSpill: false, // spilling will put the element back where it was dragged from, if this is true
+                        removeOnSpill: false, // spilling will `.remove` the element, if this is true
+                        mirrorContainer: document.body, // set the element that gets mirror elements appended
+                        ignoreInputTextSelection: true // allows users to select input text, see details below
+                    });
+                    dragula([document.querySelector('.itemIngsBox')], {
+                        removeOnSpill: true, // spilling will `.remove` the element, if this is true
+                        accepts: function (el, target, source, sibling) {
+                            return false; // elements can be dropped in any of the `containers` by default
+                        }
+                    });
+                    $(document).find(".ingsMenuPanelCont").velocity("transition.slideUpBigIn", 400);
+                });
+    });
+
     getfullMenu();
     //              CARGAMOS TODOS LOS PRODUCTOS ACTIVOS DEL MENU       //
     function getfullMenu() {
@@ -96,7 +167,7 @@
                                 if (nn.nombreMenu == n) {
                                     htmlcontentTabs += '<div class="col-md-12 menublockBtn">' +
                                             '               <button class="btn btn-danger btn-block" onclick="displayProduct(' + nn.idProducto + ')">' +
-                                            '                   <img src="api/assets/img/productos/default.jpg" class="menuitemImgSmall pull-left"><span class="nombreProducto">' + nn.nombreProducto + '</span> <span class="precioProducto  pull-right"><i class="fas fa-money-bill-alt"></i> ' + nn.precioProducto + '<i class="fas fa-dollar-sign"></i> </span> ' +
+                                            '                   <img src="api/assets/img/productos/' + nn.idProducto + '.jpg" class="menuitemImgSmall pull-left"><span class="nombreProducto">' + nn.nombreProducto + '</span> <span class="precioProducto  pull-right"><i class="fas fa-money-bill-alt"></i> ' + nn.precioProducto + '<i class="fas fa-dollar-sign"></i> </span> ' +
                                             '               </button>' +
                                             '           </div>';
                                 }
@@ -109,7 +180,7 @@
                                 if (nn.nombreMenu == n) {
                                     htmlcontentTabs += '<div class="col-md-12 menublockBtn">' +
                                             '               <button class="btn btn-danger btn-block" onclick="displayProduct(' + nn.idProducto + ')">' +
-                                            '                   <img src="api/assets/img/productos/default.jpg" class="menuitemImgSmall pull-left"><span class="nombreProducto">' + nn.nombreProducto + '</span> <span class="precioProducto  pull-right"><i class="fas fa-money-bill-alt"></i> ' + nn.precioProducto + '<i class="fas fa-dollar-sign"></i> </span> ' +
+                                            '                   <img src="api/assets/img/productos/' + nn.idProducto + '.jpg" class="menuitemImgSmall pull-left"><span class="nombreProducto">' + nn.nombreProducto + '</span> <span class="precioProducto  pull-right"><i class="fas fa-money-bill-alt"></i> ' + nn.precioProducto + '<i class="fas fa-dollar-sign"></i> </span> ' +
                                             '               </button>' +
                                             '           </div>';
                                 }
@@ -165,28 +236,31 @@
                         '               </div>' +
                         '               <div class="panel-body redbg">' +
                         '                   <div class="row">' +
-                        '                       <ul class="list-tags">';
+                        '                       <ul class="list-tags thisProdIngs">';
                 $.each(data.ings, function (ii, nn) {
                     htmlcontent += '<li><a><i class="fas fa-pepper-hot"></i> ' + nn.nombreIngrediente + '</a></li>';
                 });
                 htmlcontent += '        </ul>' +
                         '                   <ul class="list-tags">' +
-                        '                       <li class="pull-right"><button class="btn btn-info"><i class="fas fa-pencil-alt"></i> Modificar</button></li>' +
+                        '                       <li class="pull-right editCurrentIngs"><span class="hidethis editIngIdProd">' + data.producto.idProducto + '</span><button class="btn btn-info"><i class="fas fa-pencil-alt"></i> Modificar</button></li>' +
                         '                   </ul>' +
                         '               </div>' +
                         '           </div>' +
+                        '           <div class="hidethis ingsProductoCurrentView">' + data.producto.ingsProducto + '</div>' +
+                        '           <div class="hidethis idMenuProductoCurrentView">' + data.producto.idMenu + '</div>' +
                         '           <div class="panel-body list-group border-bottom">   ' +
                         '               <a  class="list-group-item active"> ' + data.producto.descProducto + '</a>' +
                         '               <a  class="list-group-item  fontx1-5"><span class="fas fa-money-bill-wave"></span> <span class="pull-right"> ' + data.producto.precioProducto + ' $</span></a>' +
                         '           </div>' +
                         '           <div class="panel-body">' +
                         '               <div class="form-group">' +
-                        '                   <select class="form-control select" data-style="btn-primary">' +
-                        '                       <option>Tamaño</option>' +
-                        '                       <option>Personal</option>' +
-                        '                       <option>Mediana</option>' +
-                        '                       <option>Familiar</option>' +
-                        '                   </select>' +
+                        '                   <select class="form-control select" data-style="btn-primary">';
+
+                var tamsArray = JSON.parse(data.producto.tamProducto);
+                $.each(tamsArray, function (tami, tamv) {
+                    htmlcontent += '<option value="' + (+data.producto.precioProducto + +tamv) + '">' + tami + ' ( $' + (+data.producto.precioProducto + +tamv) + ')</option>';
+                });
+                htmlcontent += '            </select>' +
                         '               </div>' +
                         '           </div>' +
                         '           <div class="panel-body"> ' +
@@ -203,6 +277,12 @@
                         '            <div class="col-md-12">' +
                         '                <h4 class="pull-left">Comentarios:</h4>' +
                         '                <textarea type="text" class="form-control" rows="3" placeholder="Ingresa el texto"></textarea>   ' +
+                        '            </div>  ' +
+                        '        </div>' +
+                        '        <div class="panel-body">    ' +
+                        '            <div class="col-md-12">' +
+                        '                <h4 class="pull-left">Cantidad:</h4>' +
+                        '                <input type="number" class="form-control" value="1" />   ' +
                         '            </div>  ' +
                         '        </div>' +
                         '        <div class="panel-body">   ' +

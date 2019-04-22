@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 100023
 File Encoding         : 65001
 
-Date: 2019-04-10 09:45:49
+Date: 2019-04-22 11:40:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -285,9 +285,7 @@ DROP TABLE IF EXISTS `ingrediente`;
 CREATE TABLE `ingrediente` (
   `idIngrediente` int(11) NOT NULL AUTO_INCREMENT,
   `nombreIngrediente` varchar(100) DEFAULT NULL,
-  `cantidad1` int(11) DEFAULT NULL,
-  `cantidad2` varchar(255) DEFAULT NULL,
-  `cantidad3` varchar(255) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
   `codigoIngrediente` varchar(255) DEFAULT NULL,
   `barcodeIngrediente` varchar(255) DEFAULT NULL,
   `unidadIngrediente` varchar(255) DEFAULT NULL,
@@ -307,100 +305,100 @@ CREATE TABLE `ingrediente` (
 -- ----------------------------
 -- Records of ingrediente
 -- ----------------------------
-INSERT INTO `ingrediente` VALUES ('1', 'Jamón', '55', '81', '29', '00001', '000001254', '2', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-19', '0');
-INSERT INTO `ingrediente` VALUES ('2', 'Champiñoness', '39', '27', '60', '00002', '000001254', '1', '1', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-06-25', '0');
-INSERT INTO `ingrediente` VALUES ('3', 'Tomate', '69', '83', '11', '00003', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-13', '1');
-INSERT INTO `ingrediente` VALUES ('4', 'Perejil', '11', '63', '49', '00004', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('5', 'Pollo', '110', '7', '74', '00005', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('6', 'Carne', '56', '49', '45', '00006', '000001254', '2', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-18', '1');
-INSERT INTO `ingrediente` VALUES ('8', 'Aceitunas', '51', '74', '57', '00007', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('9', 'Parmesano', '30', '45', '56', '00008', '000001254', '3', '3', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-13', '1');
-INSERT INTO `ingrediente` VALUES ('10', 'Pan de ajo Di Rulo', '52', '57', '91', '00009', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('11', 'Salsa de albaca', '56', '56', '18', '00010', '000001254', '3', '3', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-19', '1');
-INSERT INTO `ingrediente` VALUES ('12', 'Aceite de oliva', '87', '91', '91', '00011', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('14', 'Pollo desmechado', '17', '18', '18', '00012', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('15', 'Choclo tierno', '15', '18', '18', '00013', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('16', 'Queso rayado', '41', '42', '42', '00014', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('17', 'Pimiento', '6', '15', '15', '00015', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('18', 'Cebolla', '30', '39', '39', '00016', '000001254', '1', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2019-03-20', '1');
-INSERT INTO `ingrediente` VALUES ('20', 'Mezcla de dos quesos La Merced', '-27', '19', '19', '00017', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('21', 'Peperoni', '33', '45', '63', '00018', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('22', 'Camarón', '57', '63', '7', '00019', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('23', 'Salami', '8', '14', '49', '00020', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('24', 'Carne molida de res', '26', '32', '74', '00021', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('25', 'Napolitana', '24', '34', '45', '00022', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('26', 'Chorizo', '38', '48', '57', '00023', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('27', 'Frutas', '71', '81', '56', '00024', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('29', 'Piña', '53', '59', '91', '00025', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('30', 'Pasas', '12', '18', '18', '00026', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('31', 'coca cola 350 ml', '43', '43', '18', '00027', '000001254', '1', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2019-03-20', '0');
-INSERT INTO `ingrediente` VALUES ('32', 'Orégano', '69', '83', '83', '00028', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('33', 'Tocino', '53', '55', '55', '00029', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('34', 'Longaniza', '62', '64', '64', '00030', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('35', 'Lonjas de tocino', '23', '23', '23', '00031', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('37', 'Salsa de tocino', '33', '12', '12', '00032', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('38', 'Pasta de tomate', '34', '57', '57', '00033', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('39', 'Salsa blanca', '80', '48', '48', '00034', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('40', 'Camarón adobado con cebolla', '-3', '9', '9', '00035', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('41', 'Pasta de lasaña', '51', '45', '45', '00036', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('42', 'Pollo en salsa bechamel', '2', '17', '17', '00037', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('43', 'Pasta de tomate', '84', '78', '78', '00038', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('44', 'Mozarrella', '23', '29', '29', '00039', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('45', 'Rollitos de pasta relleno de salsa de tomate, carne y queso La Merced', '85', '85', '85', '00040', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('47', 'Rollitos de pasta relleno de salsa de tomate, camarón y queso La Merced', '68', '69', '69', '00041', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('48', 'Salsa napolitana', '36', '36', '36', '00042', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('49', 'Queso parmesano La Merced', '25', '25', '25', '00043', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('50', 'Relleno de queso ricota', '47', '47', '47', '00044', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('51', 'Espinaca', '68', '68', '68', '00045', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('52', 'Relleno de alcachofa', '23', '23', '23', '00046', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('53', '4 variedades de quesos', '90', '90', '90', '00047', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('54', 'Albóndigas de carne en salsa boloñesa', '49', '52', '52', '00048', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('55', 'Tocino en salsa blanca', '67', '67', '67', '00049', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('56', 'Lechuga', '36', '37', '63', '00050', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('57', 'Pepinillo', '49', '50', '7', '00051', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('58', 'Pechuga de pollo', '19', '19', '49', '00052', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('59', 'Tomate cherry', '37', '37', '74', '00053', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('60', 'Tostaditas de pan', '15', '15', '45', '00054', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('61', 'Choclo', '96', '84', '57', '00055', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('62', 'Papa', '19', '31', '56', '00056', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('63', 'Alberja', '80', '68', '91', '00057', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('64', 'Zanahoria', '41', '53', '18', '00058', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('65', 'Mayonesa', '39', '27', '18', '00059', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('66', 'Rollitos de mortadela', '76', '88', '42', '00060', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('68', 'Papas fritas', '46', '51', '15', '00061', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('69', 'Pernil ahumado en Pan Dirulo', '35', '35', '39', '00062', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('70', 'Masas suaves rellenas de helado', '45', '45', '19', '00063', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('71', 'Salsa de mora', '25', '25', '45', '00064', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('72', 'Crema', '67', '67', '63', '00065', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('73', 'Queso gratinado La Merced', '94', '94', '14', '00066', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('74', 'Pollo envuelto en crepes en salsa de champiñones', '76', '76', '32', '00067', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('75', 'Masas suaves rellenas de camarón salteado con cebolla', '82', '82', '34', '00068', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('76', 'Salsa bechamel', '54', '54', '48', '00069', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('84', 'Queso', '24', '24', '81', '00070', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('87', 'Queso la Merced', '55', '55', '59', '00071', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('88', 'Pan Dirulo', '78', '68', '68', '00072', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('89', 'Carne en salsa bechamel', '85', '87', '87', '00073', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('90', 'Camarones en salsa bechamel', '75', '77', '77', '00074', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('91', 'Salsa bechamel', '33', '33', '33', '00075', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('92', 'Rollitos de pasta relleno de salsa de tomate, pollo y queso La Merced', '59', '63', '63', '00076', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('93', 'Trozos de Platano', '22', '22', '7', '00077', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('94', 'Trozos de Papaya', '14', '14', '49', '00078', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('95', 'Trozos de Manzana', '94', '94', '74', '00079', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('96', 'Trozos de melón', '56', '56', '45', '00080', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('97', 'Trozos de kiwi', '43', '43', '57', '00081', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('98', 'Crema de leche', '22', '22', '56', '00082', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('99', 'Grageas', '33', '33', '91', '00083', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('100', 'Pernil ahumado', '96', '96', '18', '00084', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('101', 'Papas cocidas en salsa tartara', '47', '47', '18', '00085', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('102', 'Especias', '87', '87', '42', '00086', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('103', 'Papas al horno rellenas de queso mozarella La Merced', '40', '40', '15', '00087', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('104', 'Brocoli', '34', '15', '39', '00088', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('105', 'Ensalada de verduras cocidas', '65', '65', '19', '00089', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('106', 'Papas al horno', '96', '96', '45', '00090', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('107', 'Papas cocidas', '49', '50', '63', '00091', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
-INSERT INTO `ingrediente` VALUES ('108', 'parpica ', null, '2', null, 'pprica', '12445678', '1', '1', '12345667', 'paprica para aderesos', '1', '5', '20', '2', '0.5', '2018-04-30', '1');
-INSERT INTO `ingrediente` VALUES ('109', 'Carne Asada', '800', null, null, '1232535', '1232535', '2', '2', '2000', 'Carne al Carbon', 'invetario1', '100', '50000', '10', '8', '2019-01-28', '1');
-INSERT INTO `ingrediente` VALUES ('110', 'Salchi papas', '100', null, null, '12345679', '12345678', '1', '3', '122528', 'salchichas alemanas', 'lote 1', '5', '1000', '5', '3', '2019-01-29', '1');
+INSERT INTO `ingrediente` VALUES ('1', 'Jamón', '55', '00001', '000001254', '2', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-19', '0');
+INSERT INTO `ingrediente` VALUES ('2', 'Champiñoness', '39', '00002', '000001254', '1', '1', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-06-25', '0');
+INSERT INTO `ingrediente` VALUES ('3', 'Tomate', '69', '00003', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-13', '1');
+INSERT INTO `ingrediente` VALUES ('4', 'Perejil', '11', '00004', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('5', 'Pollo', '110', '00005', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('6', 'Carne', '56', '00006', '000001254', '2', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-18', '1');
+INSERT INTO `ingrediente` VALUES ('8', 'Aceitunas', '51', '00007', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('9', 'Parmesano', '30', '00008', '000001254', '3', '3', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-13', '1');
+INSERT INTO `ingrediente` VALUES ('10', 'Pan de ajo Di Rulo', '52', '00009', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('11', 'Salsa de albaca', '56', '00010', '000001254', '3', '3', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-04-19', '1');
+INSERT INTO `ingrediente` VALUES ('12', 'Aceite de oliva', '87', '00011', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('14', 'Pollo desmechado', '17', '00012', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('15', 'Choclo tierno', '15', '00013', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('16', 'Queso rayado', '41', '00014', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('17', 'Pimiento', '6', '00015', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('18', 'Cebolla', '30', '00016', '000001254', '1', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2019-03-20', '1');
+INSERT INTO `ingrediente` VALUES ('20', 'Mezcla de dos quesos La Merced', '-27', '00017', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('21', 'Peperoni', '33', '00018', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('22', 'Camarón', '57', '00019', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('23', 'Salami', '8', '00020', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('24', 'Carne molida de res', '26', '00021', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('25', 'Napolitana', '24', '00022', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('26', 'Chorizo', '38', '00023', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('27', 'Frutas', '71', '00024', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('29', 'Piña', '53', '00025', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('30', 'Pasas', '12', '00026', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('31', 'coca cola 350 ml', '43', '00027', '000001254', '1', '2', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2019-03-20', '0');
+INSERT INTO `ingrediente` VALUES ('32', 'Orégano', '69', '00028', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('33', 'Tocino', '53', '00029', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('34', 'Longaniza', '62', '00030', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('35', 'Lonjas de tocino', '23', '00031', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('37', 'Salsa de tocino', '33', '00032', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('38', 'Pasta de tomate', '34', '00033', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('39', 'Salsa blanca', '80', '00034', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('40', 'Camarón adobado con cebolla', '-3', '00035', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('41', 'Pasta de lasaña', '51', '00036', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('42', 'Pollo en salsa bechamel', '2', '00037', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('43', 'Pasta de tomate', '84', '00038', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('44', 'Mozarrella', '23', '00039', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('45', 'Rollitos de pasta relleno de salsa de tomate, carne y queso La Merced', '85', '00040', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('47', 'Rollitos de pasta relleno de salsa de tomate, camarón y queso La Merced', '68', '00041', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('48', 'Salsa napolitana', '36', '00042', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('49', 'Queso parmesano La Merced', '25', '00043', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('50', 'Relleno de queso ricota', '47', '00044', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('51', 'Espinaca', '68', '00045', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('52', 'Relleno de alcachofa', '23', '00046', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('53', '4 variedades de quesos', '90', '00047', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('54', 'Albóndigas de carne en salsa boloñesa', '49', '00048', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('55', 'Tocino en salsa blanca', '67', '00049', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('56', 'Lechuga', '36', '00050', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('57', 'Pepinillo', '49', '00051', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('58', 'Pechuga de pollo', '19', '00052', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('59', 'Tomate cherry', '37', '00053', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('60', 'Tostaditas de pan', '15', '00054', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('61', 'Choclo', '96', '00055', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('62', 'Papa', '19', '00056', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('63', 'Alberja', '80', '00057', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('64', 'Zanahoria', '41', '00058', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('65', 'Mayonesa', '39', '00059', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('66', 'Rollitos de mortadela', '76', '00060', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('68', 'Papas fritas', '46', '00061', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('69', 'Pernil ahumado en Pan Dirulo', '35', '00062', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('70', 'Masas suaves rellenas de helado', '45', '00063', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('71', 'Salsa de mora', '25', '00064', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('72', 'Crema', '67', '00065', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('73', 'Queso gratinado La Merced', '94', '00066', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('74', 'Pollo envuelto en crepes en salsa de champiñones', '76', '00067', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('75', 'Masas suaves rellenas de camarón salteado con cebolla', '82', '00068', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('76', 'Salsa bechamel', '54', '00069', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('84', 'Queso', '24', '00070', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('87', 'Queso la Merced', '55', '00071', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('88', 'Pan Dirulo', '78', '00072', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('89', 'Carne en salsa bechamel', '85', '00073', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('90', 'Camarones en salsa bechamel', '75', '00074', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('91', 'Salsa bechamel', '33', '00075', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('92', 'Rollitos de pasta relleno de salsa de tomate, pollo y queso La Merced', '59', '00076', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('93', 'Trozos de Platano', '22', '00077', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('94', 'Trozos de Papaya', '14', '00078', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('95', 'Trozos de Manzana', '94', '00079', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('96', 'Trozos de melón', '56', '00080', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('97', 'Trozos de kiwi', '43', '00081', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('98', 'Crema de leche', '22', '00082', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('99', 'Grageas', '33', '00083', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('100', 'Pernil ahumado', '96', '00084', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('101', 'Papas cocidas en salsa tartara', '47', '00085', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('102', 'Especias', '87', '00086', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('103', 'Papas al horno rellenas de queso mozarella La Merced', '40', '00087', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('104', 'Brocoli', '34', '00088', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('105', 'Ensalada de verduras cocidas', '65', '00089', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('106', 'Papas al horno', '96', '00090', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('107', 'Papas cocidas', '49', '00091', '000001254', '2', '4', 'Cuenta contable', 'detalle Ingrediente', 'Bodega Principal', '10', '100', '1', '12', '2018-02-21-10:00', '1');
+INSERT INTO `ingrediente` VALUES ('108', 'parpica ', null, 'pprica', '12445678', '1', '1', '12345667', 'paprica para aderesos', '1', '5', '20', '2', '0.5', '2018-04-30', '1');
+INSERT INTO `ingrediente` VALUES ('109', 'Carne Asada', '800', '1232535', '1232535', '2', '2', '2000', 'Carne al Carbon', 'invetario1', '100', '50000', '10', '8', '2019-01-28', '1');
+INSERT INTO `ingrediente` VALUES ('110', 'Salchi papas', '100', '12345679', '12345678', '1', '3', '122528', 'salchichas alemanas', 'lote 1', '5', '1000', '5', '3', '2019-01-29', '1');
 
 -- ----------------------------
 -- Table structure for ingresos
@@ -439,7 +437,7 @@ CREATE TABLE `menu` (
   `nombreMenu` varchar(100) DEFAULT NULL,
   `estadoMenu` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idMenu`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of menu
@@ -449,7 +447,8 @@ INSERT INTO `menu` VALUES ('2', 'Pastas', 'ACTIVO');
 INSERT INTO `menu` VALUES ('3', 'Carnes', 'ACTIVO');
 INSERT INTO `menu` VALUES ('4', 'Pizzas', 'ACTIVO');
 INSERT INTO `menu` VALUES ('5', 'Crepes y Postres', 'ACTIVO');
-INSERT INTO `menu` VALUES ('6', 'Bebidas', 'ACTIVO');
+INSERT INTO `menu` VALUES ('6', 'Bebidas y Refrigerios', 'ACTIVO');
+INSERT INTO `menu` VALUES ('7', 'Comida Mexicana', 'ACTIVO');
 
 -- ----------------------------
 -- Table structure for mesa
@@ -465,7 +464,7 @@ CREATE TABLE `mesa` (
   PRIMARY KEY (`idMesa`) USING BTREE,
   KEY `idEstablecimiento` (`idEstablecimiento`) USING BTREE,
   CONSTRAINT `mesa_ibfk_1` FOREIGN KEY (`idEstablecimiento`) REFERENCES `establecimiento` (`idEstablecimiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=1005 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of mesa
@@ -479,7 +478,7 @@ INSERT INTO `mesa` VALUES ('6', '1', '6', 'OCUPADA', 'Piso 1', ' Mesa de la Izqu
 INSERT INTO `mesa` VALUES ('7', '1', '7', 'HABILITADA', 'Piso 2', ' ');
 INSERT INTO `mesa` VALUES ('8', '1', '8', 'HABILITADA', 'Piso 1', ' ');
 INSERT INTO `mesa` VALUES ('9', '1', '9', 'HABILITADA', 'Piso 1', ' ');
-INSERT INTO `mesa` VALUES ('10', '1', '10', 'OCUPADA', 'Piso 1', ' ');
+INSERT INTO `mesa` VALUES ('10', '1', '10', 'HABILITADA', 'Piso 1', ' ');
 INSERT INTO `mesa` VALUES ('11', '1', '11', 'HABILITADA', 'Exterior', ' ');
 INSERT INTO `mesa` VALUES ('12', '1', '12', 'HABILITADA', 'Exterior', ' ');
 INSERT INTO `mesa` VALUES ('13', '1', '13', 'HABILITADA', 'Exterior', ' ');
@@ -2442,28 +2441,30 @@ CREATE TABLE `productos` (
   `ingsProducto` varchar(255) DEFAULT NULL,
   `tamProducto` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idProducto`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of productos
 -- ----------------------------
-INSERT INTO `productos` VALUES ('1', '1', 'Ensalada Verde', 'ensalada verde fresca', '12.55', 'ACTIVO', 'DJE2234', '01', 'Con nada', '3', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('2', '1', 'Ensalada Capri', 'Ensalada Italiana', '4.52', 'ACTIVO', 'DDD098', '01', 'Con Queso, Con Pan', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('3', '1', 'Ensalada Verde Especial', 'Ensalada con queso Bufalo', '15.23', 'ACTIVO', 'EERD34', '01', 'Con aceite de Oliva, Con aceite de almendra', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('4', '2', 'Nuggets Dirulo', '6 Unidades', '8.65', 'ACTIVO', 'ERFDEDF', '01', 'Con papas Fritas, Con Papas asadas', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('5', '2', 'Sanduches de pernil ahumado', 'Sanduche 15cm', '20', 'ACTIVO', 'ERE432', '01', 'Pan INtegral, Pan de Ajonjoli', '58,74,15,85', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('6', '2', 'Empanadas Colombianas', 'De carne y pollo', '2', 'ACTIVO', 'QASWE', '01', 'Con Lechuga,Con Berro', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('7', '3', 'Costillas ahumadas', 'En salsa barbacoa', '17.50', 'ACTIVO', 'AWD432', '01', 'Con Queso, Con Pan', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('8', '3', 'Piernitas BBQ', 'Piernas de Chancho', '8.20', 'ACTIVO', 'EE432', '01', 'Con aceite de Oliva, Con aceite de almendra', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('9', '4', 'Pizza MArgarita', 'Queso y salsa', '11', 'ACTIVO', 'PIZ123', '01', 'Con papas Fritas, Con Papas asadas', '58,74,15,85', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('10', '4', 'Pizza Hawaiana', 'Piña', '14', 'ACTIVO', 'RUN1092', '01', 'Pan INtegral, Pan de Ajonjoli', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('11', '4', 'Pizza 4 Estaciones', 'Queso, Carne, Pollo, Salchicha', '22', 'ACTIVO', 'REH432', '01', 'Con Lechuga,Con Berro', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('12', '4', 'Pizza Napolitana', 'Salsa especial', '18', 'ACTIVO', 'AWDAW12', '01', 'Con Queso, Con Pan', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('13', '5', 'Crepes dulce con helado', 'Crepe postre', '6', 'ACTIVO', 'AAASD', '01', 'Con aceite de Oliva, Con aceite de almendra', '58,74,15,85', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('14', '5', 'Durazno con Crema', 'Crema chantilli', '7', 'ACTIVO', 'RUEJ4542', '01', 'Con papas Fritas, Con Papas asadas', '98,78,68,86,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('15', '6', 'Gaseosa 1.5 lts.', 'Helada o al clima', '5', 'ACTIVO', 'ALDI654', '01', 'Pan INtegral, Pan de Ajonjoli', '85,84,87,68,95', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('16', '6', 'Té Botella', 'De limon', '2', 'ACTIVO', 'ADJEU', '01', 'Con Lechuga,Con Berro', '15,45,85,39,79', 'Pequeña:0,Mediana:5.0,Grande:8');
-INSERT INTO `productos` VALUES ('18', '4', 'Pizza Cuadrada', 'asombrosa', '22.45', 'ACTIVO', 'AAA', '01', 'Regular,y rectangular', '3,15,18', 'Pequeña:0,Mediana:5.0,Grande:8');
+INSERT INTO `productos` VALUES ('1', '1', 'Ensalada Verde', 'ensalada verde fresca', '12.55', 'ACTIVO', 'DJE2234', '01', 'Con nada', '3', '{\"Normal\":\"0\",\"Mediana\":\"1\",\"Grande\":\"8\",\"Personal\":\"1.85\"}');
+INSERT INTO `productos` VALUES ('2', '1', 'Ensalada Capri', 'Ensalada Italiana', '4.52', 'ACTIVO', 'DDD098', '01', 'Con Queso, Con Pan', '98,78,68,86,95', '{\"Normal\":\"0\",\"Personal\":\"2\"}');
+INSERT INTO `productos` VALUES ('3', '1', 'Ensalada Verde Especial', 'Ensalada con queso Bufalo', '15.23', 'ACTIVO', 'EERD34', '01', 'Con aceite de Oliva, Con aceite de almendra', '85,84,87,68,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('4', '2', 'Nuggets Dirulo', '6 Unidades', '8.65', 'ACTIVO', 'ERFDEDF', '01', 'Con papas Fritas, Con Papas asadas', '15,45,85,39,79', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('5', '2', 'Sanduches de pernil ahumado', 'Sanduche 15cm', '20', 'ACTIVO', 'ERE432', '01', 'Pan INtegral, Pan de Ajonjoli', '58,74,15,85', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('6', '2', 'Empanadas Colombianas', 'De carne y pollo', '2', 'ACTIVO', 'QASWE', '01', 'Con Lechuga,Con Berro', '98,78,68,86,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('7', '3', 'Costillas ahumadas', 'En salsa barbacoa', '17.50', 'ACTIVO', 'AWD432', '01', 'Con Queso, Con Pan', '85,84,87,68,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('8', '3', 'Piernitas BBQ', 'Piernas de Chancho', '8.20', 'ACTIVO', 'EE432', '01', 'Con aceite de Oliva, Con aceite de almendra', '15,45,85,39,79', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('9', '4', 'Pizza MArgarita', 'Queso y salsa', '11', 'ACTIVO', 'PIZ123', '01', 'Con papas Fritas, Con Papas asadas', '58,74,15,85', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('10', '4', 'Pizza Hawaiana', 'Piña', '14', 'ACTIVO', 'RUN1092', '01', 'Pan INtegral, Pan de Ajonjoli', '98,78,68,86,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('11', '4', 'Pizza 4 Estaciones', 'Queso, Carne, Pollo, Salchicha', '22', 'ACTIVO', 'REH432', '01', 'Con Lechuga,Con Berro', '85,84,87,68,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('12', '4', 'Pizza Napolitana', 'Salsa especial', '18', 'ACTIVO', 'AWDAW12', '01', 'Con Queso, Con Pan', '15,45,85,39,79', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('13', '5', 'Crepes dulce con helado', 'Crepe postre', '6', 'ACTIVO', 'AAASD', '01', 'Con aceite de Oliva, Con aceite de almendra', '58,74,15,85', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('14', '5', 'Durazno con Crema', 'Crema chantilli', '7', 'ACTIVO', 'RUEJ4542', '01', 'Con papas Fritas, Con Papas asadas', '98,78,68,86,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('15', '7', 'Gaseosa 1.5 lts. Coca Cola', 'Helada o al clima', '5', 'ACTIVO', 'ALDI654', '01', 'Pan INtegral,Pan de Ajonjoli', '68,84,87,95', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('16', '6', 'Té Botella awd aw dawd awd awd awd ', 'De limon', '2', 'ACTIVO', 'ADJEU', '01', 'Con Lechuga,Con Berro', '15,39', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('18', '4', 'Pizza Cuadrada', 'asombrosa', '22.45', 'ACTIVO', 'AAA', '01', 'Regular,y rectangular', '3,15,18', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('19', '3', 'producto de mentira', 'dEscripcion', '11', 'ACTIVO', '123', '01', 'Regular,awda drgrf', '3,104', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
+INSERT INTO `productos` VALUES ('20', '7', '12eqwda', 'wdawdaw', 'wd', 'ACTIVO', 'awd', '01', 'Regular,aw dawe awd,ser r,dr gdr g,dr g', '16', '{\"Normal\":\"0\",\"Mediana\":\"5.0\",\"Grande\":\"8\"}');
 
 -- ----------------------------
 -- Table structure for repartidores
@@ -2652,7 +2653,7 @@ CREATE TABLE `usuario` (
 -- ----------------------------
 -- Records of usuario
 -- ----------------------------
-INSERT INTO `usuario` VALUES ('1', 'frankfrank', 'burton', '7', '154789', '2017-02-01', 'Frank', 'Montagne', '1', '1', 'green', '2019-04-10 09:42:38');
+INSERT INTO `usuario` VALUES ('1', 'burtonburton', 'burton', '7', '154789', '2017-02-01', 'Frank', 'Montagne', '1', '1', 'green', '2019-04-22 08:24:13');
 INSERT INTO `usuario` VALUES ('2', 'Frank1234@', 'frank', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '1', '1', 'dark', null);
 INSERT INTO `usuario` VALUES ('3', 'burtontech', 'burtontech', '7', '1547896548', '2017-02-01', 'Burton', 'Burton', '1', '1', 'red', null);
 INSERT INTO `usuario` VALUES ('4', 'Luist1234@', 'luist', '1', '1547896548', '2017-02-01', 'Burton', 'Burton', '1', '1', 'dark', null);

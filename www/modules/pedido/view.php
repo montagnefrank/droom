@@ -41,6 +41,36 @@
 <!-- FIN BREADCRUMB -->
 <div class="page-content-wrap">    
     <div class="col-md-12 fullMenuContainer">
-
+        <div class="col-md-6 ingsMenuPanelCont hidethis">
+            <div class="panel panel-default">
+                <div class="panel panel-heading">
+                    <h3 class="panel-title"> <i class="fas fa-edit"></i> &nbsp;&nbsp; Editar Los Ingredientes</h3>
+                </div>
+                <div class="panel panel-body">
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel panel-heading">
+                                <h3 class="panel-title"> <i class="fas fa-check"></i> &nbsp;&nbsp; Actuales</h3>
+                            </div>
+                            <div class="panel panel-body">
+                                <div class="itemIngsBox col-md-6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel panel-heading">
+                                <h3 class="panel-title"> <i class="fas fa-list"></i> &nbsp;&nbsp; Disponibles</h3>
+                            </div>
+                            <div class="panel panel-body">
+                                <div class="fullIngBox col-md-6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>      
 </div>
