@@ -16,9 +16,9 @@ Vagrant.configure("2") do |config|
 
 #############       Define local address ##################
 #############       (you can define multiple address for multiple connections)     ##################
-  config.vm.network "public_network", ip: "192.168.1.231"
+#  config.vm.network "public_network", ip: "192.168.1.231"
 #  config.vm.network "public_network", ip: "192.168.100.231"
-#  config.vm.network "public_network", ip: "10.0.0.231"
+  config.vm.network "public_network", ip: "10.0.0.231"
 # config.vm.network "public_network", ip: "192.168.3.219"
 
 #############       Shared folders for Host-Guest drag&drop        ##################

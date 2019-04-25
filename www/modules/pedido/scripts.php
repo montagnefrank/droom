@@ -37,6 +37,7 @@
     //       ACTIVAMOS EL MENU LATERAL       //
     $(".menuItem").removeClass("active");
     $(".newpedido").addClass("active");
+    getfullMenu();
 
     //      Seleccionar Mesa Para nuevo pedido  //
     $(document).on("click", ".menublockBtn", function () {
@@ -71,14 +72,15 @@
     });
 
     //      Ver Editar Ingredientes  //
+    var drake;
     $(document).on("click", ".editCurrentIngs", function () {
         event.preventDefault();
         var self, idProducto = $(this).find(".editIngIdProd").html();
         self = this;
 
-        $.when($(document).find(".menuPanelContainer").velocity("transition.slideUpBigOut", 400))
+        $.when($(document).find(".menuPanelContainer,.editCurrentIngs").velocity("transition.slideUpBigOut", 400))
                 .then(function () {
-                    
+
                     var formData = new FormData();
                     formData.append('meth', 'getIngFullTable');
                     $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
@@ -87,15 +89,22 @@
                                     ingsThisProd = $('.ingsProductoCurrentView').html().split(','),
                                     thisIdMenuCurrent = $('.idMenuProductoCurrentView').html();
                             $.each(data.ings, function (i, n) {
-                                if (ingsThisProd.includes(n.idIngrediente)){
-                                    htmlThisProd += '<div class="col-md-12 push5 handleThisIng currentIng"><button class="col-md-12 btn btn-info"><i class="fas fa-pepper-hot"></i>  '+ n.nombreIngrediente +'</a></button></div>'
+                                if (ingsThisProd.includes(n.idIngrediente)) {
+                                    htmlThisProd += '<div class="col-md-12 push5 handleThisIng currentIng">' +
+                                            '   <button class="col-md-12 btn btn-info">' +
+                                            '       <i class="fas fa-pepper-hot"></i>  ' + n.nombreIngrediente +
+                                            '       <span class="hidethis handleThisIngIdIng">' + n.idIngrediente + '</span> ' +
+                                            '       <span class="hidethis handleThisIngNombreIng">' + n.nombreIngrediente + '</span> ' +
+                                            '   </button>' +
+                                            '</div>'
                                 }
-                                if (n.tipoIngrediente == thisIdMenuCurrent){
-                                    htmlAllIngs += '<div class="col-md-12 push5 handleThisIng newIng">'+
-                                            '   <button class="col-md-12 btn btn-success">'+
-                                            '       <i class="fas fa-pepper-hot"></i>  '+ n.nombreIngrediente +
-                                            '       <span class="hidethis"></i>  '+
-                                            '   </button>'+
+                                if (n.tipoIngrediente == thisIdMenuCurrent) {
+                                    htmlAllIngs += '<div class="col-md-12 push5 handleThisIng newIng">' +
+                                            '   <button class="col-md-12 btn btn-success">' +
+                                            '       <i class="fas fa-pepper-hot"></i>  ' + n.nombreIngrediente +
+                                            '       <span class="hidethis handleThisIngIdIng">' + n.idIngrediente + '</span> ' +
+                                            '       <span class="hidethis handleThisIngNombreIng">' + n.nombreIngrediente + '</span> ' +
+                                            '   </button>' +
                                             '</div>'
                                 }
                             });
@@ -109,8 +118,8 @@
                             console.log(error);
                         }
                     });
-                    
-                    dragula([document.querySelector('.itemIngsBox'), document.querySelector('.fullIngBox')], {
+
+                    drake = dragula([document.querySelector('.itemIngsBox'), document.querySelector('.fullIngBox')], {
                         isContainer: function (el) {
                             return false; // only elements in drake.containers will be taken into account
                         },
@@ -124,7 +133,7 @@
                             return false; // don't prevent any drags from initiating by default
                         },
                         direction: 'vertical', // Y axis is considered when determining where an element would be dropped
-                        copy: true, // elements are moved by default, not copied
+                        copy: false, // elements are moved by default, not copied
                         copySortSource: false, // elements in copy-source containers can be reordered
                         revertOnSpill: false, // spilling will put the element back where it was dragged from, if this is true
                         removeOnSpill: false, // spilling will `.remove` the element, if this is true
@@ -141,7 +150,159 @@
                 });
     });
 
-    getfullMenu();
+    //      REGRESAR AL FULL MENU Y VACIAR CONTENEDORES DE INGREDINETES      //
+    $(document).on("click", ".returntToMenu", function () {
+        event.preventDefault();
+        var self;
+        self = this;
+
+        $.when($(document).find(".ingsMenuPanelCont").velocity("transition.slideUpBigOut", 400))
+                .then(function () {
+                    drake.destroy();
+                    $(document).find(".menuPanelContainer,.editCurrentIngs").velocity("transition.slideUpBigIn", 400);
+                });
+    });
+
+    //      Modificamos los ingredientes de la Vista Actual      //
+    $(document).on("click", ".editcurrentIngsList", function () {
+        event.preventDefault();
+        var self, htmlTagsIngs = '', ListNewIngs = '', newIngsArray, uniqueArr, Htmlnewings = '';
+        self = this;
+
+        $.when($(document).find(".ingsMenuPanelCont,.thisProdIngs").velocity("transition.slideUpBigOut", 800))
+                .then(function () {
+                    $.each($('.itemIngsBox .handleThisIng.currentIng'), function (i, n) {
+                        htmlTagsIngs += '<li><a><i class="fas fa-pepper-hot"></i> ' + $(n).find('.handleThisIngNombreIng').html() + '</a></li>';
+                        Htmlnewings += '<span class="label label-danger push5">+ ' + $(n).find('.handleThisIngNombreIng').html() + '</span> \n\ ';
+                        ListNewIngs += $(n).find('.handleThisIngIdIng').html() + ',';
+                    });
+                    $.each($('.itemIngsBox .handleThisIng.newIng'), function (i, n) {
+                        htmlTagsIngs += '<li><a class="greenTag"><i class="fas fa-pepper-hot"></i> ' + $(n).find('.handleThisIngNombreIng').html() + '</a></li>';
+                        Htmlnewings += '<span class="label label-danger push5">+ ' + $(n).find('.handleThisIngNombreIng').html() + '</span> \n\ ';
+                        ListNewIngs += $(n).find('.handleThisIngIdIng').html() + ',';
+                    });
+                    ListNewIngs = ListNewIngs.replace(/,\s*$/, "");
+                    uniqueArr = uniqueArray(ListNewIngs.split(','));
+                    $('.ingNamesProductoCurrentView').html(Htmlnewings);
+                    $('.thisProdIngs').html(htmlTagsIngs);
+                    $('.ingsProductoCurrentView').html(uniqueArr.join(','));
+                    drake.destroy();
+                    $(document).find(".menuPanelContainer,.editCurrentIngs,.thisProdIngs").velocity("transition.slideUpBigIn", 400);
+                });
+    });
+
+    //      AGREGAMOS A LA LISTA ESTE PEDIDO  //
+    $(document).on("click", ".addThisToList", function () {
+        var self = this,
+                idProducto = $(self).parent().parent().find('.idProdCurrentView').html(),
+                nombProducto = $(self).parent().parent().find('.nombProdCurrentView').html(),
+                ingNamesProducto = $(self).parent().parent().find('.ingNamesProductoCurrentView').html(),
+                ingsProducto = $(self).parent().parent().find('.ingsProductoCurrentView').html(),
+                precioProducto = $(self).parent().parent().find('.precProdCurrentView').html(),
+                tamProducto = $('#tamProdsSelect').val(),
+                varsProducto = $('#varsProdsSelect').val(),
+                comProducto = $('#comentProdCurrent').val(),
+                cantProducto = $('#cantProdCurrent').val(),
+                htmlList = '',
+                tamName = $('#tamProdsSelect').parent().find('.bootstrap-select button .filter-option').html(),
+                currentTotal = $('.totalPedidoBtn span').html(),
+                tamNameSolo = tamName.split('(');
+        $.when($(document).find(".showProductPanelContainer,.listPanelCont").velocity("transition.slideUpBigOut", 400)).then(function () {
+            htmlList += '<a href="#" class="list-group-item">' +
+                    '       <div class="list-group-status status-online"></div>' +
+                    '       <img src="api/assets/img/productos/' + idProducto + '.jpg" class="pull-left" alt="' + nombProducto + '"/>' +
+                    '       <span class="contacts-title">' + nombProducto + '</span> <span class="label label-info push5">x ' + cantProducto + '</span>' +
+                    '       ' + ingNamesProducto + '' +
+                    '       <p>' + varsProducto + ' || ' + comProducto + ' </p>' +
+                    '       <div class="list-group-controls">' +
+                    '           <button class="btn btn-success">' + tamName + ' x ' + cantProducto + ' <i class="fas fa-money-bill-wave"></i>  ' + (+tamProducto * +cantProducto).toFixed(2) + ' $</button>' +
+                    '           <button class="btn btn-danger deleteThisItemFromFullList"><span class="fa fa-times-circle"></span></button>' +
+                    '       </div>' +
+                    '       <div class="hidethis pedidoIdProd">' + idProducto + '</div>' +
+                    '       <div class="hidethis pedidoPrecioTotalProd">' + (+tamProducto * +cantProducto).toFixed(2) + '</div>' +
+                    '       <div class="hidethis pedidoCantProd">' + cantProducto + '</div>' +
+                    '       <div class="hidethis pedidoComProd">' + varsProducto + ' || ' + comProducto + '</div>' +
+                    '       <div class="hidethis pedidoTamProd">' + tamNameSolo[0] + '</div>' +
+                    '       <div class="hidethis pedidoIngsProd">' + ingsProducto + '</div>' +
+                    '   </a>';
+            console.log(htmlList);
+            currentTotal = (+currentTotal + (+tamProducto * +cantProducto)).toFixed(2);
+            $('.totalPedidoBtn span').html(currentTotal);
+            $('.listPanelContainer').append(htmlList);
+            $(document).find('.listPanelCont').appendTo('.fullMenuContainer');
+            $(document).find('.listPanelCont').velocity("transition.slideUpBigIn", 400);
+            listhas = 1;
+        });
+    });
+
+    //      CAMBIAMOS EL PRECIO DEPENDIENDO DEL TAMAñO      //
+    $(document).on('change', "#tamProdsSelect", function (e) {
+        $('.currentViewShowPrice').html($(this).val() + ' $');
+    });
+
+    //              VER EL LISTADO PARA PEDIR       //
+    $(document).on("click", ".ShowThisList", function () {
+        $.when($(document).find(".showProductPanelContainer,.listPanelCont").velocity("transition.slideUpBigOut", 400)).then(function () {
+            $(document).find('.listPanelCont').appendTo('.fullMenuContainer');
+            $(document).find('.listPanelCont,.ShowThisList').velocity("transition.slideUpBigIn", 400);
+        });
+    });
+
+    //              VER EL LISTADO PARA PEDIR       //
+    $(document).on("click", ".deleteThisItemFromFullList", function () {
+        var self = this, currentTotal = $('.totalPedidoBtn span').html(), thisPrice = $(this).parent().parent().find('.pedidoPrecioTotalProd').html();
+        $(this).parent().parent().velocity("transition.slideDownBigOut", 400);
+        setTimeout(function () {
+            $(self).parent().parent().remove()
+        }, 400);
+        currentTotal = (+currentTotal - thisPrice).toFixed(2);
+        $(document).find('.totalPedidoBtn').velocity("transition.slideDownOut", 400);
+        setTimeout(function () {
+            $('.totalPedidoBtn span').html(currentTotal);
+            $(document).find('.totalPedidoBtn').velocity("transition.slideUpIn", 100);
+        }, 400);
+        setTimeout(function () {
+            if ($('.listPanelContainer').children().length == 0) {
+                listhas = 0;
+                $(document).find('.listPanelCont').velocity("transition.slideUpBigOut", 400);
+            }
+            console.log($('.listPanelContainer a').length);
+        }, 1500);
+    });
+
+    //              Cargamos el Pedido a la DB       //
+    $(document).on("click", ".cargarPedidoBtn", function (e) {
+        var pedidos = [], formData = new FormData();
+        $.each($('.listPanelContainer a'), function (i, n) {
+            var pedido = {}
+            pedido.idProducto = $(n).find('.pedidoIdProd').html();
+            pedido.descripcionPedidoproducto = $(n).find('.pedidoTamProd').html();
+            pedido.cantidadPedidoproducto = $(n).find('.pedidoCantProd').html();
+            pedido.observacionPedidoproducto = $(n).find('.pedidoComProd').html();
+            pedido.precioPedidoProducto = $(n).find('.pedidoPrecioTotalProd').html();
+            pedido.ingsPedidoProducto = $(n).find('.pedidoIngsProd').html();
+            pedidos.push(pedido);
+        });
+        pageLoadingFrame("show");
+        console.log(pedidos);
+        formData.append('meth', 'loadNewPedido');
+        formData.append('pedidos', JSON.stringify(pedidos));
+        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+            success: function (data) {
+                if (data.status == 'yes') {
+                    window.location.href = "/?show=home";
+                }
+                console.log(data);
+            },
+            error: function (error) {
+                pageLoadingFrame("hide");
+                $('.errormessage_mb').html('Error de red, revise su conexi&oacute;n');
+                $('#message-box-danger').toggle();
+                console.log(error);
+            }
+        });
+    });
+
     //              CARGAMOS TODOS LOS PRODUCTOS ACTIVOS DEL MENU       //
     function getfullMenu() {
         var formData = new FormData(),
@@ -154,7 +315,7 @@
                             '           <div class="panel panel-default nav-tabs-vertical menuPanel">' +
                             '               <div class="panel-heading">' +
                             '                   <h3 class="panel-title"> <i class="fas fa-list-alt"></i> &nbsp;&nbsp;Seleccione los pedidos del menu </h3>' +
-                            '                   <h3 class="panel-title pull-right"> <i class="fas fa-arrows-alt fa-2x expandItems"></i>&nbsp;&nbsp; <i class="fas fa-compress-arrows-alt fa-2x compItems"></i></h3>' +
+                            '                   <h3 class="panel-title pull-right"> <i class="fas fa-arrows-alt fa-2x expandItems" data-toggle="tooltip" data-placement="top" title="Expandir elementos"></i>&nbsp;&nbsp; <i class="fas fa-compress-arrows-alt fa-2x compItems" data-toggle="tooltip" data-placement="top" title="Contraer elementos"></i></h3>' +
                             '               </div>' +
                             '           <div class="tabs">' +
                             '               <ul class="nav nav-tabs getWidthTabs">';
@@ -166,7 +327,7 @@
                             $.each(data.menu, function (ii, nn) {
                                 if (nn.nombreMenu == n) {
                                     htmlcontentTabs += '<div class="col-md-12 menublockBtn">' +
-                                            '               <button class="btn btn-danger btn-block" onclick="displayProduct(' + nn.idProducto + ')">' +
+                                            '               <button class="btn btn-danger btn-block" onclick="displayProduct(' + nn.idProducto + ', $(\'.fullMenuContainer\').get(0))">' +
                                             '                   <img src="api/assets/img/productos/' + nn.idProducto + '.jpg" class="menuitemImgSmall pull-left"><span class="nombreProducto">' + nn.nombreProducto + '</span> <span class="precioProducto  pull-right"><i class="fas fa-money-bill-alt"></i> ' + nn.precioProducto + '<i class="fas fa-dollar-sign"></i> </span> ' +
                                             '               </button>' +
                                             '           </div>';
@@ -179,7 +340,7 @@
                             $.each(data.menu, function (ii, nn) {
                                 if (nn.nombreMenu == n) {
                                     htmlcontentTabs += '<div class="col-md-12 menublockBtn">' +
-                                            '               <button class="btn btn-danger btn-block" onclick="displayProduct(' + nn.idProducto + ')">' +
+                                            '               <button class="btn btn-danger btn-block" onclick="displayProduct(' + nn.idProducto + ', $(\'.fullMenuContainer\').get(0))">' +
                                             '                   <img src="api/assets/img/productos/' + nn.idProducto + '.jpg" class="menuitemImgSmall pull-left"><span class="nombreProducto">' + nn.nombreProducto + '</span> <span class="precioProducto  pull-right"><i class="fas fa-money-bill-alt"></i> ' + nn.precioProducto + '<i class="fas fa-dollar-sign"></i> </span> ' +
                                             '               </button>' +
                                             '           </div>';
@@ -203,8 +364,6 @@
                         $(".menuPanel .tabs .panel-body.tab-content").css("margin-left", '100px');
                         $(".menuPanel .tabs").css("min-height", $('.getWidthTabs').height());
                     });
-                } else {
-
                 }
                 console.log(data);
             },
@@ -215,94 +374,12 @@
         });
     }
 
-    //              DESPLEGAMOS LAS CARACTERISTICAS DEL PRODUCTO SELECCIONADO           //
-    function displayProduct(idProduct) {
-        var formData = new FormData();
-        formData.append('id', idProduct);
-        formData.append('meth', 'loadProdutSpecs');
-        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
-            success: function (data) {
-                console.log(data);
-                var htmlcontent = '<div class="col-md-3 showProductPanelContainer hidethis">' +
-                        '           <div class="panel panel-default showProductPanel">' +
-                        '             <div class="panel-body profile itemMenuBg">' +
-                        '                   <div class="profile-image">' +
-                        '                       <img src="api/assets/img/productos/' + data.producto.idProducto + '.jpg"/>' +
-                        '                   </div>' +
-                        '                   <div class="profile-data">' +
-                        '                       <div class="profile-data-name">' + data.producto.nombreProducto + '</div>' +
-                        '                       <div class="profile-data-title" style="color: #FFF;">' + data.producto.nombreMenu + '</div>' +
-                        '                   </div>' +
-                        '               </div>' +
-                        '               <div class="panel-body redbg">' +
-                        '                   <div class="row">' +
-                        '                       <ul class="list-tags thisProdIngs">';
-                $.each(data.ings, function (ii, nn) {
-                    htmlcontent += '<li><a><i class="fas fa-pepper-hot"></i> ' + nn.nombreIngrediente + '</a></li>';
-                });
-                htmlcontent += '        </ul>' +
-                        '                   <ul class="list-tags">' +
-                        '                       <li class="pull-right editCurrentIngs"><span class="hidethis editIngIdProd">' + data.producto.idProducto + '</span><button class="btn btn-info"><i class="fas fa-pencil-alt"></i> Modificar</button></li>' +
-                        '                   </ul>' +
-                        '               </div>' +
-                        '           </div>' +
-                        '           <div class="hidethis ingsProductoCurrentView">' + data.producto.ingsProducto + '</div>' +
-                        '           <div class="hidethis idMenuProductoCurrentView">' + data.producto.idMenu + '</div>' +
-                        '           <div class="panel-body list-group border-bottom">   ' +
-                        '               <a  class="list-group-item active"> ' + data.producto.descProducto + '</a>' +
-                        '               <a  class="list-group-item  fontx1-5"><span class="fas fa-money-bill-wave"></span> <span class="pull-right"> ' + data.producto.precioProducto + ' $</span></a>' +
-                        '           </div>' +
-                        '           <div class="panel-body">' +
-                        '               <div class="form-group">' +
-                        '                   <select class="form-control select" data-style="btn-primary">';
-
-                var tamsArray = JSON.parse(data.producto.tamProducto);
-                $.each(tamsArray, function (tami, tamv) {
-                    htmlcontent += '<option value="' + (+data.producto.precioProducto + +tamv) + '">' + tami + ' ( $' + (+data.producto.precioProducto + +tamv) + ')</option>';
-                });
-                htmlcontent += '            </select>' +
-                        '               </div>' +
-                        '           </div>' +
-                        '           <div class="panel-body"> ' +
-                        '               <div class="form-group">   ' +
-                        '                   <select class="form-control select" data-style="btn-info">';
-                var vars = data.producto.varsProducto.split(',');
-                $.each(vars, function (ii, nn) {
-                    htmlcontent += '<option>' + nn + '</option>';
-                });
-                htmlcontent += '</select>' +
-                        '            </div>   ' +
-                        '        </div>' +
-                        '        <div class="panel-body">    ' +
-                        '            <div class="col-md-12">' +
-                        '                <h4 class="pull-left">Comentarios:</h4>' +
-                        '                <textarea type="text" class="form-control" rows="3" placeholder="Ingresa el texto"></textarea>   ' +
-                        '            </div>  ' +
-                        '        </div>' +
-                        '        <div class="panel-body">    ' +
-                        '            <div class="col-md-12">' +
-                        '                <h4 class="pull-left">Cantidad:</h4>' +
-                        '                <input type="number" class="form-control" value="1" />   ' +
-                        '            </div>  ' +
-                        '        </div>' +
-                        '        <div class="panel-body">   ' +
-                        '            <button class="btn btn-success"><i class="fas fa-plus"></i> AGREGAR</button>' +
-                        '        </div>' +
-                        '    </div>   ' +
-                        '</div>';
-                $.when(
-                        $(document).find(".showProductPanelContainer").velocity("transition.slideUpBigOut", 400)
-                        ).then(function () {
-                    $(".showProductPanelContainer").remove();
-                    $(".fullMenuContainer").append(htmlcontent);
-                    $(document).find(".showProductPanelContainer").delay(500).velocity("transition.slideUpBigIn", 400);
-                    $('select').selectpicker('refresh');
-                });
-            },
-            error: function (error) {
-                console.log("Hubo un error de internet, intente de nuevo");
-                console.log(error);
-            }
-        });
+    //              OBTENEMOS LOS VALORES UNICOS DE UN ARRAY            ////
+    function uniqueArray(arr) {
+        var a = [];
+        for (var i = 0, l = arr.length; i < l; i++)
+            if (a.indexOf(arr[i]) === -1 && arr[i] !== '')
+                a.push(arr[i]);
+        return a;
     }
 </script>

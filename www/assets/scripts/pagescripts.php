@@ -87,7 +87,7 @@
 <script src='assets/js/velocity.ui.min.js'></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.js"></script>
 <script>
-
+    var listhas = 0;
     $(document).ready(function () {
         $('.page-container.login form').submit(function (e) {
             e.preventDefault();
@@ -150,7 +150,8 @@
 
 ////////////////////////CERRAMOS LA VENTNA DE NOTIFICACION CON CLIC EN CUALQUIER PARTE DE LA PAGINA
     $(document).on("click", function () {
-        $(".customalert,.message-box").animate({width: 'hide'}, 600);
+        $(".customalert").animate({width: 'hide'}, 600);
+        $(".message-box").hide();
     });
 
     $('.numonly').bind('keyup blur', function () {
@@ -167,6 +168,114 @@
         var node = $(this);
         node.val(node.val().replace(/[^a-zA-Z\-\s]/g, ''));
     });
+
+
+    /*
+     *          *************************************************************************
+     *          *******************||  FUNCIONES PUBLICAS DE LA APP   ||*****************
+     *          *************************************************************************
+     */
+    //              DESPLEGAMOS LAS CARACTERISTICAS DEL PRODUCTO SELECCIONADO           //
+    function displayProduct(idProduct, container) {
+        var formData = new FormData();
+        formData.append('id', idProduct);
+        formData.append('meth', 'loadProdutSpecs');
+        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+            success: function (data) {
+                console.log(data);
+                var htmlforlist = '';
+                var htmlcontent = '<div class="col-md-3 showProductPanelContainer hidethis">' +
+                        '           <div class="panel panel-default showProductPanel">' +
+                        '             <div class="panel-body profile itemMenuBg">' +
+                        '                   <div class="profile-image">' +
+                        '                       <img src="api/assets/img/productos/' + data.producto.idProducto + '.jpg"/>' +
+                        '                   </div>' +
+                        '                   <div class="profile-data">' +
+                        '                       <div class="profile-data-name">' + data.producto.nombreProducto + '</div>' +
+                        '                       <div class="profile-data-title" style="color: #FFF;">' + data.producto.nombreMenu + '</div>' +
+                        '                   </div>' +
+                        '               </div>' +
+                        '               <div class="panel-body redbg">' +
+                        '                   <div class="row">' +
+                        '                       <ul class="list-tags thisProdIngs">';
+                $.each(data.ings, function (ii, nn) {
+                    htmlcontent += '<li><a><i class="fas fa-pepper-hot"></i> ' + nn.nombreIngrediente + '</a></li>';
+                    htmlforlist += '<span class="label label-danger push5">+ ' + nn.nombreIngrediente + '</span> \n\ ';
+                });
+                htmlcontent += '        </ul>' +
+                        '                   <ul class="list-tags">' +
+                        '                       <li class="pull-right editCurrentIngs"><span class="hidethis editIngIdProd">' + data.producto.idProducto + '</span><button class="btn btn-info"><i class="fas fa-pencil-alt"></i> Modificar</button></li>' +
+                        '                   </ul>' +
+                        '               </div>' +
+                        '           </div>' +
+                        '           <div class="panel-body list-group border-bottom">   ' +
+                        '               <a  class="list-group-item active"> ' + data.producto.descProducto + '</a>' +
+                        '               <a  class="list-group-item  fontx1-5"><span class="fas fa-money-bill-wave"></span> <span class="pull-right currentViewShowPrice"> ' + data.producto.precioProducto + ' $</span></a>' +
+                        '           </div>' +
+                        '           <div class="panel-body">' +
+                        '               <div class="form-group">' +
+                        '                   <select class="form-control select" data-style="btn-primary" id="tamProdsSelect">';
+                var tamsArray = JSON.parse(data.producto.tamProducto);
+                $.each(tamsArray, function (tami, tamv) {
+                    htmlcontent += '<option value="' + (+data.producto.precioProducto + +tamv) + '">' + tami + ' ( $' + (+data.producto.precioProducto + +tamv) + ')</option>';
+                });
+                htmlcontent += '            </select>' +
+                        '               </div>' +
+                        '           </div>' +
+                        '           <div class="panel-body"> ' +
+                        '               <div class="form-group">   ' +
+                        '                   <select class="form-control select" data-style="btn-info"  id="varsProdsSelect">';
+                var vars = data.producto.varsProducto.split(',');
+                $.each(vars, function (ii, nn) {
+                    htmlcontent += '<option>' + nn + '</option>';
+                });
+                if (listhas == 1) {
+                    var textListhas = '';
+                } else {
+                    var textListhas = ' hidethis ';
+                }
+                htmlcontent += '</select>' +
+                        '            </div>   ' +
+                        '        </div>' +
+                        '        <div class="panel-body">    ' +
+                        '            <div class="col-md-12">' +
+                        '                <h4 class="pull-left">Comentarios:</h4>' +
+                        '                <textarea type="text" class="form-control" rows="3" placeholder="Ingresa el texto" id="comentProdCurrent"></textarea>   ' +
+                        '            </div>  ' +
+                        '        </div>' +
+                        '        <div class="panel-body">    ' +
+                        '            <div class="col-md-12">' +
+                        '                <h4 class="pull-left">Cantidad:</h4>' +
+                        '                <input id="cantProdCurrent" type="number" class="form-control" value="1" />   ' +
+                        '            </div>  ' +
+                        '        </div>' +
+                        '        <div class="hidethis idProdCurrentView">' + data.producto.idProducto + '</div>' +
+                        '        <div class="hidethis nombProdCurrentView">' + data.producto.nombreProducto + '</div>' +
+                        '        <div class="hidethis ingsProductoCurrentView">' + data.producto.ingsProducto + '</div>' +
+                        '        <div class="hidethis ingNamesProductoCurrentView">' + htmlforlist + '</div>' +
+                        '        <div class="hidethis idMenuProductoCurrentView">' + data.producto.idMenu + '</div>' +
+                        '        <div class="hidethis precProdCurrentView">' + data.producto.precioProducto + '</div>' +
+                        '        <div class="panel-body">   ' +
+                        '            <button class="btn btn-success addThisToList"><i class="fas fa-plus"></i> AGREGAR</button>' +
+                        '            <button class="btn btn-info ShowThisList pull-right ' + textListhas + '"><i class="fas fa-list"></i> Lista</button>' +
+                        '        </div>' +
+                        '    </div>   ' +
+                        '</div>';
+                $.when(
+                        $(document).find(".showProductPanelContainer,.listPanelCont").velocity("transition.slideUpBigOut", 400)
+                        ).then(function () {
+                    $(".showProductPanelContainer").remove();
+                    $(container).append(htmlcontent);
+                    $(document).find(".showProductPanelContainer").delay(500).velocity("transition.slideUpBigIn", 400);
+                    $('select').selectpicker('refresh');
+                });
+            },
+            error: function (error) {
+                console.log("Hubo un error de internet, intente de nuevo");
+                console.log(error);
+            }
+        });
+    }
 </script>
 <?php
 

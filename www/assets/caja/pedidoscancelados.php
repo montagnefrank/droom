@@ -33,7 +33,7 @@ if($rows!=0){
         if ($p["numeroMesa"] == "999"){
             $htmlPedidosCocina .= 
                 '<div class="task-item task-success task-complete" style="cursor:default">                                    
-                        <div class="task-text ui-sortable-handle"><h2>'.$p["estadoPedido"].'</h2><a href="?panel=caja.php&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
+                        <div class="task-text ui-sortable-handle"><h2>'.$p["estadoPedido"].'</h2><a href="?show=caja&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # '.$p["idPedido"].'</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-check-circle" aria-hidden="true"></i></div> 
@@ -46,7 +46,7 @@ if($rows!=0){
         } else {
             $htmlPedidosCocina .= 
                 '<div class="task-item task-success task-complete" style="cursor:default">                                    
-                        <div class="task-text ui-sortable-handle"><h2>Mesa '.$p["numeroMesa"].'</h2><a href="?panel=caja.php&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
+                        <div class="task-text ui-sortable-handle"><h2>Mesa '.$p["numeroMesa"].'</h2><a href="?show=caja&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # '.$p["idPedido"].'</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-check-circle" aria-hidden="true"></i></div> 

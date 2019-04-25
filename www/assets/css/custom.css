@@ -676,7 +676,7 @@ html, body {
     margin-top: 0px;
 }
 
-.tile.tile-selected,.tile.tile-selected:hover {
+.tile.tile-selected,.tile.tile-selected:hover,.widget.tile-selected,.widget.tile-selected:hover {
     box-shadow: 10px 10px #3f79e4;
     text-shadow: 2px 2px #480e56;
     background: #8db153;
@@ -740,4 +740,35 @@ button {
 }
 .push5{
     margin: 5px;
+}
+.list-tags li a.greenTag {
+    background: #8db153;
+    border: 1px solid #6d8448;
+    color: white;
+}
+.listPanel{
+    box-shadow: 10px 10px #a27a7a69;
+    text-shadow: 1px 1px #0f0e5652;
+}
+.listPanel .panel-heading{
+    background-color: #ed4444;
+}
+.listPanel .panel-footer{
+    background-color: #ed4444;
+}
+.listPanel .panel-heading .panel-title{
+    color: white;
+}
+.imgMesas{
+    width: 100%;
+}
+.tile.menuItemBox{
+    width: 70%;
+    font-size: 18px;
+    padding: 59px;
+    min-height: 190px;
+    background: url(/api/assets/img/mesas2.png) center #31b5e2;
+}
+.tile.menuItemBox:hover,.tile.menuItemBox.tile-selected {
+    background: url(/api/assets/img/mesas2.png) center #8cb052;
 }

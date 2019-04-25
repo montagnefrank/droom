@@ -59,7 +59,7 @@
                 idpedido: idpedido,
             },
             success: function (html) {
-                window.location.replace("index.php?panel=factura.php");
+                window.location.replace("/?show=caja/factura");
             },
             error: function (error) {
                 console.log('Disculpe, existió un problema');
@@ -141,7 +141,7 @@
                 $('#modal_consultar_factura').modal('toggle');
             } else {
                 var idfactura = inputvalue[1].split(' - ');
-                window.location.href = "index.php?panel=caja.php&verfactura=" + idfactura[0];
+                window.location.href = "/?show=caja&verfactura=" + idfactura[0];
             }
         }
     });
@@ -338,7 +338,7 @@ if (isset($_GET["verfactura"])) {
         $row_pedido = mysqli_fetch_array($result_pedido);
         echo "
         <script>
-            window.location.href = 'index.php?panel=caja.php&verfactura=" . $row_pedido["idFactura"] . "';
+            window.location.href = '/?show=caja&verfactura=" . $row_pedido["idFactura"] . "';
         </script>";
         goto salidaif;
     } else {
@@ -398,7 +398,7 @@ salidaif:
                 idFactura: idFactura,
             },
             success: function (html) {
-                window.location.href = "index.php?panel=caja.php&verfactura=" + html;
+                window.location.href = "/?show=caja&verfactura=" + html;
             },
             error: function (error) {
                 console.log('Disculpe, existió un problema');
@@ -421,7 +421,7 @@ salidaif:
                 idFactura: idFactura,
             },
             success: function (html) {
-                window.location.href = "index.php?panel=caja.php&verfactura=" + html;
+                window.location.href = "/?show=caja&verfactura=" + html;
             },
             error: function (error) {
                 console.log('Disculpe, existió un problema');

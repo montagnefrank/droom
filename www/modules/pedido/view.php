@@ -32,11 +32,12 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
+ session_start();
 ?>
 <!-- BREADCRUMB -->
 <ul class="breadcrumb">
     <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li>
-    <li>Nuevo Pedido </li>
+    <li id="debugApp">Nuevo Pedido </li>
 </ul>
 <!-- FIN BREADCRUMB -->
 <div class="page-content-wrap">    
@@ -45,26 +46,28 @@
             <div class="panel panel-default">
                 <div class="panel panel-heading">
                     <h3 class="panel-title"> <i class="fas fa-edit"></i> &nbsp;&nbsp; Editar Los Ingredientes</h3>
+                    <button class="btn btn-danger returntToMenu pull-right"><i class="fas fa-backward"></i> Regresar</button>
                 </div>
                 <div class="panel panel-body">
                     <div class="col-md-6">
                         <div class="panel panel-default">
-                            <div class="panel panel-heading">
+                            <div class="panel-heading">
                                 <h3 class="panel-title"> <i class="fas fa-check"></i> &nbsp;&nbsp; Actuales</h3>
+                                <button class="btn btn-success editcurrentIngsList pull-right"><i class="fas fa-save"></i></button>
                             </div>
-                            <div class="panel panel-body">
-                                <div class="itemIngsBox col-md-6">
+                            <div class="panel-body">
+                                <div class="itemIngsBox col-md-12">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="panel panel-default">
-                            <div class="panel panel-heading">
+                            <div class="panel-heading">
                                 <h3 class="panel-title"> <i class="fas fa-list"></i> &nbsp;&nbsp; Disponibles</h3>
                             </div>
-                            <div class="panel panel-body">
-                                <div class="fullIngBox col-md-6">
+                            <div class="panel-body">
+                                <div class="fullIngBox col-md-12">
                                 </div>
                             </div>
                         </div>
@@ -72,5 +75,34 @@
                 </div>
             </div>
         </div>
-    </div>      
+    </div>   
+    <div class=" col-md-3 hidethis listPanelCont">
+        <div class="panel panel-default listPanel">
+            <div class="panel-heading">
+                <h2 class="panel-title"><i class="fas fa-check"></i> Valide su pedido</h2>
+                <button class="btn btn-info pull-right"> Mesa <?php echo $_SESSION["numeromesa"] ?></button>
+            </div>
+            <div class="panel-body list-group list-group-contacts listPanelContainer">    
+
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-info totalPedidoBtn pull-left"> Total: <i class="fas fa-money-check-alt"></i> <span>0</span> $</button>
+                <button class="btn btn-success cargarPedidoBtn pull-right"><i class="fas fa-upload"></i> Cargar Pedido </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL ERROR -->
+<div class="message-box message-box-danger animated fadeIn" id="message-box-danger">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title"><span class="fa fa-times"></span> error</div>
+            <div class="mb-content">
+                <p class="errormessage_mb"></p>
+            </div>
+            <div class="mb-footer">
+            </div>
+        </div>
+    </div>
 </div>

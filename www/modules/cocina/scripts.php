@@ -45,9 +45,6 @@
     var estadoCont = 1;
 
     $(document).ready(function () {
-        $(".dashboard").removeClass("active");
-        $(".pedidos").removeClass("active");
-        $(".cocina").addClass("active");
 
         cargaPedidos();
 
@@ -436,7 +433,7 @@
                 if (pedidos.length == 0) {
                     longitud = 0;
                     $(".page-content").css("height", $(window).height());
-                    $(".contenedorCocina").html("<center><h1 style='padding:10px;'><i class='fa fa-check-circle-o' aria-hidden='true'></i> Ningún pedido por atender</h1></center>");
+                    $(".contenedorCocina").html("<center><h1 style='padding:10px;'><i class=\"far fa-meh-rolling-eyes\"></i> Ningún pedido por atender</h1></center>");
                 }
             },
             error: function (error) {
@@ -453,16 +450,13 @@
     function asignaPedidos(pedidos) {
         $.when(
                 $(pedidos).each(function (index, value) {
-            $.ajax({
-                // Verificacion de los datos introducidos
-                url: 'assets/cocina/consultaProductos.php',
-                type: 'POST',
-                data: {
-                    idpedido: value.idPedido,
-                    index: (index + 1)
-                },
-                success: function (html) {
-                    $(".item" + (index + 1)).append(html);
+            var formData = new FormData();
+            formData.append('meth', 'consultaProductosCocina');
+            formData.append('idpedido', value.idPedido);
+            formData.append('index', (index + 1));
+            $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                success: function (data) {
+                    $(".item" + (index + 1)).append(data.result);
                 },
                 error: function (error) {
                     console.log('Disculpe, existió un problema');

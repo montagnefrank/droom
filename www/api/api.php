@@ -153,7 +153,7 @@ if ($_POST) {
 
     //          ASIGNAMOS LAS MESAS AL NUEVO EPDIDO             //
     if ($method == 'asignaMesa') {
-
+        session_start();
         $idMesa = $_POST["idmesa"];
         $numeroMesa = $_POST["numeromesa"];
         $idPedido;
@@ -246,7 +246,6 @@ if ($_POST) {
         $json['output'] = $output;
         echo json_encode($json);
         return;
-        return;
     }
 
     //          MOSTRAMOS LOS PRODUCTOS DLE PEDIDO CLICKEADO           //
@@ -255,9 +254,8 @@ if ($_POST) {
         $idpedido = $_POST["idpedido"];
 
         $query = "SELECT * FROM pedidoproducto pp "
-                . "JOIN producto p ON (p.idProducto = pp.idProducto) "
-                . "JOIN submenu sm ON(p.idSubMenu = sm.idSubMenu) "
-                . "JOIN menu m ON (sm.idMenu = m.idMenu) "
+                . "INNER JOIN productos p ON (p.idProducto = pp.idProducto) "
+                . "INNER JOIN menu m ON (p.idMenu = m.idMenu) "
                 . "WHERE pp.idPedido= '$idpedido'";
         $result = $conn->query($query);
         if (!$result)
@@ -274,263 +272,51 @@ if ($_POST) {
         $htmlPedido = "";
 
         foreach ($productos as $producto) {
-            $htmldiv = '<div style="display:none;" class="idproducto">' . $producto["idProducto"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="idsubmenu">' . $producto["idSubmenu"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="idmenu">' . $producto["idMenu"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="idpedido">' . $producto["idPedido"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="idpedidoproducto">' . $producto["idPedidoproducto"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="nombrepedidoproducto">' . $producto["nombreProducto"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="submenupedidoproducto">' . $producto["nombreSubmenu"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="menupedidoproducto">' . $producto["nombreMenu"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="descripcionpedidoproducto">' . $producto["descripcionPedidoproducto"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="observacionpedidoproducto">' . $producto["observacionPedidoproducto"] . '</div>';
-            $htmldiv .= '<div style="display:none;" class="cantidadpedidoproducto">' . $producto["cantidadPedidoproducto"] . '</div>';
-
-
-            $estado = "";
-            $icon = "";
-            $cancelarpedido = "";
-            $editarpedido = "";
-            $entregarpedido = "";
-
             if ($producto["estadoPedidoproducto"] == "SOLICITADO") {
                 $estado = "info";
                 $icon = '<i class="fa fa-asterisk fa-2x" style="font-size:25px;color:white;" aria-hidden="true"></i>';
-                $cancelarpedido = "<button class=\"btn btn-primary cancelarPedido\" style=\"border: 1px solid;\"><i class='fa fa-times' aria-hidden='true'></i> Cancelar pedido</button>";
-                if ($producto["nombreMenu"] != "Bebidas") {
-                    $editarpedido = "<button class=\"btn btn-primary editarPedido\" style=\"border: 1px solid;\"><i class='fas fa-edit' aria-hidden='true'></i> Editar pedido</button>";
-                }
-                $entregarpedido = "";
-            } elseif ($producto["estadoPedidoproducto"] == "EN PROCESO") {
+                $btns = "<button class=\"btn btn-primary push5 cancelarPedido\" style=\"border: 1px solid;\"><i class='fa fa-times' aria-hidden='true'></i> Cancelar pedido</button>"
+                        . "<button class=\"btn btn-primary push5 editarPedido\" style=\"border: 1px solid;\"><i class='fas fa-edit' aria-hidden='true'></i> Editar pedido</button>";
+            }
+            if ($producto["estadoPedidoproducto"] == "EN PROCESO") {
                 $estado = "warning";
                 $icon = '<i class="fas fa-sync-alt fa-spin fa-2x fa-fw" style="font-size:25px;color:white;"></i>';
-                $cancelarpedido = "";
-                $editarpedido = "";
-                $entregarpedido = "";
-            } elseif ($producto["estadoPedidoproducto"] == "LISTO PARA ENTREGAR") {
+                $btns = "";
+            }
+            if ($producto["estadoPedidoproducto"] == "LISTO PARA ENTREGAR") {
                 $estado = "success";
                 $icon = '<i class="fa fa-check" style="font-size:25px;color:white;" aria-hidden="true"></i>';
-                $cancelarpedido = "";
-                $editarpedido = "";
-                $entregarpedido = "<button class=\"btn btn-primary pedidoEntregado\" style=\"border: 1px solid;\"><i class='fa fa-thumbs-o-up' aria-hidden='true'></i> Pedido entregado</button>";
-            } elseif ($producto["estadoPedidoproducto"] == "ENTREGADO") {
+                $btns = "<button class=\"btn btn-primary push5 pedidoEntregado\" style=\"border: 1px solid;\"><i class='fas fa-vote-yea' aria-hidden='true'></i> Entregar</button>";
+            }
+            if ($producto["estadoPedidoproducto"] == "ENTREGADO") {
                 $estado = "default";
-                $icon = '<i class="fa fa-thumbs-o-up" aria-hidden="true" style="font-size:25px;color:black;"></i>';
-                $cancelarpedido = "";
-                $editarpedido = "";
-                $entregarpedido = "";
+                $icon = '<i class="fas fa-vote-yea" aria-hidden="true" style="font-size:25px;color:black;"></i>';
+                $btns = "";
             }
 
+            $htmlPedido .= '  
+            <div class="list-group-item btn-' . $estado . ' pedidoSingleModal">
+                <p style="font-size:25px;">' . $producto["nombreProducto"] . '</p>
+                <p style="font-size:15px;font-weight:bold;">' . $producto["descripcionPedidoproducto"] . ' </p>
+                <p style="position:absolute;top:12px;right:10px;">' . $icon . '</p>
+                <div style="text-align: -webkit-right;">
+                    <h3>Cantidad : <small style="font-size: 20px;color: black;font-weight: bold;">' . $producto["cantidadPedidoproducto"] . '</small></h3>
+                    <h3>Observaciones : <small style="font-size: 20px;color: black;font-weight: bold;">' . $producto["observacionPedidoproducto"] . '</small></h3>
+                </div>
+                <div class="list-group-controls" style="text-align:center;">
+                    ' . $btns . '
+                </div>';
 
-
-
-            if ($producto["nombreMenu"] == "Pizzas") {
-                $htmlPedido .= '<div class="list-group-item btn-' . $estado . ' pedidoSingleModal" >' .
-                        "<p style='font-size:25px;'>" . $producto["nombreProducto"] . "</p>" .
-                        "<p style='font-size:15px;font-weight:bold;'>" . $producto["descripcionPedidoproducto"] . "</p>" .
-                        "<p style='position:absolute;top:12px;right:10px;'>" . $icon . "</p>";
-
-                //ASIGNAMIENTO A TABLA DEL PEDIDO PRODUCTO Y DEL PEDIDO PRODUCTO COMBINADO
-                $htmlPedido .= '<table class="table table-bordered">' .
-                        '<thead>' .
-                        '<tr>' .
-                        '<th style="background: rgba(255, 255, 255,0.4);color: black;">Pizza</th>' .
-                        '<th style="background: rgba(255, 255, 255,0.4);color: black;">Ingredientes</th>' .
-                        '</tr>' .
-                        '</thead>' .
-                        '<tbody>';
-
-
-                $idPedidoProducto = $producto["idPedidoproducto"];
-                $htmlPedido .= '<tr><td style="background: rgba(255, 255, 255,0.2);color: black;">' . $producto["nombreSubmenu"] . '</td>';
-                $q = "SELECT * FROM pedprod_ing ppi join ingrediente i on(ppi.idIngrediente = i.idIngrediente) WHERE ppi.idPedidoproducto = '$idPedidoProducto'";
-
-                $result = $conn->query($q);
-                if (!$result)
-                    die($conn->error);
-
-                $rows = $result->num_rows;
-                $ingredientesProducto = array();
-
-                for ($i = 0; $i < $rows; $i++) {
-                    $result->data_seek($i);
-                    $ingredientesProducto[] = $result->fetch_array(MYSQLI_ASSOC);
-                }
-
-                if ($rows != 0) {
-                    $htmlPedido .= '<td style="background: rgba(255, 255, 255,0.2);color: black;">' .
-                            '<ul style="list-style-type: none;">';
-
-                    foreach ($ingredientesProducto as $ingrediente) {
-                        $cantidad = $ingrediente["cantidadPedProd_ing"];
-                        if ($ingrediente["opPedprod_ing"] == "agrega") {
-                            $htmlPedido .= '<li> (+' . $cantidad . ') ' . $ingrediente["nombreIngrediente"] . '</li>';
-                        } else
-                        if ($ingrediente["opPedprod_ing"] == "quita") {
-                            $htmlPedido .= '<li> (-' . $cantidad . ') ' . $ingrediente["nombreIngrediente"] . '</li>';
-                        }
-                    }
-                    $htmlPedido .= '</ul>' .
-                            '</td>';
-                } else {
-                    $htmlPedido .= '<td style="background: rgba(255, 255, 255,0.2);color: black;"><center>Sin ingredientes personalizados</center></td>';
-                }
-
-
-                if ($producto["descripcionPedidoproducto"] == "Combinada 1/2" || $producto["descripcionPedidoproducto"] == "Combinada 1/4" || $producto["descripcionPedidoproducto"] == "Personalizada") {
-
-                    $detalle = "";
-
-                    if ($producto["descripcionPedidoproducto"] == "Combinada 1/2") {
-                        $detalle = "(1/2)";
-                    } else
-                    if ($producto["descripcionPedidoproducto"] == "Combinada 1/4") {
-                        $detalle = "(1/4)";
-                    } else
-                    if ($producto["descripcionPedidoproducto"] == "Personalizada") {
-                        $detalle = "(Pers.)";
-                    }
-
-                    //PARA CONSULTAR LOS PEDIDOS PRODUCTOS COMBINADOS DE LA PIZZA
-                    $q = "SELECT * FROM pedidoproductocombinado ppc join producto p on(p.idProducto = ppc.idProducto) join submenu sm on(p.idSubMenu = sm.idSubMenu) join menu m on (sm.idMenu = m.idMenu) WHERE ppc.idPedidoproducto = '$idPedidoProducto'";
-                    $result = $conn->query($q);
-                    if (!$result)
-                        die($conn->error);
-
-                    $rows = $result->num_rows;
-                    $productosCombinados = array();
-
-                    for ($i = 0; $i < $rows; $i++) {
-                        $result->data_seek($i);
-                        $productosCombinados[] = $result->fetch_array(MYSQLI_ASSOC);
-                    }
-
-                    if ($rows != 0) {
-                        $contador = 1;
-                        foreach ($productosCombinados as $productocombinado) {
-
-                            $htmlPedido .= '<tr><td style="background: rgba(255, 255, 255,0.2);color: black;">' . $productocombinado["nombreSubmenu"] . " " . $detalle . '</td>';
-
-
-                            $idPedidoproductocombinado = $productocombinado["idPedidoproductocombinado"];
-
-                            $htmldiv .= '<div style="display:none;" class="idpedidoproductocombinado' . $contador . '">' . $idPedidoproductocombinado . '</div>';
-                            $htmldiv .= '<div style="display:none;" class="nombrepedidoproductocombinado' . $contador . '">' . $productocombinado["nombreProducto"] . '</div>';
-                            $htmldiv .= '<div style="display:none;" class="submenupedidoproductocombinado' . $contador . '">' . $productocombinado["nombreSubmenu"] . '</div>';
-
-                            $contador++;
-
-                            $q = "SELECT * FROM pedprodcomb_ing ppci join ingrediente i on(ppci.idIngrediente = i.idIngrediente) WHERE ppci.idPedidoproductocombinado = '$idPedidoproductocombinado'";
-
-                            $result = $conn->query($q);
-                            if (!$result)
-                                die($conn->error);
-
-                            $rows = $result->num_rows;
-                            $ingredientesProductoCombinado = array();
-
-                            for ($i = 0; $i < $rows; $i++) {
-                                $result->data_seek($i);
-                                $ingredientesProductoCombinado[] = $result->fetch_array(MYSQLI_ASSOC);
-                            }
-
-                            if ($rows != 0) {
-
-                                $htmlPedido .= '<td style="background: rgba(255, 255, 255,0.2);color: black;"><ul style="list-style-type: none;">';
-
-                                foreach ($ingredientesProductoCombinado as $ingrediente) {
-                                    $cantidad = $ingrediente["cantidadPedProdcomb_ing"];
-                                    if ($ingrediente["opPedprodcomb_ing"] == "agrega") {
-                                        $htmlPedido .= '<li> (+' . $cantidad . ') ' . $ingrediente["nombreIngrediente"] . '</li>';
-                                    } else
-                                    if ($ingrediente["opPedprodcomb_ing"] == "quita") {
-                                        $htmlPedido .= '<li> (-' . $cantidad . ') ' . $ingrediente["nombreIngrediente"] . '</li>';
-                                    }
-                                }
-                                $htmlPedido .= '</ul></td>';
-                                '<td>' . $productocombinado["nombreProducto"] . '</td></tr>';
-                            } else {
-                                $htmlPedido .= '<td style="background: rgba(255, 255, 255,0.2);color: black;"><center>Sin ingredientes personalizados</center></td>';
-                            }
-                        }
-                    }
-                }
-            } elseif ($producto["nombreMenu"] == "Ensaladas y Bocaditos" || $producto["nombreMenu"] == "Pastas" || $producto["nombreMenu"] == "Carnes" || $producto["nombreMenu"] == "Crepes y Postres") {
-
-                $htmlPedido .= '<div class="list-group-item btn-' . $estado . ' pedidoSingleModal">' .
-                        "<p style='font-size:25px;font-weight:bold;'>" . $producto["nombreProducto"] . "</p>" .
-                        "<p style='position:absolute;top:12px;right:10px;'>" . $icon . "</p>";
-
-                $idPedidoProducto = $producto["idPedidoproducto"];
-
-                $q = "SELECT * FROM pedprod_ing ppi join ingrediente i on(ppi.idIngrediente = i.idIngrediente) WHERE ppi.idPedidoproducto = '$idPedidoProducto'";
-
-                $result = $conn->query($q);
-                if (!$result)
-                    die($conn->error);
-
-                $rows = $result->num_rows;
-                $ingredientesProducto = array();
-
-                for ($i = 0; $i < $rows; $i++) {
-                    $result->data_seek($i);
-                    $ingredientesProducto[] = $result->fetch_array(MYSQLI_ASSOC);
-                }
-
-                if ($rows != 0) {
-
-                    //ASIGNAMIENTO A TABLA DEL PEDIDO PRODUCTO Y DEL PEDIDO PRODUCTO COMBINADO
-                    $htmlPedido .= '<table class="table table-bordered" style="font-weight:bold;">' .
-                            '<thead>' .
-                            '<tr>' .
-                            '<th style="background: rgba(255, 255, 255,0.4);color: black;">Producto</th>' .
-                            '<th style="background: rgba(255, 255, 255,0.4);color: black;">Ingredientes</th>' .
-                            '</tr>' .
-                            '</thead>' .
-                            '<tbody>';
-
-                    $htmlPedido .= '<tr><td style="background: rgba(255, 255, 255,0.2);color: black;">' . $producto["nombreProducto"] . '</td>';
-
-                    $htmlPedido .= '<td style="background: rgba(255, 255, 255,0.2);color: black;">' .
-                            '<ul style="list-style-type: none;">';
-
-                    foreach ($ingredientesProducto as $ingrediente) {
-                        $cantidad = $ingrediente["cantidadPedProd_ing"];
-                        if ($ingrediente["opPedprod_ing"] == "agrega") {
-                            $htmlPedido .= '<li> (+' . $cantidad . ') ' . $ingrediente["nombreIngrediente"] . '</li>';
-                        } else
-                        if ($ingrediente["opPedprod_ing"] == "quita") {
-                            $htmlPedido .= '<li> (-' . $cantidad . ') ' . $ingrediente["nombreIngrediente"] . '</li>';
-                        }
-                    }
-                    $htmlPedido .= '</ul>' .
-                            '</td>';
-                }
-            } elseif ($producto["nombreMenu"] == "Bebidas") {
-
-                $htmlPedido .= '<div class="list-group-item btn-' . $estado . '" style="border: 2px solid #7a7a7a;color:#434a54;">' .
-                        "<p style='font-size:25px;font-weight:bold;'>" . $producto["nombreProducto"] . "</p>" .
-                        "<p style='position:absolute;top:12px;right:10px;'>" . $icon . "</p>";
-            }
-
-            $htmlPedido .= '</tbody>' . '</table>';
-
-            $htmlPedido .= "<div style=\"text-align: -webkit-right;\">
-        <h3>Cantidad : <small style=\"font-size: 20px;color: black;font-weight: bold;\">" . $producto["cantidadPedidoproducto"] . "</small></h3>";
-
-            if ($producto["observacionPedidoproducto"]) {
-                $htmlPedido .= "<h3>Observaciones : <small style=\"font-size: 20px;color: black;font-weight: bold;\">" . $producto["observacionPedidoproducto"] . "</small></h3>";
-            }
-
-            $htmlPedido .= "</div>";
-
-            $htmlPedido .= "<div class=\"list-group-controls\" style='text-align:center;'>" .
-                    $cancelarpedido .
-                    $editarpedido .
-                    $entregarpedido .
-                    "</div>" .
-                    $htmldiv;
-            $htmlPedido .= "</div>";
+            $htmlPedido .= '<div style="display:none;" class="idproducto">' . $producto["idProducto"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="idmenu">' . $producto["idMenu"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="idpedido">' . $producto["idPedido"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="idpedidoproducto">' . $producto["idPedidoproducto"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="nombrepedidoproducto">' . $producto["nombreProducto"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="menupedidoproducto">' . $producto["nombreMenu"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="descripcionpedidoproducto">' . $producto["descripcionPedidoproducto"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="observacionpedidoproducto">' . $producto["observacionPedidoproducto"] . '</div>';
+            $htmlPedido .= '<div style="display:none;" class="cantidadpedidoproducto">' . $producto["cantidadPedidoproducto"] . '</div>';
+            $htmlPedido .= '</div>';
         }
         echo $htmlPedido;
 
@@ -550,146 +336,12 @@ if ($_POST) {
         $numeromesa = $_POST["numeromesa"];
         $idpedido = $_POST["idpedido"];
 
-        if ($menupedidoproducto != "Bebidas") {
-            if ($descripcionpedidoproducto == "Combinada 1/2" || $descripcionpedidoproducto == "Combinada 1/4") {
-                $idpedidoproductocombinado1 = $_POST["idpedidoproductocombinado1"];
+        $query = "DELETE FROM pedidoproducto WHERE idPedidoproducto = '$idpedidoproducto'";
+        $res = $conn->query($query);
+        if (!$res)
+            die($conn->error);
 
-                //eliminacion de ingredientes de pedido producto combinado 1
-                $query = "DELETE FROM pedprodcomb_ing WHERE idPedidoproductocombinado = '$idpedidoproductocombinado1'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                //eliminacion de pedido producto combinado 1
-                $query = "DELETE FROM pedidoproductocombinado WHERE idPedidoproductocombinado = '$idpedidoproductocombinado1'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-
-                //ELIMINACION DEL PEDIDO PRODUCTO
-                //eliminacion de ingredientes de pedido producto combinado 1
-                $query = "DELETE FROM pedprod_ing WHERE idPedidoproducto = '$idpedidoproducto'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                $query = "DELETE FROM pedidoproducto WHERE idPedidoproducto = '$idpedidoproducto'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-            }
-            if ($descripcionpedidoproducto == "Personalizada") {
-
-                $idpedidoproductocombinado1 = $_POST["idpedidoproductocombinado1"];
-                $idpedidoproductocombinado2 = $_POST["idpedidoproductocombinado2"];
-                $idpedidoproductocombinado3 = $_POST["idpedidoproductocombinado3"];
-
-                //eliminacion de ingredientes de pedido producto combinado 1
-                $query = "DELETE FROM pedprodcomb_ing WHERE idPedidoproductocombinado = '$idpedidoproductocombinado1'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                //eliminacion de pedido producto combinado 1
-                $query = "DELETE FROM pedidoproductocombinado WHERE idPedidoproductocombinado = '$idpedidoproductocombinado1'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-
-                //eliminacion de ingredientes de pedido producto combinado 2
-                $query = "DELETE FROM pedprodcomb_ing WHERE idPedidoproductocombinado = '$idpedidoproductocombinado2'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                //eliminacion de pedido producto combinado 2
-                $query = "DELETE FROM pedidoproductocombinado WHERE idPedidoproductocombinado = '$idpedidoproductocombinado2'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-
-                //eliminacion de ingredientes de pedido producto combinado 3
-                $query = "DELETE FROM pedprodcomb_ing WHERE idPedidoproductocombinado = '$idpedidoproductocombinado3'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                //eliminacion de pedido producto combinado 3
-                $query = "DELETE FROM pedidoproductocombinado WHERE idPedidoproductocombinado = '$idpedidoproductocombinado3'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-
-
-                //ELIMINACION DEL PEDIDO PRODUCTO
-                //eliminacion de ingredientes de pedido producto combinado 1
-                $query = "DELETE FROM pedprod_ing WHERE idPedidoproducto = '$idpedidoproducto'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                $query = "DELETE FROM pedidoproducto WHERE idPedidoproducto = '$idpedidoproducto'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-            }
-            if ($descripcionpedidoproducto == "Unitario" || $descripcionpedidoproducto == "entera") {
-
-                //ELIMINACION DEL PEDIDO PRODUCTO
-                //eliminacion de ingredientes de pedido producto combinado 1
-                $query = "DELETE FROM pedprod_ing WHERE idPedidoproducto = '$idpedidoproducto'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al eliminar. ' . $conn->error;
-                }
-
-                $query = "DELETE FROM pedidoproducto WHERE idPedidoproducto = '$idpedidoproducto'";
-                $res = $conn->query($query);
-
-                if (!$res) {
-                    echo $res = 'Error al ingresar. ' . $conn->error;
-                }
-            }
-        } else {
-
-            //ELIMINACION DEL PEDIDO PRODUCTO
-
-            $query = "DELETE FROM pedidoproducto WHERE idPedidoproducto = '$idpedidoproducto'";
-            $res = $conn->query($query);
-
-            if (!$res) {
-                echo $res = 'Error al ingresar. ' . $conn->error;
-            }
-        }
-
-
-        $query = "SELECT * from mesa m JOIN pedido p on(m.idMesa = p.idMesa) JOIN pedidoproducto pp on(pp.idPedido = p.idPedido) WHERE p.idPedido = '$idpedido'";
-
+        $query = "SELECT * from pedidoproducto WHERE idPedido = '$idpedido'";
         $result = $conn->query($query);
         if (!$result)
             die($conn->error);
@@ -1572,7 +1224,7 @@ if ($_POST) {
             echo json_encode($json);
         }
     }
-    
+
     //                  REEMPLAZAMOS LA IMAGEN DEL LOGO     //
     if ($method == 'newLogo') {
 
@@ -1633,7 +1285,7 @@ if ($_POST) {
             return;
         }
     }
-    
+
     //                  REEMPLAZAMOS PRIMER SLIDE    //
     if ($method == 'newSlide1') {
 
@@ -1694,7 +1346,7 @@ if ($_POST) {
             return;
         }
     }
-    
+
     //                  REEMPLAZAMOS PRIMER SLIDE    //
     if ($method == 'newSlide2') {
 
@@ -1755,7 +1407,7 @@ if ($_POST) {
             return;
         }
     }
-    
+
     //                  REEMPLAZAMOS PRIMER SLIDE    //
     if ($method == 'newSlide3') {
 
@@ -1816,7 +1468,7 @@ if ($_POST) {
             return;
         }
     }
-    
+
     //                  OBTENEMOS LOS MENU   //
     if ($method == 'getMenuList') {
         $query = "SELECT * FROM menu ";
@@ -1861,7 +1513,7 @@ if ($_POST) {
         echo json_encode($json);
         return;
     }
-    
+
     //                  EDITAMOS EL MENU          //
     if ($method == 'editMenu') {
         $val_select = "UPDATE menu SET "
@@ -1884,7 +1536,7 @@ if ($_POST) {
             echo json_encode($json);
         }
     }
-    
+
     //                  AGREGAMOS NUEVA MESA             //
     if ($method == 'addnewMenu') {
 
@@ -1960,7 +1612,7 @@ if ($_POST) {
 
     //                  ACTUALIZAMOS LOS TAMAñOS           //
     if ($method == 'updateTams') {
-        
+
         $val_select = "UPDATE productos SET tamProducto = '" . $_POST['tams'] . "' WHERE idProducto = '" . $_POST['idProducto'] . "'";
         $val_result = $conn->query($val_select) or die($conn->error);
 
@@ -1979,6 +1631,162 @@ if ($_POST) {
             $json['output'] = $output;
             echo json_encode($json);
         }
+    }
+
+    //                  CARGAMOS NUEVO PEDIDO EN SISTEMA           //
+    if ($method == 'loadNewPedido') {
+
+        session_start();
+        $pedidosList = json_decode(stripslashes($_POST['pedidos']));
+        $insertPedido = "INSERT INTO pedido(idMesa,idUsuario,estadoPedido,estadopagoPedido) "
+                . "VALUES ('" . $_SESSION['idmesa'] . "',"
+                . "'" . $_SESSION['usuario']['idUsuario'] . "',"
+                . "'SOLICITADO',"
+                . "'SIN PAGAR')";
+        $val_result = $conn->query($insertPedido); // or die($link->error)
+
+        if ($val_result) {
+            $lastIdPedido = $conn->insert_id;
+            $catnPEdidos = sizeof($pedidosList);
+            $catnPEdidos = $catnPEdidos - 1;
+            for ($x = 0; $x <= $catnPEdidos; $x++) {
+                $pedidosList[$x] = (array) $pedidosList[$x];
+            }
+
+            foreach ($pedidosList as $thisPedido) {
+                $insertPedidoProds = "INSERT INTO `pedidoproducto`(`idPedido`,`idProducto`,`descripcionPedidoproducto`,`cantidadPedidoproducto`,`observacionPedidoproducto`,`precioPedidoProducto`,`ingsPedidoProducto`,`estadoPedidoproducto`) "
+                        . "VALUES ('" . $lastIdPedido . "',"
+                        . "'" . $thisPedido['idProducto'] . "',"
+                        . "'" . $thisPedido['descripcionPedidoproducto'] . "',"
+                        . "'" . $thisPedido['cantidadPedidoproducto'] . "',"
+                        . "'" . $thisPedido['observacionPedidoproducto'] . "',"
+                        . "'" . $thisPedido['precioPedidoProducto'] . "',"
+                        . "'" . $thisPedido['ingsPedidoProducto'] . "',"
+                        . "'SOLICITADO'); ";
+                $insertPedidos_result = $conn->query($insertPedidoProds) or die($link->error);
+            }
+            if ($insertPedidos_result) {
+                $val_select = "UPDATE mesa SET estadoMesa = 'OCUPADA' WHERE idMesa = '" . $_SESSION['idmesa'] . "'";
+                $val_result = $conn->query($val_select) or die($conn->error);
+
+                if ($val_result) {
+                    $json['status'] = 'yes';
+                    $output = ob_get_contents();
+                    ob_end_clean();
+                    $json['output'] = $output;
+                    echo json_encode($json);
+                } else {
+                    $json['status'] = 'no';
+                    $output = ob_get_contents();
+                    ob_end_clean();
+                    $json['query'] = $val_select;
+                    $json['output'] = $output;
+                    echo json_encode($json);
+                }
+            } else {
+                $json['status'] = 'no';
+                $output = ob_get_contents();
+                ob_end_clean();
+                $json['query'] = $insertPedidoProds;
+                $json['error'] = $conn->error;
+                $json['output'] = $output;
+                echo json_encode($json);
+            }
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $insertPedido;
+            $json['output'] = $output;
+            echo json_encode($json);
+            die;
+        }
+    }
+
+    //                  MOSTRAMOS LOS PEDIDOS PARA LA COCINA         //
+    if ($method == 'consultaProductosCocina') {
+
+        $idpedido = $_POST["idpedido"];
+
+        $query = "SELECT * FROM pedidoproducto pp "
+                . "INNER JOIN productos p on(p.idProducto = pp.idProducto) "
+                . "INNER JOIN menu m on (p.idMenu = m.idMenu) "
+                . "WHERE pp.idPedido= '$idpedido' AND pp.estadoPedidoproducto != 'ENTREGADO'";
+        $result = $conn->query($query);
+        if (!$result)
+            die($conn->error);
+
+        $rows = $result->num_rows;
+        $productos = array();
+
+        for ($i = 0; $i < $rows; $i++) {
+            $result->data_seek($i);
+            $productos[] = $result->fetch_array(MYSQLI_ASSOC);
+        }
+
+        $htmlPedido = "";
+        $contador = 1;
+        $index = $_POST["index"];
+
+        foreach ($productos as $producto) {
+            $estado = "";
+            $icon = "";
+            if ($producto["estadoPedidoproducto"] == "SOLICITADO") {
+                $estado = "info";
+                $icon = '<i class="fa fa-asterisk fa-2x" style="font-size:25px;color:white;" aria-hidden="true"></i>';
+            } elseif ($producto["estadoPedidoproducto"] == "EN PROCESO") {
+                $estado = "warning";
+                $icon = '<i class="fas fa-sync-alt fa-spin fa-2x fa-fw" style="font-size:25px;color:white;"></i>';
+            } elseif ($producto["estadoPedidoproducto"] == "LISTO PARA ENTREGAR") {
+                $estado = "success";
+                $icon = '<i class="fa fa-check" style="font-size:25px;color:white;" aria-hidden="true"></i>';
+            } elseif ($producto["estadoPedidoproducto"] == "ENTREGADO") {
+                $estado = "default";
+                $icon = '<i class="fas fa-vote-yea" aria-hidden="true" style="font-size:25px;color:black;"></i>';
+            }
+
+
+            $ings = $producto["ingsPedidoProducto"];
+            $origIngs = explode(',', $producto["ingsProducto"]);
+            $query2 = "SELECT * FROM ingrediente ing WHERE ing.idIngrediente IN ($ings) ";
+            $result2 = $conn->query($query2);
+            if (!$result2)
+                die(json_encode($query2));
+            $rows = $result2->num_rows;
+            $allIngs = '<ul class="list-tags">';
+            for ($i = 0; $i < $rows; $i++) {
+                $result2->data_seek($i);
+                $thisIng = $result2->fetch_array(MYSQLI_ASSOC);
+                if (in_array($thisIng['idIngrediente'], $origIngs)) {
+                    $allIngs .= '<li><a><i class="fas fa-pepper-hot"></i> ' . $thisIng['nombreIngrediente'] . '</a></li>';
+                } else {
+                    $allIngs .= '<li><a class="greenTag"><i class="fas fa-pepper-hot"></i> ' . $thisIng['nombreIngrediente'] . '</a></li>';
+                }
+            }
+            $allIngs .= '</ul>';
+
+
+            $htmlPedido .= '<div class="tile tile-' . $estado . ' col-md-10 col-md-offset-1 subitem' . $contador . '" style="text;display: block;white-space:inherit;border: 1px solid white;min-height: 50px;" tabindex="-1">
+                    <div style="display:none;" class="inputMesa"><input type="checkbox" id="chk_pedido" name="chk_pedido" autocomplete="off" value="1"></div>
+                     ' . '<div style="position: absolute;top: -20px;right: 5px;">' . $icon . '</div>' . '
+                    <div class="idpedido" hidden>' . $producto["idPedido"] . '</div>
+                    <div class="idpedidoproducto" hidden>' . $producto["idPedidoproducto"] . '</div>
+                <div class="label-form col-md-12 " style="font-weight: bold;color:black;">
+                <p style="text-align: center;font-size: 25px;">' . $producto["nombreProducto"] . '</p><br>
+                <p style="text-align: center;font-size: 20px;">' . $allIngs . '</p>';
+
+            $htmlPedido .= '</div></div>';
+            $contador++;
+        }
+
+        echo $htmlPedido;
+
+        $json['result'] = $htmlPedido;
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        echo json_encode($json);
+        return;
     }
 }
 

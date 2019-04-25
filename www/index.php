@@ -110,7 +110,7 @@ require ("assets/scripts/config.php");
 
         <!-- START SIDEBAR -->
         <?php
-        if ($module == "dashboard.php") {
+        if ($module == "dashboard") {
             require ("assets/dashboard/rightbar.php");
         }
         ?>
