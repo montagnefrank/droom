@@ -106,7 +106,7 @@
                 }
 
             } else
-            if ($(this).val() == "CHEQUE") {
+            if ($(this).val() == "OTRO") {
                 if ($(this).is(":checked")) {
                     $(".tablaCheque").show("slow");
                     $("#valorCheque").focus();
@@ -164,8 +164,8 @@
                 '</td>' +
                 '<td style="width:65%;padding:2px;" class="colVoucher">' +
                 '<div class="form-group">' +
-                '<label for="valor" class="control-label"># Cheque</label>' +
-                '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="# Cheque" required>' +
+                '<label for="valor" class="control-label">Comentario</label>' +
+                '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Comentario" required>' +
                 '</div>' +
                 '</td>' +
                 '<td style="width:10%;padding:2px;" class="colAccion">' +
@@ -689,7 +689,7 @@
                         if ($("#checkbox_efectivo").prop('checked') == false && montofaltante > 0) { /////////////////////////VERIFICO QUE NO SE PUEDA DAR VUELTO SI NO PAGO CON EFECTIVO
                             $('#factura_checkout .modal-dialog .modal-content .modal-header .modal-title').html('<i class="fa fa-exclamation-circle"></i> Alerta</h4>');
                             $('#factura_checkout .modal-dialog .modal-content .modal-body').html('<p></p>');
-                            $('#factura_checkout .modal-dialog .modal-content .modal-body p').html('Cuando no se ha seleccionado el pago con EFECTIVO, El monto pagado no puede ser mayor al monto de la factura');
+                            $('#factura_checkout .modal-dialog .modal-content .modal-body p').html('El monto pagado debe ser igual al de la factura');
                             $('#factura_checkout').modal('toggle');
                             return false;
                         } else {
@@ -827,7 +827,7 @@
         var chequepagado = 0;
         $(".monto_a_pagar").each(function() {
             if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "CHEQUE") {
+                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "OTRO") {
                     chequepagado += parseFloat($(this).val());
                 }
             }
@@ -850,7 +850,7 @@
         var nrochequepagado = "";
         $(".id_formadepago").each(function() {
             if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "CHEQUE") {
+                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "OTRO") {
                     nrochequepagado += $(this).val() + " | ";
                 }
             }

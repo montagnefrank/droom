@@ -3,10 +3,9 @@
 require ("../scripts/database.php");
 
 session_start();
-$idestablecimiento = $_SESSION['usuario']['idEstablecimiento'];
 
-$query="SELECT * from pedido p JOIN mesa m on(p.idMesa = m.idMesa) JOIN factura fa on(p.idPedido = fa.idPedido) 
-    WHERE estadopagoPedido = 'PAGADO' AND m.idEstablecimiento = '$idestablecimiento' ORDER BY p.idPedido DESC LIMIT 5";
+$query="SELECT * from pedido p LEFT JOIN mesa m on(p.idMesa = m.idMesa) JOIN factura fa on(p.idPedido = fa.idPedido) 
+    WHERE estadopagoPedido = 'PAGADO' ORDER BY p.idPedido DESC LIMIT 5";
 
 $result = $conn->query($query);
 
@@ -30,10 +29,10 @@ if($rows!=0){
         } else {
             $badge = "danger";
         }
-        if ($p["numeroMesa"] == "999"){
+        if ($p["idMesa"] == ""){
             $htmlPedidosCocina .= 
                 '<div class="task-item task-success task-complete" style="cursor:default">                                    
-                        <div class="task-text ui-sortable-handle"><h2>'.$p["estadoPedido"].'</h2><a href="?show=caja&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
+                        <div class="task-text ui-sortable-handle"><h2>Para Llevar</h2><a href="?show=caja&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # '.$p["idPedido"].'</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-check-circle" aria-hidden="true"></i></div> 
@@ -46,7 +45,7 @@ if($rows!=0){
         } else {
             $htmlPedidosCocina .= 
                 '<div class="task-item task-success task-complete" style="cursor:default">                                    
-                        <div class="task-text ui-sortable-handle"><h2>Mesa '.$p["numeroMesa"].'</h2><a href="?show=caja&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
+                        <div class="task-text ui-sortable-handle"><h2>'.$p["numeroMesa"].'</h2><a href="?show=caja&verfactura='.$p["idFactura"].'"><span class="badge badge-'.$badge.' verfactura_formadepago">Ver Factura # '.$p["idFactura"].'</span></a></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # '.$p["idPedido"].'</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-check-circle" aria-hidden="true"></i></div> 

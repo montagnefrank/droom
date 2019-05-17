@@ -65,27 +65,12 @@
         </div>
         <div class="widget widget-primary widget-item-icon">
             <div class="widget-item-right">
-                <a href="index.php?panel=nuevodomicilio.php" style="color: white; font-size: 50px;" >
-                    <span class="fa fa-plus-square"></span>
-                </a>
-            </div>                             
-            <div class="widget-data-left">
-                <div class="widget-int num-count">Domicilios</div>
-                <div class="widget-title">
-                    Nuevo pedido
-                </div>
-            </div>                                     
-        </div>
-        <div class="widget widget-primary widget-item-icon">
-            <div class="widget-item-right">
-                <a href="index.php?panel=parallevar.php" style="color: white; font-size: 50px;" >
-                    <span class="fa fa-plus-square"></span>
-                </a>
+                <span class="fa fa-plus-square"></span>
             </div>                             
             <div class="widget-data-left">
                 <div class="widget-int num-count">Para llevar</div>
-                <div class="widget-title">
-                    Nuevo Pedido
+                <div class="widget-subtitle">
+                    <button class="btn btn-info pull-right btnNuevoPedido"><i class="fas fa-plus"></i> Nuevo Pedido</button> 
                 </div>
             </div>                                     
         </div>

@@ -724,10 +724,10 @@ button {
     color: #FFFFFF;
 }
 .menuitemImgSmall{
- border: 2px solid #F5F5F5; 
- border-radius: 50%; 
- width: 40px; 
- margin-right: 10px;
+    border: 2px solid #F5F5F5; 
+    border-radius: 50%; 
+    width: 40px; 
+    margin-right: 10px;
 }
 .itemMenuBg{
     background: url('../../api/assets/img/tableitem.jpg') center center no-repeat;
@@ -771,4 +771,20 @@ button {
 }
 .tile.menuItemBox:hover,.tile.menuItemBox.tile-selected {
     background: url(/api/assets/img/mesas2.png) center #8cb052;
+}
+.login-center img{
+    width: 100%;
+}
+.editarImagenLogo .panel-body-image {
+    background-color: #ececec;
+}
+.mostratMesasBtn,.btnNuevoPedido,.estadoPedido{
+    box-shadow: 10px 10px #a27a7a69;
+    text-shadow: 1px 1px #0f0e5652;
+}
+.widget .widget-item-right .fa,.widget .widget-item-right .fas{
+    font-size: 60px;
+}
+.billsImg{
+    width: 27px;
 }

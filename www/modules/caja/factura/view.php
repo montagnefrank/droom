@@ -201,15 +201,15 @@
                                     <div class="col-md-1">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" class="chkMetodoPago" value="CHEQUE" id="checkbox_cheque">
+                                                <input type="checkbox" class="chkMetodoPago" value="OTRO" id="checkbox_cheque">
                                                 <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <a>
-                                            <img src="api/assets/img/lot/cards/cheque.png"> Cheque
-                                            <p>DOCUMENTO DE VALOR</p>
+                                            <img src="api/assets/img/bills.png" class="billsImg"> Otro
+                                            <p>Pagos Diferenciados</p>
                                         </a>
                                     </div>
                                     <div class="col-md-7">
@@ -225,14 +225,14 @@
                                                         </td>
                                                         <td style="width:65%;padding:2px;">
                                                             <div class="form-group">
-                                                                <label for="nrocheque" class="control-label"># Cheque</label>
-                                                                <input type="text" class="form-control id_formadepago" id="nrocheque" name="nrocheque" placeholder="# Cheque" required>
+                                                                <label for="nrocheque" class="control-label">Comentario</label>
+                                                                <input type="text" class="form-control id_formadepago" id="nrocheque" name="nrocheque" placeholder="Comentario" required>
                                                             </div>
                                                         </td>
                                                         <td style="width:10%;padding:2px;">
                                                             <div style="padding-top: 30px;">
                                                             </div>
-                                                            <span class="fa fa-plus agregacheque" aria-hidden="true" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Añade un cheque"></span>
+                                                            <span class="fa fa-plus agregacheque" aria-hidden="true" style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Añade otra caja"></span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -477,7 +477,7 @@
                             <div class="user">
                                 <a href="#" class="name resumen_numerodepedido">Numero de pedido</a>
                                 <div class="pull-right" style="width: 100px;">
-                                    <button class="btn btn-info btn-block resumen_numeromesa"><span class="fa fa-thumb-tack"></span> Mesa</button>
+                                    <button class="btn btn-info btn-block resumen_numeromesa"><span class="fa fa-thumb-tack"></span></button>
                                 </div>
                                 <div class="pull-right" style="width: 100px; margin-right:16px;">
                                     <button class="btn btn-primary btn-block resumen_fecha"><span class="fas fa-clock"></span> Fecha</button>

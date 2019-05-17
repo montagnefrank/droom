@@ -34,7 +34,7 @@ if (isset($_POST['cocina']) && $_POST['cocina'] == "true") {
 
         foreach ($pedidos as $p) {
             $htmlPedidosCocina['pedidos'] .= '<div class="task-item task-info task-complete Pedido">                                    
-                        <div class="task-text ui-sortable-handle"><h2>Mesa ' . $p["numeroMesa"] . '</h2></div>
+                        <div class="task-text ui-sortable-handle"><h2>' . $p["numeroMesa"] . '</h2></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # ' . $p["idPedido"] . '</div>     
                             <div class="pull-right btn btn-info pedido_imprimir" style="color:white;"><i class="fa fa-print" aria-hidden="true"></i> Imprimir</div>     

@@ -3,11 +3,10 @@
 require ("../scripts/database.php");
 
 session_start();
-$idestablecimiento = $_SESSION['usuario']['idEstablecimiento'];
 
-$query = "SELECT * from pedido p JOIN mesa m on(p.idMesa = m.idMesa) 
+$query = "SELECT * from pedido p LEFT JOIN mesa m on(p.idMesa = m.idMesa) 
     WHERE (estadoPedido = 'ENTREGADO' OR estadoPedido = 'DOMICILIO') 
-    AND estadopagoPedido = 'SIN PAGAR' AND m.idEstablecimiento = '$idestablecimiento'";
+    AND estadopagoPedido = 'SIN PAGAR' ";
 
 $result = $conn->query($query);
 if (!$result)
@@ -26,9 +25,9 @@ if ($rows != 0) {
     $htmlPedidosCocina = '';
 
     foreach ($pedidos as $p) {
-        if ($p["numeroMesa"] == "999") {
+        if ($p["idMesa"] == "") {
             $htmlPedidosCocina .= '<div class="task-item task-danger task-complete Pedido">                                    
-                        <div class="task-text ui-sortable-handle"><h2>'.$p["estadoPedido"].'</h2></div>
+                        <div class="task-text ui-sortable-handle"><h2> Para Llevar </h2></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # ' . $p["idPedido"] . '</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-exclamation" aria-hidden="true"></i></div> 
@@ -39,7 +38,7 @@ if ($rows != 0) {
                     </div>';
         } else {
             $htmlPedidosCocina .= '<div class="task-item task-danger task-complete Pedido">                                    
-                        <div class="task-text ui-sortable-handle"><h2>Mesa ' . $p["numeroMesa"] . '</h2></div>
+                        <div class="task-text ui-sortable-handle"><h2>awdaw' . $p["numeroMesa"] . '</h2></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # ' . $p["idPedido"] . '</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-exclamation" aria-hidden="true"></i></div> 

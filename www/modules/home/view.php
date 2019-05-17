@@ -44,14 +44,15 @@
         <div class="col-md-4">
             <div class="widget widget-primary widget-item-icon">
                 <div class="widget-item-right">
-                    <a href="#" style="color: white;font-size: 50px;" class="btnNuevoPedido">
-                        <span class="fa fa-plus-square"></span>
-                    </a>
+                        <span class="fas fa-clipboard-list"></span>
                 </div>                             
                 <div class="widget-data-left">
                     <div class="widget-int num-count">Nuevo Pedido</div>
                     <div class="widget-title">Para la mesa: <span class="mesaSelected">Seleccione</span> </div>
-                    <div class="widget-subtitle"><button class="btn btn-info mostratMesasBtn"><i class="fas fa-eye"></i> Mostrar Mesas</button> </div>
+                    <div class="widget-subtitle">
+                        <button class="btn btn-info mostratMesasBtn"><i class="fas fa-eye"></i> Mostrar Mesas</button> 
+                        <button class="btn btn-info pull-right btnNuevoPedido"><i class="fas fa-plus"></i> Nuevo Pedido</button> 
+                    </div>
                 </div>                                     
             </div>
         </div>

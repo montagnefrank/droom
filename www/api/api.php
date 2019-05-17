@@ -153,17 +153,16 @@ if ($_POST) {
 
     //          ASIGNAMOS LAS MESAS AL NUEVO EPDIDO             //
     if ($method == 'asignaMesa') {
-        session_start();
-        $idMesa = $_POST["idmesa"];
-        $numeroMesa = $_POST["numeromesa"];
+        $idMesa = broom('num', $_POST['idmesa']);
+        $numeroMesa = broom('text', $_POST['numeromesa']);
         $idPedido;
 
         if (isset($_POST["idpedido"])) {
-            $idPedido = $_POST["idpedido"];
+            $idPedido = broom('num', $_POST['idpedido']);
         }
         session_start();
         $_SESSION["idmesa"] = $idMesa;
-        $_SESSION["numeromesa"] = $numeroMesa;
+        $_SESSION["nameMesa"] = $numeroMesa;
         if (isset($idPedido)) {
             $_SESSION["idpedido"] = $idPedido;
 
@@ -171,6 +170,7 @@ if ($_POST) {
             $output = ob_get_contents();
             ob_end_clean();
             $json['output'] = $output;
+            $json['ses'] = $_SESSION;
             echo json_encode($json);
             return;
         } else {
@@ -178,6 +178,8 @@ if ($_POST) {
             $output = ob_get_contents();
             ob_end_clean();
             $json['output'] = $output;
+            $json['ses'] = $_SESSION;
+            $json['post'] = $_POST;
             echo json_encode($json);
             return;
         }
@@ -275,8 +277,7 @@ if ($_POST) {
             if ($producto["estadoPedidoproducto"] == "SOLICITADO") {
                 $estado = "info";
                 $icon = '<i class="fa fa-asterisk fa-2x" style="font-size:25px;color:white;" aria-hidden="true"></i>';
-                $btns = "<button class=\"btn btn-primary push5 cancelarPedido\" style=\"border: 1px solid;\"><i class='fa fa-times' aria-hidden='true'></i> Cancelar pedido</button>"
-                        . "<button class=\"btn btn-primary push5 editarPedido\" style=\"border: 1px solid;\"><i class='fas fa-edit' aria-hidden='true'></i> Editar pedido</button>";
+                $btns = "<button class=\"btn btn-primary push5 cancelarPedido\" style=\"border: 1px solid;\"><i class='fa fa-times' aria-hidden='true'></i> Cancelar pedido</button>";
             }
             if ($producto["estadoPedidoproducto"] == "EN PROCESO") {
                 $estado = "warning";
@@ -639,7 +640,7 @@ if ($_POST) {
                 <div class="col-md-3 hidethis mesaItemBlock">   
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><span> Mesa #' . $row['numeroMesa'] . '</span></h3>   
+                            <h3 class="panel-title"><span>' . $row['numeroMesa'] . '</span></h3>   
                             <ul class="panel-controls">
                                 <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                                 <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
@@ -1638,11 +1639,19 @@ if ($_POST) {
 
         session_start();
         $pedidosList = json_decode(stripslashes($_POST['pedidos']));
-        $insertPedido = "INSERT INTO pedido(idMesa,idUsuario,estadoPedido,estadopagoPedido) "
+        if($_SESSION['idmesa'] == '0'){
+            $insertPedido = "INSERT INTO pedido(idMesa,idUsuario,estadoPedido,estadopagoPedido) "
+                . "VALUES ('0',"
+                . "'" . $_SESSION['usuario']['idUsuario'] . "',"
+                . "'DOMICILIO',"
+                . "'SIN PAGAR')";
+        } else {
+            $insertPedido = "INSERT INTO pedido(idMesa,idUsuario,estadoPedido,estadopagoPedido) "
                 . "VALUES ('" . $_SESSION['idmesa'] . "',"
                 . "'" . $_SESSION['usuario']['idUsuario'] . "',"
                 . "'SOLICITADO',"
                 . "'SIN PAGAR')";
+        }
         $val_result = $conn->query($insertPedido); // or die($link->error)
 
         if ($val_result) {

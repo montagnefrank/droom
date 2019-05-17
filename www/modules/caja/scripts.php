@@ -71,6 +71,7 @@
         });
 
     });
+    
     function asignaPedidosCocina() {
         $.ajax({
             // Verificacion de los datos introducidos
@@ -92,6 +93,7 @@
             }
         });
     }
+    
     function asignaPedidosPorCancelar() {
         $.ajax({
             // Verificacion de los datos introducidos
@@ -109,6 +111,7 @@
             }
         });
     }
+    
     function pedidoscancelados() {
         $.ajax({
             // Verificacion de los datos introducidos
@@ -126,7 +129,8 @@
             }
         });
     }
-////////////////////////////////////////////////////////////////////////////ACTIVAMOS EL EVENTO DEL BUSCADOR DE FACTURAS
+    
+    ////////////////////////////////////////////////////////////////////////////ACTIVAMOS EL EVENTO DEL BUSCADOR DE FACTURAS
     $("#search_pedidos").keyup(function (e) {
         var code = e.which;
         if (code == 13)
@@ -145,7 +149,8 @@
             }
         }
     });
-////////////////////////////////////////////////////////////////////////////FUNCION PARA MOSTRAR EL PEDIDO INGRESADA
+    
+    ////////////////////////////////////////////////////////////////////////////FUNCION PARA MOSTRAR EL PEDIDO INGRESADA
     function consultarpeddo(idpedido) {
         $.ajax({
             url: 'assets/factura/consultaProductos.php',
@@ -166,7 +171,8 @@
             }
         });
     }
-////////////////////////////////////////////////////////////////////////////FUNCION PARA MOSTRAR LA FACTURA INGRESADA
+    
+    ////////////////////////////////////////////////////////////////////////////FUNCION PARA MOSTRAR LA FACTURA INGRESADA
     function consultarfactura(idfactura) {
         $.ajax({
             url: 'assets/caja/consultafactura.php',
@@ -186,7 +192,8 @@
             }
         });
     }
-////////////////////////////////////////////////////////////////////////////////MANDAMOS LA FACTURA A PDF
+    
+    ////////////////////////////////////////////////////////////////////////////////MANDAMOS LA FACTURA A PDF
     function exporttopdftable() {
         //    $('.tablaDescripcion table').tableExport({type:'pdf',escape:'false'});
         var output = "";
@@ -252,12 +259,8 @@
             }
         });
     }
-/////////////////////////////////////////////////////////////////////////////DEBUG VENTANAMODAL DE FACTURAS
-//$(document).on('click', '#showmodal', function () {
-//    $('#modal_consultar_factura').modal('toggle');
-//});
-
-////////////////////////////////////////////////////////////////////////////////imprimir pedido
+    
+    ////////////////////////////////////////////////////////////////////////////////imprimir pedido
     $(document).on('click', '.pedido_imprimir', function (e) {
         if (!e)
             var e = window.event;
@@ -272,7 +275,7 @@
         var pedido_nro = $(this).parent().parent().find(".idpedido").html();
         var output = "";
         output += "<tr><td> ======================== <br /></td></tr> \n\ ";
-        output += "<tr><td> Mesa # " + mesa_nro + "  <br /></td></tr> \n\ ";
+        output += "<tr><td> " + mesa_nro + "  <br /></td></tr> \n\ ";
         output += "<tr><td> Pedido # " + pedido_nro + " <br /></td></tr> \n\ ";
         output += "<tr><td> ======================== <br /></td></tr> \n\ ";
         $.ajax({
@@ -302,6 +305,7 @@
             }
         });
     });
+    
     ////////////////////////////////////////////////////////////////////////////AUTOCOMPLETE DE PEDIDOS FACTURADOS
     $(function () {
 
@@ -326,6 +330,74 @@ while ($row_facturas = mysqli_fetch_array($result_facturas, MYSQLI_BOTH)) {
                 var newTop = oldTop - $("#prod_ac").height() + 25;
                 autocomplete.css("top", newTop);
 
+            }
+        });
+    });
+
+    ///////////////////////////////////////////////////////////////////////////AL ANULAR LA FACTURA
+    $(document).on('click', '#anular_factura', function () {
+        var idFactura = '<?php echo $_GET["verfactura"] ?>'
+        $.ajax({
+            url: 'assets/caja/anularfactura.php',
+            type: 'POST',
+            data: {
+                idFactura: idFactura,
+            },
+            success: function (html) {
+                window.location.href = "/?show=caja&verfactura=" + html;
+            },
+            error: function (error) {
+                console.log('Disculpe, existió un problema');
+                console.log(error);
+            },
+            complete: function (xhr, status) {
+                console.log('Petición realizada');
+            }
+        });
+    });
+
+    ///////////////////////////////////////////////////////////////////////////AL REACTIVAR LA FACTURA
+    $(document).on('click', '#reactivar_factura', function () {
+        var idFactura = '<?php echo $_GET["verfactura"] ?>'
+        $.ajax({
+            url: 'assets/caja/reactivarfactura.php',
+            type: 'POST',
+            data: {
+                idFactura: idFactura,
+            },
+            success: function (html) {
+                window.location.href = "/?show=caja&verfactura=" + html;
+            },
+            error: function (error) {
+                console.log('Disculpe, existió un problema');
+                console.log(error);
+            },
+            complete: function (xhr, status) {
+                console.log('Petición realizada');
+            }
+        });
+    });
+
+    //              VALIDAMOS  EL NUEVO PEDIDO QUE SE VA A CARGAR Y SI LA MESA YA FUE SELECCIONADA      //
+    $(".btnNuevoPedido").click(function () {
+        var formData = new FormData();
+        formData.append('idmesa', '0');
+        formData.append('numeromesa', 'Para llevar');
+        formData.append('meth', 'asignaMesa');
+        $.ajax({
+            url: 'api/api.php',
+            type: 'POST',
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                window.location.replace("/?show=pedido");
+            },
+            error: function (error) {
+                console.log("Hubo un error de internet, intente de nuevo");
+                console.log(error);
             }
         });
     });
@@ -387,49 +459,3 @@ if (isset($_GET["verfactura"])) {
 }
 salidaif:
 ?>
-<script>
-    ///////////////////////////////////////////////////////////////////////////AL ANULAR LA FACTURA
-    $(document).on('click', '#anular_factura', function () {
-        var idFactura = '<?php echo $_GET["verfactura"] ?>'
-        $.ajax({
-            url: 'assets/caja/anularfactura.php',
-            type: 'POST',
-            data: {
-                idFactura: idFactura,
-            },
-            success: function (html) {
-                window.location.href = "/?show=caja&verfactura=" + html;
-            },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
-                console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
-            }
-        });
-    });
-</script>
-<script>
-    ///////////////////////////////////////////////////////////////////////////AL REACTIVAR LA FACTURA
-    $(document).on('click', '#reactivar_factura', function () {
-        var idFactura = '<?php echo $_GET["verfactura"] ?>'
-        $.ajax({
-            url: 'assets/caja/reactivarfactura.php',
-            type: 'POST',
-            data: {
-                idFactura: idFactura,
-            },
-            success: function (html) {
-                window.location.href = "/?show=caja&verfactura=" + html;
-            },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
-                console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
-            }
-        });
-    });
-</script>

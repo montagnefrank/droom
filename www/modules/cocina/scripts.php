@@ -403,7 +403,7 @@
                             $(".contenedorCocina").append(
                                     '<div class="col-md-4" style="padding: 8px;">' +
                                     '<div href="#" class="tile ' + tile + ' estadoPedido item' + (index + 1) + '" style="padding: 5px;margin-bottom:0px;border:5px solid #000000;box-shadow:6px 6px 6px #888888;font-weight: bold;color:black;">' +
-                                    enunciadoMesa +
+                                    value.numeroMesa +
                                     '<p> Pedido # ' + value.idPedido + '</p>' +
                                     '<div style="position: absolute;top: -20px;right: 5px;">' + icon + '</div>' +
                                     '<div style="position: absolute;top: -20px;right: 50px;"><i class="fa fa-print imprimir_pedido" aria-hidden="true" style="font-size:25px;color:white;"></i></div>' +
@@ -415,7 +415,7 @@
                             $(".contenedorCocina").append(
                                     '<div class="col-md-4" style="padding: 8px;">' +
                                     '<div href="#" class="tile ' + tile + ' estadoPedido item' + (index + 1) + '" style="padding: 5px;margin-bottom:0px;font-weight: bold;color:black;">' +
-                                    enunciadoMesa +
+                                    value.numeroMesa +
                                     '<p> Pedido # ' + value.idPedido + '</p>' +
                                     '<div style="position: absolute;top: -20px;right: 5px;">' + icon + '</div>' +
                                     '<div style="position: absolute;top: -20px;right: 50px;"><i class="fa fa-print imprimir_pedido" aria-hidden="true" style="font-size:25px;color:white;"></i></div>' +
@@ -444,7 +444,6 @@
                 console.log('Petición realizada');
             }
         });
-
     }
 
     function asignaPedidos(pedidos) {

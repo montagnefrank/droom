@@ -36,7 +36,7 @@
 <script>
     //       ACTIVAMOS EL MENU LATERAL       //
     $(".menuItem").removeClass("active");
-    $(".caja").addClass("active");
+    $(".usuarios").addClass("active");
     
     
     $(document).ready(function () {

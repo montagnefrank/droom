@@ -32,6 +32,8 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
+ session_start();
+ $nameMesa = $_SESSION['nameMesa'];
 ?>
 <script>
     //       ACTIVAMOS EL MENU LATERAL       //
@@ -314,7 +316,7 @@
                     var htmlcontent = '<div class="col-md-6 menuPanelContainer hidethis">' +
                             '           <div class="panel panel-default nav-tabs-vertical menuPanel">' +
                             '               <div class="panel-heading">' +
-                            '                   <h3 class="panel-title"> <i class="fas fa-list-alt"></i> &nbsp;&nbsp;Seleccione los pedidos del menu </h3>' +
+                            '                   <h3 class="panel-title"> <i class="fas fa-list-alt"></i> &nbsp;&nbsp;Seleccione los productos <span class="btn btn-info"><?php echo $nameMesa;  ?></span </h3>' +
                             '                   <h3 class="panel-title pull-right"> <i class="fas fa-arrows-alt fa-2x expandItems" data-toggle="tooltip" data-placement="top" title="Expandir elementos"></i>&nbsp;&nbsp; <i class="fas fa-compress-arrows-alt fa-2x compItems" data-toggle="tooltip" data-placement="top" title="Contraer elementos"></i></h3>' +
                             '               </div>' +
                             '           <div class="tabs">' +
