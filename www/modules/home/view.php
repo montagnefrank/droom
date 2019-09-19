@@ -117,8 +117,11 @@
             <div class="modal-body contenidoEstadoPedido">
             </div>
             <div class="modal-footer label-primary">
+                <div class="hidethis idPedidoContainer"></div>
+                <div class="hidethis numeroMesaContainer"></div>
+                <div class="hidethis idMesaContainer"></div>
                 <button type="button" class="btn btn-primary pedido_imprimir"><i class="fa fa-print" aria-hidden="true"></i> Imprimir</button>
-                <button type="button" class="btn btn-primary btnAnadirPedido"><i class="fa fa-plus" aria-hidden="true"></i> Añadir Pedido</button>
+                <button type="button" class="btn btn-primary editThisOrder"><i class="fa fa-edit" aria-hidden="true"></i> Editar Pedido</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

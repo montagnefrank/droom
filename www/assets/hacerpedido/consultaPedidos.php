@@ -27,7 +27,7 @@ $arraypedidos = [];
 foreach($pedidos as $p){
     $idpedido = $p["idPedido"];
     //VERIFICACION DEL MENU CORRESPONDIENTE
-    $query="SELECT me.nombreMenu FROM pedidoproducto pp JOIN producto p on(p.idProducto = pp.idProducto) join submenu sm on(p.idSubMenu = sm.idSubMenu) join menu me on (sm.idMenu = me.idMenu) WHERE idPedido = '$idpedido';";
+    $query="SELECT me.nombreMenu FROM pedidoproducto pp JOIN productos p on(p.idProducto = pp.idProducto) join menu me on (p.idMenu = me.idMenu) WHERE idPedido = '$idpedido';";
 
     $result = $conn->query($query);
     if(!$result) die($conn->error);
@@ -52,9 +52,8 @@ foreach($pedidos as $p){
             //PASA LA PRUEBA
             $query="SELECT me.nombreMenu, pp.estadoPedidoproducto FROM pedido pe join pedidoproducto pp on(pe.idPedido = pp.idPedido)
                         JOIN mesa m on(m.idMesa=pe.idMesa) 
-                        JOIN producto p on(p.idProducto = pp.idProducto) 
-                        JOIN submenu sm on(p.idSubMenu = sm.idSubMenu) 
-                        JOIN menu me on (sm.idMenu = me.idMenu)
+                        JOIN productos p on(p.idProducto = pp.idProducto) 
+                        JOIN menu me on (p.idMenu = me.idMenu)
                         where (m.estadoMesa ='OCUPADA' OR m.estadoMesa ='PARA LLEVAR' OR m.estadoMesa ='DOMICILIO') AND pe.idPedido = '$idpedido'";
 
             $result = $conn->query($query);

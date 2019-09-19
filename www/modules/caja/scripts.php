@@ -41,37 +41,49 @@
         asignaPedidosCocina();
         asignaPedidosPorCancelar();
         pedidoscancelados();
+        consultarTurno();
     });
 
     $(document).on('click', '.Pedido', function () {
-
-        var idmesa = $(this).find(".idmesa").html();
-        var idpedido = $(this).find(".idpedido").html();
-        var numeromesa = $(this).find(".numeromesa").html();
-
-        $.ajax({
-            // Verificacion de los datos introducidos
-            url: 'assets/mesas/asignaMesa.php',
-            type: 'POST',
-            data: {
-                idmesa: idmesa,
-                numeromesa: numeromesa,
-                idpedido: idpedido,
-            },
-            success: function (html) {
-                window.location.replace("/?show=caja/factura");
-            },
-            error: function (error) {
-                console.log('Disculpe, existió un problema');
-                console.log(error);
-            },
-            complete: function (xhr, status) {
-                console.log('Petición realizada');
+        var self = this;
+        pageLoadingFrame("show");
+        var isClosed = $('.isCajaCerrada').html();
+        setTimeout(function () {
+            if (isClosed == 'si') {
+                pageLoadingFrame("hide");
+                $(".customalert_text").html("Debe aperturar la caja");
+                $(".customalert").animate({width: 'toggle'}, 600);
+                return;
+            } else {
+                var idmesa = $(self).find(".idmesa").html();
+                var idpedido = $(self).find(".idpedido").html();
+                var numeromesa = $(self).find(".numeromesa").html();
+                var formData = new FormData();
+                formData.append('idmesa', idmesa);
+                formData.append('numeromesa', numeromesa);
+                formData.append('idpedido', idpedido);
+                formData.append('meth', 'asignaMesa');
+                $.ajax({
+                    url: 'api/api.php',
+                    type: 'POST',
+                    dataType: "json",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (data) {
+                        window.location.replace("/?show=caja/factura");
+                    },
+                    error: function (error) {
+                        console.log("Hubo un error de internet, intente de nuevo");
+                        console.log(error);
+                    }
+                });
             }
-        });
+        }, 1000);
 
     });
-    
+
     function asignaPedidosCocina() {
         $.ajax({
             // Verificacion de los datos introducidos
@@ -93,7 +105,7 @@
             }
         });
     }
-    
+
     function asignaPedidosPorCancelar() {
         $.ajax({
             // Verificacion de los datos introducidos
@@ -111,7 +123,7 @@
             }
         });
     }
-    
+
     function pedidoscancelados() {
         $.ajax({
             // Verificacion de los datos introducidos
@@ -129,7 +141,7 @@
             }
         });
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////ACTIVAMOS EL EVENTO DEL BUSCADOR DE FACTURAS
     $("#search_pedidos").keyup(function (e) {
         var code = e.which;
@@ -149,7 +161,7 @@
             }
         }
     });
-    
+
     ////////////////////////////////////////////////////////////////////////////FUNCION PARA MOSTRAR EL PEDIDO INGRESADA
     function consultarpeddo(idpedido) {
         $.ajax({
@@ -171,7 +183,7 @@
             }
         });
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////FUNCION PARA MOSTRAR LA FACTURA INGRESADA
     function consultarfactura(idfactura) {
         $.ajax({
@@ -192,7 +204,7 @@
             }
         });
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////////MANDAMOS LA FACTURA A PDF
     function exporttopdftable() {
         //    $('.tablaDescripcion table').tableExport({type:'pdf',escape:'false'});
@@ -259,7 +271,7 @@
             }
         });
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////////imprimir pedido
     $(document).on('click', '.pedido_imprimir', function (e) {
         if (!e)
@@ -305,7 +317,7 @@
             }
         });
     });
-    
+
     ////////////////////////////////////////////////////////////////////////////AUTOCOMPLETE DE PEDIDOS FACTURADOS
     $(function () {
 
@@ -401,6 +413,196 @@ while ($row_facturas = mysqli_fetch_array($result_facturas, MYSQLI_BOTH)) {
             }
         });
     });
+
+    /////////////////////////////////////           CONSULTAMOS EL TURNO DISPONIBLE                     ///////////////
+    function consultarTurno() {
+        var formData = new FormData();
+        formData.append('meth', 'getTurno');
+        $.ajax({
+            url: 'api/api.php',
+            type: 'POST',
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                if (data.status == 'yes') {
+                    if (data.lastTurno.tipoTurno == 'apertura') {
+                        $('.turnoBox').html('<a href="#" class="list-group-item">'
+                                + '<span class="fa fa-circle text-info"></span><span class="turnoName">'
+                                + data.lastTurno.nombresUsuario
+                                + ' '
+                                + data.lastTurno.apellidosUsuario
+                                + ' '
+                                + data.lastTurno.msgTurno
+                                + '</span>'
+                                + '<span class="idTurnoCont hidethis">' + data.lastTurno.idTurno + '</span>'
+                                + '<span class="montoInicialCont hidethis">' + data.lastTurno.saldoTurno + '</span>'
+                                + '</a>'
+                                );
+                        $('.turnoBox').append('<a href="#" class="list-group-item">'
+                                + '<button class="btn btn-primary cerrarTurno"><i class="fas fa-hand-holding-usd"></i> Cerrar Turno</button></a>');
+                        $('.turnoBox').append('<a href="api/api.php?meth=report&print=1&idTurno='+data.lastTurno.idTurno+'" class="list-group-item">'
+                                + '<button class="btn btn-primary corteX"><i class="fas fa-hand-holding-usd"></i> Emitir corte X</button></a>');
+                    } else {
+                        $('.turnoBox').html('<a href="#" class="list-group-item">'
+                                + '<span class="fa fa-circle text-danger"></span><span class="turnoName"> Caja Cerrada'
+                                + '<span class="isCajaCerrada hidethis">si</span>'
+                                + '</span><button class="btn btn-primary pull-right abrirTurno"><i class="fas fa-hand-holding-usd"></i> Abrir Turno</button></a>'
+                                );
+                        $('.turnoBox').append('<a href="api/api.php?meth=report&print=2" class="list-group-item">'
+                                + '<button class="btn btn-primary corteZ"><i class="fas fa-hand-holding-usd"></i> Emitir corte Z</button></a>');
+                    }
+                }
+                console.log(data);
+            },
+            error: function (error) {
+                console.log("Hubo un error de internet, intente de nuevo");
+                console.log(error);
+            }
+        });
+    }
+
+    ///////////                                                 AL ABRIR UN TURNO                           /////
+    $(document).on('click', '.abrirTurno', function () {
+        $('#modalPrevCaja .modal-header h4').text('Abrir Turno de Caja');
+        $('#modalPrevCaja .modal-body').html('<div class="col-md-12">'
+                + ' <h4 style="color:black;text-align: left;">Ingrese PIN:</h4>'
+                + ' <div class="input-group">'
+                + '     <input id="pinSeguridad" type="password" class="form-control">'
+                + '     <div class="input-group-addon"><i class="fas fa-unlock-alt"></i></div>'
+                + ' </div>'
+                + ' <hr />'
+                + ' <h4 style="color:black;text-align: left;">Usuario: <button class="btn btn-info"><?php echo $_SESSION['usuario']['nombresUsuario'] . ' ' . $_SESSION['usuario']['apellidosUsuario'] ?></button></h4>'
+                + ' <hr />'
+                + ' <h4 style="color:black;text-align: left;">Monto inicial:</h4>'
+                + ' <div class="input-group">'
+                + '     <input id="montoInicial" type="text" class="form-control" placeholder="Ingrese el monto">'
+                + '     <div class="input-group-addon"><i class="fas fa-money-bill-wave"></i></div>'
+                + ' </div>'
+                + ' <hr />'
+                + ' <h4 style="color:black;text-align: left;">Comentario:</h4>'
+                + ' <textarea id="comentCaja" class="form-control" placeholder="su comentario"></textarea>'
+                + '</div>');
+        $('.cargarApertura').remove();
+        $('#modalPrevCaja .modal-footer').append('<button type="button" class="btn btn-success pull-right cargarApertura"><i class="fa fa-check" aria-hidden="true"></i> Cargar</button>');
+        $('#modalPrevCaja').modal('toggle');
+        return;
+    });
+
+    ///////////                                                 AL ABRIR UN TURNO                           /////
+    $(document).on('click', '.cerrarTurno', function () {
+        $('#modalPrevCaja .modal-header h4').text('Cerrar Turno de Caja');
+        $('#modalPrevCaja .modal-body').html('<div class="col-md-12">'
+                + ' <h4 style="color:black;text-align: left;">Ingrese PIN:</h4>'
+                + ' <div class="input-group">'
+                + '     <input id="pinSeguridadCierre" type="password" class="form-control">'
+                + '     <div class="input-group-addon"><i class="fas fa-unlock-alt"></i></div>'
+                + ' </div>'
+                + ' <hr />'
+                + ' <h4 style="color:black;text-align: left;">Usuario: <button class="btn btn-info"><?php echo $_SESSION['usuario']['nombresUsuario'] . ' ' . $_SESSION['usuario']['apellidosUsuario'] ?></button></h4>'
+                + ' <hr />'
+                + ' <h4 style="color:black;text-align: left;">Monto final:</h4>'
+                + ' <div class="input-group">'
+                + '     <input id="montoFinal" type="text" class="form-control" placeholder="Ingrese el monto">'
+                + '     <div class="input-group-addon"><i class="fas fa-money-bill-wave"></i></div>'
+                + ' </div>'
+                + '</div>');
+        $('.cargarApertura').remove();
+        $('#modalPrevCaja .modal-footer').append('<button type="button" class="btn btn-info pull-right cargarCierre"><i class="far fa-window-close"></i> Cierre de caja</button>');
+        $('#modalPrevCaja').modal('toggle');
+        return;
+    });
+
+    /////////////                                   CARGAR APERTURA DE CAJA                     /////////////////////
+    $(document).on('click', '.cargarApertura', function () {
+        pageLoadingFrame("show");
+        var formData = new FormData(), montoInicial = $('#montoInicial').val(), comentario = $('#comentCaja').val(), pin = $('#pinSeguridad').val();
+        setTimeout(function () {
+            if (pin == '8520') {
+                if (montoInicial == '' || comentario == '') {
+                    pageLoadingFrame("hide");
+                    $(".customalert_text").html("No puede dejar campos en blanco");
+                    $(".customalert").animate({width: 'toggle'}, 600);
+                } else {
+                    formData.append('meth', 'abrirTurno');
+                    formData.append('montoInicial', montoInicial);
+                    formData.append('comentario', comentario);
+                    $.ajax({
+                        url: 'api/api.php',
+                        type: 'POST',
+                        dataType: "json",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.log("Hubo un error de internet, intente de nuevo");
+                            console.log(error);
+                        }
+                    });
+                }
+            } else {
+                pageLoadingFrame("hide");
+                $(".customalert_text").html("El pin no coincide");
+                $(".customalert").animate({width: 'toggle'}, 600);
+            }
+        }, 1000);
+    });
+
+    /////////////                                   CARGAR CIERRE DE CAJA                     /////////////////////
+    $(document).on('click', '.cargarCierre', function () {
+        pageLoadingFrame("show");
+        var
+                formData = new FormData(),
+                montoInicial = $('.montoInicialCont').html(),
+                montoFinal = $('#montoFinal').val(),
+                idTurno = $('.idTurnoCont').html(),
+                pin = $('#pinSeguridadCierre').val();
+        setTimeout(function () {
+            if (pin == '8520') {
+                if (montoFinal == '') {
+                    pageLoadingFrame("hide");
+                    $(".customalert_text").html("No puede dejar los campos en blanco");
+                    $(".customalert").animate({width: 'toggle'}, 600);
+                } else {
+                    if (+montoInicial > +montoFinal) {
+                        pageLoadingFrame("hide");
+                        $(".customalert_text").html("No se puede cerrar la caja con un monto menor a la apertura");
+                        $(".customalert").animate({width: 'toggle'}, 600);
+                    } else {
+                        formData.append('meth', 'cerrarTurno');
+                        formData.append('montoFinal', montoFinal);
+                        formData.append('idTurno', idTurno);
+                        $.ajax({
+                            url: 'api/api.php',
+                            type: 'POST',
+                            dataType: "json",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            success: function (data) {
+                                window.location.reload();
+                            },
+                            error: function (error) {
+                                console.log("Hubo un error de internet, intente de nuevo");
+                                console.log(error);
+                            }
+                        });
+                    }
+                }
+            } else {
+                pageLoadingFrame("hide");
+                $(".customalert_text").html("El pin no coincide");
+                $(".customalert").animate({width: 'toggle'}, 600);
+            }
+        }, 1000);
+    });
 </script>
 <?php
 if (isset($_GET["verfactura"])) {
@@ -412,7 +614,7 @@ if (isset($_GET["verfactura"])) {
         <script>
             window.location.href = '/?show=caja&verfactura=" . $row_pedido["idFactura"] . "';
         </script>";
-        goto salidaif;
+        return;
     } else {
         $select_pedido = "SELECT * FROM factura WHERE idFactura = '" . $_GET["verfactura"] . "' LIMIT 1";
         $result_pedido = mysqli_query($conn, $select_pedido);
@@ -457,5 +659,4 @@ if (isset($_GET["verfactura"])) {
         ";
     }
 }
-salidaif:
 ?>

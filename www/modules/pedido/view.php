@@ -37,7 +37,7 @@
 <!-- BREADCRUMB -->
 <ul class="breadcrumb">
     <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li>
-    <li id="debugApp">Nuevo Pedido </li>
+    <li id="changeCrumbs">Nuevo Pedido </li>
 </ul>
 <!-- FIN BREADCRUMB -->
 <div class="page-content-wrap">    
@@ -80,7 +80,7 @@
         <div class="panel panel-default listPanel">
             <div class="panel-heading">
                 <h2 class="panel-title"><i class="fas fa-check"></i> Valide su pedido</h2>
-                <button class="btn btn-info pull-right"> Mesa <?php echo $_SESSION["numeromesa"] ?></button>
+                <button class="btn btn-info pull-right"><?php echo $_SESSION["nameMesa"] ?></button>
             </div>
             <div class="panel-body list-group list-group-contacts listPanelContainer">    
 

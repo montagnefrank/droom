@@ -36,6 +36,7 @@
 // DEBUG EN PANTALLA //
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
+
 // DESPLEGAMOS TODA LA CONFIG   //
 require ("assets/scripts/config.php");
 ?>
@@ -59,10 +60,10 @@ require ("assets/scripts/config.php");
         }
         ?>
     </head>
-    <body>
-        <?php
-        if ($page == 'login') {
-            ?>
+    <?php
+    if ($page == 'login') {
+        ?>
+        <body>
             <div class="page-container login">
                 <div class="login-center">
                     <img src="assets/img/logo_rec.png" />
@@ -77,8 +78,15 @@ require ("assets/scripts/config.php");
             </div> 
             <?php
         } else {
-            
-            echo '<div class="page-container page-navigation-top-fixed">';
+            echo '<body class="' . $fullwidth . ' ">' .
+            '       <div class="video-background">' .
+            '            <div class="video-foreground">' .
+            '                <iframe src="https://www.youtube.com/embed/' . $video . '?controls=0&showinfo=0&rel=0&mute=1&modestbranding=1&autoplay=1&loop=1&playlist=' . $video . '" frameborder="0" allowfullscreen></iframe>' .
+            '            </div>' .
+            '            <div class="video-overlay">' .
+            '            </div>' .
+            '       </div>';
+            echo '<div class="page-container  ' . $sidebar . '">';
             require ("assets/views/sidebar.php");
             ?>
             <div class="page-content" style="height: 100%;">

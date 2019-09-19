@@ -68,7 +68,7 @@
             <div class="panel-title-box">
                 <h3>Ingredientes</h3>
                 <span>Resumen de inventario</span> <button class="btn btn-info addnew_ing_btn" style="margin-left: 16px;"><i class="fa fa-plus-square fa-lg"></i> Nuevo</button>
-                <button class="btn btn-warning listadohistorico_btn" style="margin-left: 16px;"><i class="fa fa-list fa-lg"></i> Listado</button>
+                <button class="btn btn-warning listadohistorico_btn" style="margin-left: 16px;"><i class="fa fa-list fa-lg"></i> Movimientos de Inventario</button>
             </div>                                    
             <ul class="panel-controls" style="margin-top: 2px;">
                 <li><a id="ingredientes_toggle_list" href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
@@ -76,13 +76,6 @@
                 <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>                                 
             </ul>
         </div>
-        <div id="ingredientes_botonera_small" class="panel-footer text-center">                                                                                                                                                                                                           
-            <div class="btn-group">
-                <button id="ingredientes_quitosur_btn" class="btn btn-primary">Quito Sur</button>
-                <button id="ingredientes_villaflora_btn" class="btn btn-primary">Villaflora</button>                                                
-                <button id="ingredientes_quitonorte_btn" class="btn btn-primary">Quito Norte</button>                                        
-            </div>     
-        </div> 
         <div id="ingredientes_graph_peq" class="panel-body panel-body-table" >
             <div class="table-responsive" >
                 <input id="selected_dinner" type='hidden' value="1">
@@ -94,7 +87,6 @@
                             <th width="10%">Modificar</th>
                             <th width="10%">Codigo</th>
                             <th width="10%">Precio</th>
-                            <th width="5%">Unidad</th>
                             <th width="10%">Estado</th>
                             <th width="10%">Fecha</th>
                             <th width="10%">Tipo</th>
@@ -123,7 +115,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label class="control-label">Cantidad</label>
-                    <input type="text" class="form-control textinput numonly" id="cantidad_new" name="cantidad" placeholder="Cantidad a modificar" required>
+                    <input type="text" class="form-control textinput numonly" id="cantidad_new" name="cantidad" placeholder="Cantidad inicial" required>
                 </div>                                     
                 <div class="form-group col-md-4">
                     <label class="control-label">C&oacute;digo</label>
@@ -132,33 +124,14 @@
                 <div class="form-group col-md-4">
                     <label class="control-label">Codigo de Barras</label>
                     <input type="text" class="form-control textinput" id="barcode_new" name="barcode" placeholder="Codigo de barras" required>
-                </div>                                                                            
-                <div class="form-group col-md-4">
-                    <label class="control-label">Unidad</label>
-                    <select class="form-control select" data-style="btn-primary" id="unidadselect_new">
-                        <option value='0'>Seleccione</option>
-                        <option value='1'>Unidad</option>
-                        <option value='2'>KG</option>
-                        <option value='3'>0.25KG</option>
-                    </select>
-                </div>                                                                          
+                </div>                                                                                
                 <div class="form-group col-md-4">
                     <label class="control-label">Tipo de Ingrediente</label>
                     <select class="form-control select" data-style="btn-primary" id="tiposelect_new">
-                        <option value='0'>Grupo del menu</option>
-                        <option value='1'>General</option>
-                        <option value='2'>Pastas</option>
-                        <option value='3'>Carnes</option>
-                        <option value='4'>Pizzas</option>
-                        <option value='5'>Crepes & Postres</option>
-                        <option value='6'>Bebidas</option>
-                        <option value='7'>Ensaladas & Bocaditos</option>
+                        <option value='0'>Seleccione</option>
+                        <option value='G'>General</option>
                     </select>
                 </div>  
-                <div class="form-group col-md-4">
-                    <label class="control-label">Cuenta contable</label>
-                    <input type="text" class="form-control textinput" id="cuneta_new" name="cuneta" placeholder="Cuenta contable del producto" required>
-                </div>
                 <div class="form-group col-md-4">
                     <label class="control-label">Detalle</label>
                     <input type="text" class="form-control textinput" id="detalle_new" name="detalle" placeholder="Detalle del producto" required>
@@ -172,26 +145,13 @@
                     <input type="text" class="form-control textinput numonly" id="minimo_new" name="minimo" placeholder="Inventario Minimo" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label class="control-label">Inventario Maximo</label>
-                    <input type="text" class="form-control textinput numonly" id="maximo_new" name="maximo" placeholder="Inventario Maximo" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label class="control-label">Precio de Venta</label>
+                    <label class="control-label">Precio</label>
                     <input type="text" class="form-control" id="precioventa_new" name="precioventa" placeholder="Precio de venta" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label class="control-label">Precio de Compra</label>
+                    <label class="control-label">Costo</label>
                     <input type="text" class="form-control" id="preciocompra_new" name="preciocompra" placeholder="Precio de Compra" required>
-                </div>                                                                          
-                <div class="form-group col-md-4">
-                    <label class="control-label">Establecimiento</label>
-                    <select class="form-control select" data-style="btn-primary" id="estselect_new">
-                        <option value='0'>Seleccione</option>
-                        <option value='1'>Quito Sur</option>
-                        <option value='2'>Villaflora</option>
-                        <option value='3'>Cotocollao</option>
-                    </select>
-                </div> 
+                </div>        
                 <div class="form-group col-md-4">
                     <label class="control-label">Estado</label>
                     <div class="col-md-12">
@@ -235,7 +195,6 @@
                             <th width="10%">Tipo</th>
                             <th width="10%">Fecha</th>
                             <th width="5%">Usuario</th>
-                            <th width="10%">Establecimiento</th>
                         </tr>
                     </thead>
                     <tbody class="listahistorico">
@@ -264,39 +223,20 @@
                     <input readonly="readonly" type="text" class="form-control textinput numonly" id="cantidad_edit" name="cantidad" placeholder="Cantidad a modificar" required>
                 </div>                                     
                 <div class="form-group col-md-4">
-                    <label class="control-label">C&oacute;digo</label>
+                    <label class="control-label">C&oacute;digo ingrediente</label>
                     <input type="text" class="form-control textinput" id="codigo_edit" name="codigo" placeholder="Identifcador " required>
                 </div>                          
                 <div class="form-group col-md-4">
                     <label class="control-label">Codigo de Barras</label>
                     <input type="text" class="form-control textinput" id="barcode_edit" name="barcode" placeholder="Codigo de barras" required>
-                </div>                                                                            
-                <div class="form-group col-md-4">
-                    <label class="control-label">Unidad</label>
-                    <select class="form-control select" data-style="btn-primary" id="unidadselect_edit">
-                        <option value='0'>Seleccione</option>
-                        <option value='1'>Unidad</option>
-                        <option value='2'>KG</option>
-                        <option value='3'>0.25KG</option>
-                    </select>
-                </div>                                                                          
+                </div>                                                                              
                 <div class="form-group col-md-4">
                     <label class="control-label">Tipo de Ingrediente</label>
                     <select class="form-control select" data-style="btn-primary" id="tiposelect_edit">
-                        <option value='0'>Grupo del menu</option>
-                        <option value='1'>General</option>
-                        <option value='2'>Pastas</option>
-                        <option value='3'>Carnes</option>
-                        <option value='4'>Pizzas</option>
-                        <option value='5'>Crepes & Postres</option>
-                        <option value='6'>Bebidas</option>
-                        <option value='7'>Ensaladas & Bocaditos</option>
+                        <option value='0'>Seleccione</option>
+                        <option value='G'>General</option>
                     </select>
                 </div>  
-                <div class="form-group col-md-4">
-                    <label class="control-label">Cuenta contable</label>
-                    <input type="text" class="form-control textinput" id="cuneta_edit" name="cuneta" placeholder="Cuenta contable del producto" required>
-                </div>
                 <div class="form-group col-md-4">
                     <label class="control-label">Detalle</label>
                     <input type="text" class="form-control textinput" id="detalle_edit" name="detalle" placeholder="Detalle del producto" required>
@@ -310,25 +250,13 @@
                     <input type="text" class="form-control textinput numonly" id="minimo_edit" name="minimo" placeholder="Inventario Minimo" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label class="control-label">Inventario Maximo</label>
-                    <input type="text" class="form-control textinput numonly" id="maximo_edit" name="maximo" placeholder="Inventario Maximo" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label class="control-label">Precio de Venta</label>
+                    <label class="control-label">Precio</label>
                     <input type="text" class="form-control" id="precioventa_edit" name="precioventa" placeholder="Precio de venta" required>
                 </div>
                 <div class="form-group col-md-4">
-                    <label class="control-label">Precio de Compra</label>
+                    <label class="control-label">Costo</label>
                     <input type="text" class="form-control" id="preciocompra_edit" name="preciocompra" placeholder="Precio de Compra" required>
-                </div>                                                                          
-                <div class="form-group col-md-4 estselectcontainer">
-                    <label class="control-label">Establecimiento</label>
-                    <select class="form-control select estselectcontainer" data-style="btn-primary" id="estselect_edit" disabled>
-                        <option value='1'>Quito Sur</option>
-                        <option value='2'>Villaflora</option>
-                        <option value='3'>Cotocollao</option>
-                    </select>
-                </div> 
+                </div>     
                 <div class="form-group col-md-4">
                     <label class="control-label">Estado</label>
                     <div class="col-md-12">
@@ -339,11 +267,30 @@
                     </div>                                         
                 </div>
                 <input type="hidden" id="estado_input_edit" value="" >
+                <input type="hidden" id="idIngredientEdit" value="" >
             </form>
         </div>
         <div class="panel-footer">
             <button class="btn btn-info goback_ing_btn" style="margin-left: 16px; margin-bottom: 16px;"><i class="fa fa-reply"></i> Regresar</button>
             <button class="btn btn-success saveedit_btn pull-right" style="margin-left: 16px; margin-bottom: 16px;"><i class="fas fa-sync-alt"></i> Actualizar</button>
+        </div>
+    </div>
+</div>
+<div class="col-md-4 hidethis editing_panel">
+    <div class="panel panel-default relPanel">
+        <div class="panel-heading">
+            <div class="col-md-12">
+                <h2><span class="fa fa-edit"></span> Productos Asignados</h2>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 pushtop_16">
+                    <div class="col-md-12 relListcont">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -35,7 +35,8 @@
 ?>
 <!-- BREADCRUMB -->
 <ul class="breadcrumb">
-    <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li>
+    <!-- <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li> -->
+    <li><a href="/?show=home">Inicio</a></li>
     <li>Configuracion del Usuario </li>
 </ul>
 <!-- FIN BREADCRUMB -->
@@ -116,8 +117,45 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-4">   
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="fa fa-arrows-alt"></span> Interfaz</h3>                                
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                    <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                </ul>                                   
+            </div>
+            <div class="panel-body">
+                <form action="#" role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-9 control-label text-left">Contraer Sidebar</label>
+                        <div class="col-md-3">
+                            <label class="switch changeSidebar">
+                                <input type="checkbox" class="switch" value="1" <?php echo $checkedsb ?>/>
+                                <span></span>
+                                <div class="hidethis_force idusuario_cont"><?php echo $_SESSION["usuario"]['idUsuario'] ?></div>
+                            </label>                                            
+                        </div>
+                    </div>                                    
+                    <div class="form-group">
+                        <label class="col-md-9 control-label text-left">Pantalla completa</label>
+                        <div class="col-md-3">
+                            <label class="switch changeBoxed">
+                                <input type="checkbox" class="switch" value="1" <?php echo $checkedfw ?>/>
+                                <span></span>
+                                <div class="hidethis_force idusuario_cont"><?php echo $_SESSION["usuario"]['idUsuario'] ?></div>
+                            </label>                                            
+                        </div>
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-12">
-        <div class="col-md-4 editarImagenSlide1">
+        <div class="col-md-4 editarImagenSlide1 xn-panel-dragging">
             <div class="panel panel-default">     
                 <div class="panel-heading">
                     <h3>
@@ -146,7 +184,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 editarImagenSlide2">
+        <div class="col-md-4 editarImagenSlide2 xn-panel-dragging">
             <div class="panel panel-default">     
                 <div class="panel-heading">
                     <h3>
@@ -175,7 +213,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 editarImagenSlide3">
+        <div class="col-md-4 editarImagenSlide3 xn-panel-dragging">
             <div class="panel panel-default">     
                 <div class="panel-heading">
                     <h3>
@@ -311,42 +349,3 @@
         </div>
     </div>
 </div> 
-<div id="modal_change_establecimiento" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header label-primary">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title tituloModalPreferencias" style="color:white;"><center><i class="fa fa-home" aria-hidden="true"></i> Cambiar establecimiento</center></h4>
-            </div>
-            <div class="modal-body">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="btn-group-vertical radioEstablecimiento" data-toggle="buttons" style="width: 100%;">
-                        <label class="btn btn-primary active">
-                            <input type="radio" name="options" id="option1" autocomplete="off" value="" checked><br><h3 style="color:white;">Seleccione un establecimiento ..</h3><br>
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="option2" autocomplete="off" value="avmaestro"><img src="img/establecimientos/sucursal-norte-dirulo.png" alt="Imagen anterior" class="mCS_img_loaded" width="100" height="100"> <h3 style="color:white;">Dirulo Av. del Maestro</h3>
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="option3" autocomplete="off" value="quitosur"><img src="img/establecimientos/sucursal-sur-dirulo.png" alt="Imagen anterior" class="mCS_img_loaded" width="100" height="100"> <h3 style="color:white;">Dirulo Quito Sur</h3>
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="option4" autocomplete="off" value="villaflora"><img src="img/establecimientos/sucursal-villaflora-dirulo.png" alt="Imagen anterior" class="mCS_img_loaded" width="100" height="100"> <h3 style="color:white;">Dirulo Villaflora</h3>
-                        </label>
-                        <!--
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="option5" autocomplete="off" value="todos" ><img src="img/logo_rec.png" alt="Imagen anterior" class="mCS_img_loaded" width="200" style="padding: 10px 0px;"><h3 style="color:white;">Todos los establecimientos</h3>
-                        </label>-->
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer label-primary">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle" aria-hidden="true"></i> Cerrar</button>
-                <button type="button" class="btn btn-primary btnEstableceEstablecimiento" style="border: 1px solid;"><i class="fas fa-sync-alt" aria-hidden="true"></i> Cambiar establecimiento</button>
-            </div>
-        </div>
-
-    </div>
-</div>

@@ -78,9 +78,9 @@ if ($_POST) {
         $username = broom('reg', $_POST["username"]);
         $password = $_POST["password"];
 
-//        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
-//        $password = hash('sha512', $_POST['password']);
-//        
+        //        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
+        //        $password = hash('sha512', $_POST['password']);
+        //        
         ////            CONSULTAMOS EL USUARIO EN LA BASE DE DATOS A VER SI EXISTE              ////
         $query = " SELECT * FROM usuario us "
                 . " INNER JOIN perfil p ON (us.idPerfil = p.idPerfil ) "
@@ -121,12 +121,6 @@ if ($_POST) {
             session_start();
             $_SESSION["usuario"] = $json['userIntel'];
 
-            //              DATOS PARA CONSTRUIR LOS MODULOS            //
-            $_SESSION["usuario"]["nombreEstablecimiento"] = $json['userIntel']["nombreEstablecimiento"];
-            $_SESSION["usuario"]["ciudadEstablecimiento"] = $json['userIntel']["ciudadEstablecimiento"];
-            $_SESSION["usuario"]["telefonoEstablecimiento"] = $json['userIntel']["telefonoEstablecimiento"];
-            $_SESSION["usuario"]["sectorEstablecimiento"] = $json['userIntel']["sectorEstablecimiento"];
-
             $val_update = "UPDATE usuario SET lastLogin = '" . date('Y-m-d H:i:s') . "' WHERE idUsuario = '" . $row["idUsuario"] . "';";
             $val_result = $conn->query($val_update) or die("{'scriptResp' : 'queryFailedd', 'query' : '" . $val_update . "'}");
 
@@ -155,17 +149,12 @@ if ($_POST) {
     if ($method == 'asignaMesa') {
         $idMesa = broom('num', $_POST['idmesa']);
         $numeroMesa = broom('text', $_POST['numeromesa']);
-        $idPedido;
-
+        session_start();
         if (isset($_POST["idpedido"])) {
             $idPedido = broom('num', $_POST['idpedido']);
-        }
-        session_start();
-        $_SESSION["idmesa"] = $idMesa;
-        $_SESSION["nameMesa"] = $numeroMesa;
-        if (isset($idPedido)) {
             $_SESSION["idpedido"] = $idPedido;
-
+            $_SESSION["idmesa"] = $idMesa;
+            $_SESSION["nameMesa"] = $numeroMesa;
             $json['scriptResp'] = "done";
             $output = ob_get_contents();
             ob_end_clean();
@@ -174,6 +163,9 @@ if ($_POST) {
             echo json_encode($json);
             return;
         } else {
+            $_SESSION["idpedido"] = '';
+            $_SESSION["idmesa"] = $idMesa;
+            $_SESSION["nameMesa"] = $numeroMesa;
             $json['scriptResp'] = "done";
             $output = ob_get_contents();
             ob_end_clean();
@@ -194,9 +186,8 @@ if ($_POST) {
         $query = "SELECT * FROM pedido pe "
                 . "INNER JOIN mesa m on(m.idMesa=pe.idMesa) "
                 . "INNER JOIN pedidoproducto pp ON(pe.idPedido = pp.idPedido) "
-                . "INNER JOIN producto p on(p.idProducto = pp.idProducto) "
-                . "INNER JOIN submenu sm on(p.idSubMenu = sm.idSubMenu) "
-                . "INNER JOIN menu me on (sm.idMenu = me.idMenu) "
+                . "INNER JOIN productos p on(p.idProducto = pp.idProducto) "
+                . "INNER JOIN menu me on (p.idMenu = me.idMenu) "
                 . "GROUP BY(pe.idPedido) "
                 . "HAVING m.estadoMesa = 'OCUPADA' AND pe.estadopagoPedido != 'PAGADO' AND m.idEstablecimiento = '$idEstablecimiento' "
                 . "ORDER BY pe.idPedido ASC";
@@ -447,62 +438,6 @@ if ($_POST) {
             echo json_encode($json);
             return;
         }
-    }
-
-    //          OBTENEMOS LOS PRODUCTOS          //
-    if ($method == 'getProductos') {
-
-        $idsubmenu = $_POST["idsubmenu"];
-
-        $query = "SELECT * FROM producto where idSubmenu like '$idsubmenu'";
-        $result = $conn->query($query);
-        if (!$result)
-            die($conn->error);
-
-        $rows = $result->num_rows;
-        $contentMenu = array();
-
-        for ($i = 0; $i < $rows; $i++) {
-            $result->data_seek($i);
-            $contentMenu[] = $result->fetch_array(MYSQLI_ASSOC);
-        }
-
-        if ($rows != 0) {
-            $json['productos'] = $contentMenu;
-            $json['status'] = 'yes';
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        } else {
-            $json['result'] = 'No se ha encontrado contenido de tal menú';
-            $json['status'] = 'no';
-            $output = ob_get_contents();
-            ob_end_clean();
-            $json['output'] = $output;
-            echo json_encode($json);
-            return;
-        }
-    }
-
-    //                  OBTENEMOS EL SUBMENU DE LA PIZZA            //
-    if ($method == 'getIdperfil') {
-
-        $idsubmenu = $_POST["idsubmenu"];
-        $query = "SELECT * FROM submenu sm join menu m on (m.idMenu=sm.idMenu) where sm.idSubmenu like '$idsubmenu'";
-        $result = $conn->query($query);
-        if (!$result)
-            die($conn->error);
-        $result->data_seek(0);
-        $menu = $result->fetch_array(MYSQLI_ASSOC);
-        $json['menu'] = $menu;
-        $json['status'] = 'yes';
-        $output = ob_get_contents();
-        ob_end_clean();
-        $json['output'] = $output;
-        echo json_encode($json);
-        return;
     }
 
     //                  CARGAMOS LOS PEDIDOS DEL MENU        //
@@ -798,7 +733,7 @@ if ($_POST) {
                 $awe = 'fa-times';
             }
             echo ' 
-            <div class="hidethis boxProductItem col-md-6">
+            <div class="hidethis boxProductItem col-md-4">
                 <div class="panel panel-default">                            
                     <div class="panel-body panel-body-image">
                         <img src="api/assets/img/productos/' . $row['idProducto'] . '.jpg" alt="Slide1" style="height: 300px;"/>
@@ -1614,7 +1549,9 @@ if ($_POST) {
     //                  ACTUALIZAMOS LOS TAMAñOS           //
     if ($method == 'updateTams') {
 
-        $val_select = "UPDATE productos SET tamProducto = '" . $_POST['tams'] . "' WHERE idProducto = '" . $_POST['idProducto'] . "'";
+        $tams = $_POST['tams'];
+        $prodId = $_POST['idProducto'];
+        $val_select = "UPDATE productos SET tamProducto = '" . $tams . "' WHERE idProducto = '" . $prodId . "'";
         $val_result = $conn->query($val_select) or die($conn->error);
 
         if ($val_result) {
@@ -1639,18 +1576,18 @@ if ($_POST) {
 
         session_start();
         $pedidosList = json_decode(stripslashes($_POST['pedidos']));
-        if($_SESSION['idmesa'] == '0'){
+        if ($_SESSION['idmesa'] == '0') {
             $insertPedido = "INSERT INTO pedido(idMesa,idUsuario,estadoPedido,estadopagoPedido) "
-                . "VALUES ('0',"
-                . "'" . $_SESSION['usuario']['idUsuario'] . "',"
-                . "'DOMICILIO',"
-                . "'SIN PAGAR')";
+                    . "VALUES ('0',"
+                    . "'" . $_SESSION['usuario']['idUsuario'] . "',"
+                    . "'DOMICILIO',"
+                    . "'SIN PAGAR')";
         } else {
             $insertPedido = "INSERT INTO pedido(idMesa,idUsuario,estadoPedido,estadopagoPedido) "
-                . "VALUES ('" . $_SESSION['idmesa'] . "',"
-                . "'" . $_SESSION['usuario']['idUsuario'] . "',"
-                . "'SOLICITADO',"
-                . "'SIN PAGAR')";
+                    . "VALUES ('" . $_SESSION['idmesa'] . "',"
+                    . "'" . $_SESSION['usuario']['idUsuario'] . "',"
+                    . "'SOLICITADO',"
+                    . "'SIN PAGAR')";
         }
         $val_result = $conn->query($insertPedido); // or die($link->error)
 
@@ -1781,7 +1718,7 @@ if ($_POST) {
                     <div class="idpedido" hidden>' . $producto["idPedido"] . '</div>
                     <div class="idpedidoproducto" hidden>' . $producto["idPedidoproducto"] . '</div>
                 <div class="label-form col-md-12 " style="font-weight: bold;color:black;">
-                <p style="text-align: center;font-size: 25px;">' . $producto["nombreProducto"] . '</p><br>
+                <p style="text-align: center;font-size: 25px;line-height: 30px;">' . $producto["nombreProducto"] . '</p><br>
                 <p style="text-align: center;font-size: 20px;">' . $allIngs . '</p>';
 
             $htmlPedido .= '</div></div>';
@@ -1797,6 +1734,382 @@ if ($_POST) {
         echo json_encode($json);
         return;
     }
+
+    //                  CONSULTAR PEDIDO A EDITAR       //
+    if ($method == 'getThisOrder') {
+
+        $idpedido = $_POST["idPedido"];
+
+        $query = "SELECT * FROM pedidoproducto pp "
+                . "INNER JOIN productos p ON (p.idProducto = pp.idProducto) "
+                . "INNER JOIN pedido ped ON (pp.idPedido = ped.idPedido) "
+                . "INNER JOIN mesa mes ON (ped.idMesa = mes.idMesa) "
+                . "INNER JOIN menu m ON (p.idMenu = m.idMenu) "
+                . "WHERE pp.idPedido= '$idpedido'";
+        $result = $conn->query($query);
+        if (!$result)
+            die($conn->error);
+
+        $rows = $result->num_rows;
+        $productos = array();
+
+        for ($i = 0; $i < $rows; $i++) {
+            $result->data_seek($i);
+            $thisLine = $result->fetch_array(MYSQLI_ASSOC);
+            $ings = $thisLine['ingsPedidoProducto'];
+            $query2 = "SELECT * FROM ingrediente ing WHERE ing.idIngrediente IN ($ings) ";
+            $result2 = $conn->query($query2);
+            if (!$result2)
+                die(json_encode($query2));
+            $rowss = $result2->num_rows;
+            $allIngs = array();
+            for ($ii = 0; $ii < $rowss; $ii++) {
+                $result2->data_seek($ii);
+                $allIngs[] = $result2->fetch_array(MYSQLI_ASSOC);
+            }
+            $thisLine['allIngs'] = $allIngs;
+            $productos[] = $thisLine;
+        }
+
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['list'] = $productos;
+        $json['output'] = $output;
+        $json['quer'] = $query;
+        $json['status'] = 'yes';
+        echo json_encode($json);
+        return;
+    }
+
+    //                  OBTENER TODOS LSO INGREDIENTES DE UNA LISTA      //
+    if ($method == 'getIngsList') {
+        $ings = $product['ingsPedidoProducto'];
+        $query2 = "SELECT * FROM ingrediente ing WHERE ing.idIngrediente IN ($ings) ";
+        $result2 = $conn->query($query2);
+        if (!$result2)
+            die(json_encode($query2));
+        $rows = $result2->num_rows;
+        $allIngs = array();
+        for ($i = 0; $i < $rows; $i++) {
+            $result2->data_seek($i);
+            $allIngs[] = $result2->fetch_array(MYSQLI_ASSOC);
+        }
+
+        $json['ings'] = $allIngs;
+        $json['quer'] = $query2;
+        $json['status'] = 'yes';
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  ACTUALIZAMOS NUEVO PEDIDO EN SISTEMA           //
+    if ($method == 'loadUpdatePedido') {
+
+        session_start();
+        $idPedido = $_POST['idPedido'];
+        $pedidosList = json_decode(stripslashes($_POST['pedidos']));
+        $insertPedido = "DELETE FROM pedidoproducto WHERE idPedido = '" . $idPedido . "'  ";
+        $val_result = $conn->query($insertPedido); // or die($link->error)
+
+        if ($val_result) {
+            $lastIdPedido = $idPedido;
+            $catnPEdidos = sizeof($pedidosList);
+            $catnPEdidos = $catnPEdidos - 1;
+            for ($x = 0; $x <= $catnPEdidos; $x++) {
+                $pedidosList[$x] = (array) $pedidosList[$x];
+            }
+
+            foreach ($pedidosList as $thisPedido) {
+                $insertPedidoProds = "INSERT INTO `pedidoproducto`(`idPedido`,`idProducto`,`descripcionPedidoproducto`,`cantidadPedidoproducto`,`observacionPedidoproducto`,`precioPedidoProducto`,`ingsPedidoProducto`,`estadoPedidoproducto`) "
+                        . "VALUES ('" . $lastIdPedido . "',"
+                        . "'" . $thisPedido['idProducto'] . "',"
+                        . "'" . $thisPedido['descripcionPedidoproducto'] . "',"
+                        . "'" . $thisPedido['cantidadPedidoproducto'] . "',"
+                        . "'" . $thisPedido['observacionPedidoproducto'] . "',"
+                        . "'" . $thisPedido['precioPedidoProducto'] . "',"
+                        . "'" . $thisPedido['ingsPedidoProducto'] . "',"
+                        . "'SOLICITADO'); ";
+                $insertPedidos_result = $conn->query($insertPedidoProds) or die($link->error);
+            }
+            if ($insertPedidos_result) {
+                $json['status'] = 'yes';
+                $output = ob_get_contents();
+                ob_end_clean();
+                $json['output'] = $output;
+                echo json_encode($json);
+            } else {
+                $json['status'] = 'no';
+                $output = ob_get_contents();
+                ob_end_clean();
+                $json['query'] = $insertPedidoProds;
+                $json['error'] = $conn->error;
+                $json['output'] = $output;
+                echo json_encode($json);
+            }
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $insertPedido;
+            $json['output'] = $output;
+            echo json_encode($json);
+            die;
+        }
+    }
+
+    //                  AGREGAR  NUEVO INGREDINETE           //
+    if ($method == 'addnewing') {
+        $select = "SELECT codigoIngrediente FROM ingrediente WHERE codigoIngrediente = '" . $_POST['codigoIngrediente'] . "';";
+        $result = $conn->query($select) or die($conn->error);
+        $row_cnt = $result->num_rows;
+
+        if ($row_cnt > 0) {
+            $json['status'] = "error";
+            $json['msg'] = " Ya existe el ingrediente en sistema, por favor seleccione un codigo diferente.";
+            echo json_encode($json);
+        } else {
+            $query = "INSERT INTO ingrediente (nombreIngrediente,cantidad1,codigoIngrediente,barcodeIngrediente,tipoIngrediente,detalleIngrediente,bodegaIngrediente,minIngrediente,precioIngrediente,compraIngrediente,editadoIngredinete,estadoIngrediente) "
+                    . " VALUES ('" . $_POST['nombreIngrediente'] . "','" . $_POST['cantidad'] . "','" . $_POST['codigoIngrediente'] . "','" . $_POST['barcodeIngrediente'] . "','" . $_POST['tipoIngrediente'] . "','" . $_POST['detalleIngrediente'] . "','" . $_POST['bodegaIngrediente'] . "','" . $_POST['minIngrediente'] . "','" . $_POST['precioIngrediente'] . "','" . $_POST['compraIngrediente'] . "','" . date('Y-m-d') . "','" . $_POST['estadoIngrediente'] . "')";
+            //        echo $query;
+            $val_result = $conn->query($query) or die($conn->error);
+
+            if ($val_result) {
+                $json['status'] = "ok";
+                $json['msg'] = " Nuevo ingrediente agregado en sistema ";
+                echo json_encode($json);
+            } else {
+                $json['status'] = "error";
+                $json['msg'] = " Error al crear el ingrediente, consulte con su departamento de soporte. ";
+                echo json_encode($json);
+            }
+        }
+        return;
+    }
+
+    //                     OBTENEMOS LOS PRODUCTOS RELACIONADOS AL INGREDIENTE                   //
+    if ($method == 'getRelsProd') {
+
+        $idIng = $_POST["idIng"];
+        $html = '';
+        $ingsRows = [];
+        $select = "SELECT * FROM productos WHERE estadoProducto = 'ACTIVO';";
+        $result = $conn->query($select) or die($conn->error);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $ingList = explode(',', $row['ingsProducto']);
+            $ingsRows[] = $ingList;
+            if (in_array($idIng, $ingList)) {
+                $selectRel = "SELECT * FROM relaciones WHERE idIngrediente = '" . $idIng . "' AND idProducto = '" . $row['idProducto'] . "' LIMIT 1;";
+                $resultRel = $conn->query($selectRel) or die($conn->error);
+                $row_cntRel = $resultRel->num_rows;
+                $rowRel = $resultRel->fetch_array(MYSQLI_ASSOC);
+                if ($row_cntRel > 0) {
+                    $html .= '  <div class="widget widget-info widget-item-icon">' .
+                            '       <div class="widget-item-left editThisRel">' .
+                            '            <span class="fa fa-save" data-toggle="tooltip" data-placement="top" title="Actualizar"></span>' .
+                            '        </div>' .
+                            '        <div class="widget-data">' .
+                            '            <div class="hidden idIngRel">' . $idIng . '</div>' .
+                            '            <div class="hidden idProdRel">' . $row['idProducto'] . '</div>' .
+                            '            <div class="widget-int num-count">- ' . $rowRel['valRel'] . '</div>' .
+                            '            <div class="widget-title tamIndex">' . $row['nombreProducto'] . '</div>' .
+                            '            <div class="widget-subtitle col-md-3"><input type="text" class="form-control relNewValInput" value="" placeholder="Actualizar" /></div>' .
+                            '      </div>  ' .
+                            '      <div class="widget-controls deleteThisTam">' .
+                            '           <a class="widget-control-right"><span class="fa fa-times"></span></a>' .
+                            '      </div>     ' .
+                            '   </div>
+                         ';
+                } else {
+                    $html .= '  <div class="widget widget-info widget-item-icon">' .
+                            '       <div class="widget-item-left editThisRel">' .
+                            '            <span class="fa fa-save" data-toggle="tooltip" data-placement="top" title="Actualizar"></span>' .
+                            '        </div>' .
+                            '        <div class="widget-data">' .
+                            '            <div class="hidden idIngRel">' . $idIng . '</div>' .
+                            '            <div class="hidden idProdRel">' . $row['idProducto'] . '</div>' .
+                            '            <div class="widget-int num-count">- 1</div>' .
+                            '            <div class="widget-title tamIndex">' . $row['nombreProducto'] . '</div>' .
+                            '            <div class="widget-subtitle col-md-3"><input type="text" class="form-control relNewValInput" value="" placeholder="Actualizar" /></div>' .
+                            '      </div>  ' .
+                            '      <div class="widget-controls deleteThisTam">' .
+                            '           <a class="widget-control-right"><span class="fa fa-times"></span></a>' .
+                            '      </div>     ' .
+                            '   </div>
+                         ';
+                }
+            }
+        }
+        if ($html == '') {
+            $html = '<h3>Este Ingrediente no esta relacionado a ningun Producto</h3>';
+        }
+        $json['idIng'] = $idIng;
+        $json['ingS'] = $ingsRows;
+        $json['status'] = 'yes';
+        $json['html'] = $html;
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  CONSULTAMOS EL TURNO ACTUAL   //
+    if ($method == 'updateRel') {
+
+        $idIngr = $_POST['idIngrediente'];
+        $prodId = $_POST['idProducto'];
+        $newVal = $_POST['relNewVal'];
+        $val_select = "DELETE FROM relaciones WHERE idProducto = '" . $prodId . "' AND idIngrediente = '" . $idIngr . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+        $val_Ins = "INSERT INTO relaciones(valRel,idProducto,idIngrediente) VALUES ('" . $newVal . "','" . $prodId . "','" . $idIngr . "')";
+        $ins_result = $conn->query($val_Ins) or die($conn->error);
+
+        if ($ins_result) {
+            $json['status'] = 'yes';
+            $json['q'] = $val_Ins;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+    }
+
+    //                  CONSULTAMOS EL TURNO   DE CAJA             //
+    if ($method == 'getTurno') {
+
+        $query2 = "SELECT * FROM turnos tur "
+                . "LEFT JOIN usuario us ON (tur.idUsuario = us.idUsuario) "
+                . "ORDER BY idTurno DESC LIMIT 1";
+        $result2 = $conn->query($query2);
+        $rows = $result2->num_rows;
+        if ($rows > 0) {
+            $row = $result2->fetch_array(MYSQLI_ASSOC);
+            $json['lastTurno'] = $row;
+            $json['status'] = 'yes';
+        } else {
+            $json['status'] = 'no';
+        }
+        $json['quer'] = $query2;
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //                  ABRIMOS UN NUEVO TURNO DE CAJA     //
+    if ($method == 'abrirTurno') {
+        session_start();
+
+        $val_select = "INSERT INTO turnos(idUsuario,fechaTurno,tipoTurno,saldoTurno,msgTurno) "
+                . "VALUES ('" . $_SESSION['usuario']['idUsuario'] . "',"
+                . "'" . date('Y-m-d H:i:s') . "',"
+                . "'apertura',"
+                . "'" . $_POST['montoInicial'] . "',"
+                . "'" . $_POST['comentario'] . "')";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+        return;
+    }
+
+    //                  CERRAMOS UN NUEVO TURNO DE CAJA     //
+    if ($method == 'cerrarTurno') {
+        $val_select = "UPDATE turnos SET "
+                . "tipoTurno = 'cierre', "
+                . "fechaModif = '" . date('Y-m-d H:i:s') . "', "
+                . "finalTurno = '" . $_POST['montoFinal'] . "' "
+                . "WHERE idTurno = '" . $_POST['idTurno'] . "' ";
+        $val_result = $conn->query($val_select); // or die($link->error)
+
+        if ($val_result) {
+            $json['status'] = 'yes';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+        } else {
+            $json['status'] = 'no';
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['query'] = $val_select;
+            $json['output'] = $output;
+            echo json_encode($json);
+        }
+        return;
+    }
+
+    //                  ACTUALIZAMOS LA INTERFAZ     //
+    if ($method == 'sidebarUpdate') {
+
+        $val_select = "UPDATE usuario SET sidebar = '" . $_POST['changeStatus'] . "' WHERE idUsuario = '" . $_POST['idUsuario'] . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+    
+        if ($val_result) {
+            session_start();
+            $_SESSION["usuario"]['sidebar'] = $_POST['changeStatus'];
+            $msg_logo .= ' Se ha atualizado la configuraci&oacute;n de la interfaz exitosamente. ' . 
+            '<br><button class="pull-left btn btn-success" name="newtheme" type="submit" id="refreshThisPage" data-toggle="tooltip" data-placement="top" title="" data-original-title="Actualizar"><span class="fa fa-refresh"></span> Actualizar</button> ';
+            echo $msg_logo;
+            $json['status'] = 'yes';
+        } else {
+            echo " No pudimos actualizar la interfaz. Intente de nuevo ";
+            $json['status'] = 'no';
+        }
+        
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+    }
+    
+    
+    //                  ACTUALIZAMOS LA PANTALLACOMPLETA      //
+    if ($method == 'fullwidthUpdate') {
+    
+        $val_select = "UPDATE usuario SET fullwidth = '" . $_POST['changeStatus'] . "' WHERE idUsuario = '" . $_POST['idUsuario'] . "'";
+        $val_result = $conn->query($val_select) or die($conn->error);
+    
+        if ($val_result) {
+            session_start();
+            $_SESSION["usuario"]['fullwidth'] = $_POST['changeStatus'];
+            $msg_logo .= ' Se ha atualizado la configuraci&oacute;n de la interfaz exitosamente.' . 
+            '<br><button class="pull-left btn btn-success" name="newtheme" type="submit" id="refreshThisPage" data-toggle="tooltip" data-placement="top" title="" data-original-title="Actualizar"><span class="fa fa-refresh"></span> Actualizar</button> ';
+            echo $msg_logo;
+            $json['status'] = 'yes';
+        } else {
+            echo " No pudimos actualizar la interfaz. Intente de nuevo ";
+            $json['status'] = 'no';
+        }
+        
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+    }
 }
 
 if ($_GET) {
@@ -1808,37 +2121,126 @@ if ($_GET) {
     if ($method == 'report') {
         $type = broom('num', $_GET["print"]);
 
-        ////////////////////    REPORTE MASTER DE TODOS LOS PRODUCTOS       ////////////////////
+        ////////////////////    REPORTE DE CORTE X      ////////////////////
         if ($type == '1') {
 
-            $query = "SELECT * FROM producto pro
-                INNER JOIN submenu su ON (pro.idSubmenu = su.idSubmenu)
-                INNER JOIN menu me ON (su.idMenu = me.idMenu)
-                WHERE pro.tipoProducto = 'ACTIVO'
-                AND su.estadoSubmenu = 'ACTIVO'
-								AND me.estadoMenu = 'ACTIVO'
-								ORDER BY su.idSubmenu";
+            $query = "SELECT * FROM factura "
+                    . "WHERE statusFactura = 'ACTIVE' "
+                    . "AND idTurno = '" . $_GET["idTurno"] . "'";
 
             $result = $conn->query($query);
             if (!$result)
-                die('Couldn\'t fetch records');
+                die($query);
             $num_fields = mysqli_num_fields($result);
 
             $fp = fopen('php://output', 'w');
             if ($fp && $result) {
+                $query2 = "SELECT * FROM turnos tur "
+                        . "LEFT JOIN usuario us ON (tur.idUsuario = us.idUsuario) "
+                        . "ORDER BY idTurno DESC LIMIT 1";
+                $result2 = $conn->query($query2);
+                $rows = $result2->num_rows;
+                if ($rows > 0) {
+                    $rowTurno = $result2->fetch_array(MYSQLI_ASSOC);
+                }
+                $title = [];
+                $title[] = ' Reporte X                 ' . date('Y-m-d H:i:s');
+                fputcsv($fp, $title, ';');
+                $title = [];
+                $title[] = ' Turno Cajero:               ' . $rowTurno['nombresUsuario'] . ' ' . $rowTurno['apellidosUsuario'];
+                fputcsv($fp, $title, ';');
+                $title = [];
+                $title[] = ' Saldo Inicial:                   ' . $rowTurno['saldoTurno'] . ' $';
+                fputcsv($fp, $title, ';');
+                $title = [];
+                $title[] = ' ';
+                fputcsv($fp, $title, ';');
+                $headers = array('Factura', 'Pedido', 'Cliente', 'Turno', 'Fecha', 'Hora', 'Subtotal', 'Descuento Otorgado', 'IVA', 'Total', 'Formas de Pago', 'Voucher TDC', 'Pagos Diferenciados', 'Vuelto entregado', 'Pagado con Efectivo', 'Pagado con TDC', 'Pago Diferenciado', 'Tipo de Entrega');
                 fputcsv($fp, $headers, ';');
+                $sumSubtotal = 0;
+                $sumIva = 0;
+                $sumTotal = 0;
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                    $row['Precio'] = number_format($row['Precio'], 2, ',', '');
-                    $row['Precio2'] = number_format(($row['Precio2'] * 1.12), 2, ',', '');
-                    $row['Costo'] = number_format($row['Costo'], 2, ',', '.');
-                    $row['Alto'] = number_format($row['Alto'], 2, ',', '.');
-                    $row['Ancho'] = number_format($row['Ancho'], 2, ',', '.');
-                    $row['Profundo'] = number_format($row['Profundo'], 2, ',', '.');
-                    $row['Peso'] = number_format($row['Peso'], 2, ',', '.');
+                    $sumSubtotal = number_format($sumSubtotal + $row['subtotalFactura'], 2, '.', '');
+                    $sumIva = number_format($sumIva + $row['ivaFactura'], 2, '.', '');
+                    $sumTotal = number_format($sumTotal + $row['totalFactura'], 2, '.', '');
+                    unset($row['idEstablecimiento']);
+                    unset($row['statusFactura']);
                     fputcsv($fp, $row, ';');
                 }
+                $totales = [];
+                $totales[] = ' ';
+                fputcsv($fp, $totales, ';');
+                $totales = [];
+                $totales[] = ' Subtotal:';
+                $totales[] = $sumSubtotal;
+                fputcsv($fp, $totales, ';');
+                $totales = [];
+                $totales[] = ' IVA:';
+                $totales[] = $sumIva;
+                fputcsv($fp, $totales, ';');
+                $totales = [];
+                $totales[] = ' Total: ';
+                $totales[] = $sumTotal;
+                fputcsv($fp, $totales, ';');
+
                 header('Content-Type: text/csv; charset=utf-8');
-                header("Content-Disposition: attachment; filename=todoslosproductos" . date('Ymd-His') . ".csv");
+                header("Content-Disposition: attachment; filename=corteX" . date('Ymd-His') . ".csv");
+                return;
+            }
+        }
+        
+        ////////////////////    CORTE Z      ////////////////////
+        if ($type == '2') {
+
+            $query = "SELECT * FROM factura "
+                    . "WHERE statusFactura = 'ACTIVE' "
+                    . "AND fechaFactura = '" . date('Y-m-d') . "'";
+
+            $result = $conn->query($query);
+            if (!$result)
+                die($query);
+            $num_fields = mysqli_num_fields($result);
+
+            $fp = fopen('php://output', 'w');
+            if ($fp && $result) {
+                $title = [];
+                $title[] = ' Reporte Z                 ' . date('Y-m-d H:i:s');
+                fputcsv($fp, $title, ';');
+                $title = [];
+                $title[] = ' ';
+                fputcsv($fp, $title, ';');
+                $headers = array('Factura', 'Pedido', 'Cliente', 'Turno', 'Fecha', 'Hora', 'Subtotal', 'Descuento Otorgado', 'IVA', 'Total', 'Formas de Pago', 'Voucher TDC', 'Pagos Diferenciados', 'Vuelto entregado', 'Pagado con Efectivo', 'Pagado con TDC', 'Pago Diferenciado', 'Tipo de Entrega');
+                fputcsv($fp, $headers, ';');
+                $sumSubtotal = 0;
+                $sumIva = 0;
+                $sumTotal = 0;
+                while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                    $sumSubtotal = number_format($sumSubtotal + $row['subtotalFactura'], 2, '.', '');
+                    $sumIva = number_format($sumIva + $row['ivaFactura'], 2, '.', '');
+                    $sumTotal = number_format($sumTotal + $row['totalFactura'], 2, '.', '');
+                    unset($row['idEstablecimiento']);
+                    unset($row['statusFactura']);
+                    fputcsv($fp, $row, ';');
+                }
+                $totales = [];
+                $totales[] = ' ';
+                fputcsv($fp, $totales, ';');
+                $totales = [];
+                $totales[] = ' Subtotal:';
+                $totales[] = $sumSubtotal;
+                fputcsv($fp, $totales, ';');
+                $totales = [];
+                $totales[] = ' IVA:';
+                $totales[] = $sumIva;
+                fputcsv($fp, $totales, ';');
+                $totales = [];
+                $totales[] = ' Total: ';
+                $totales[] = $sumTotal;
+                fputcsv($fp, $totales, ';');
+
+                header('Content-Type: text/csv; charset=utf-8');
+                header("Content-Disposition: attachment; filename=corteZ" . date('Ymd-His') . ".csv");
                 return;
             }
         }

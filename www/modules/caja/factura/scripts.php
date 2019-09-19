@@ -35,7 +35,7 @@
 ?>
 <script>
     var idclientesel;
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $(".form-control[disabled]").css("color", "black");
 
@@ -45,41 +45,41 @@
         autocompleteTel();
         asignaFecha();
 
-        $("#cedula_cliente").keyup(function(event) {
+        $("#cedula_cliente").keyup(function (event) {
             if (event.which != 13) {
                 resetFormClienteC();
                 $("#panel_infocliente .displaynone").css("display", "none");
             }
         });
 
-        $("#nombre_cliente").keyup(function(event) {
+        $("#nombre_cliente").keyup(function (event) {
             if (event.which != 13) {
                 resetFormClienteN();
                 $("#panel_infocliente .displaynone").css("display", "none");
             }
         });
 
-        $("#telefono_cliente").keyup(function(e) {
+        $("#telefono_cliente").keyup(function (e) {
             if (e.which != 13) {
                 resetFormClienteT();
                 $("#panel_infocliente .displaynone").css("display", "none");
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
-                    // Allow: Ctrl+A, Command+A
-                    (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
-                    // Allow: home, end, left, right, down, up
-                    (e.keyCode >= 35 && e.keyCode <= 40)) {
-                    // let it happen, don't do anything
-                    return;
-                }
-                // Ensure that it is a number and stop the keypress
-                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
-                    $(this).val("");
-                }
-            }
-        });
+                        // Allow: Ctrl+A, Command+A
+                                (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                                // Allow: home, end, left, right, down, up
+                                        (e.keyCode >= 35 && e.keyCode <= 40)) {
+                            // let it happen, don't do anything
+                            return;
+                        }
+                        // Ensure that it is a number and stop the keypress
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+                            $(this).val("");
+                        }
+                    }
+                });
 
-        $('.chkMetodoPago').change(function() {
+        $('.chkMetodoPago').change(function () {
             console.log($(this).val());
 
             if ($(this).val() == "EFECTIVO") {
@@ -120,70 +120,70 @@
             }
         });
 
-        $('.agregavoucher').click(function() {
+        $('.agregavoucher').click(function () {
             $(".contentVisa").append(
-                '<tr class="visa_newinput">' +
-                '<td style="width:25%;padding:2px;" class="colValor">' +
-                '<div class="form-group">' +
-                '<label for="valor" class="control-label">$$</label>' +
-                '<input type="text" onkeypress="return validateFloatKeyPress(this,event);" class="form-control monto_a_pagar" id="valorvisa" name="valorvisa" placeholder="$0.00" required>' +
-                '</div>' +
-                '</td>' +
-                '<td style="width:40%;padding:2px;" class="colVoucher">' +
-                '<div class="form-group">' +
-                '<label for="valor" class="control-label"># Ref</label>' +
-                '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Referencia" required>' +
-                '</div>' +
-                '</td>' +
-                '<td style="width:25%;padding:2px;" class="colVoucher">' +
-                '<div class="form-group">' +
-                '<label for="valor" class="control-label"># Voucher</label>' +
-                '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Lote" required>' +
-                '</div>' +
-                '</td>' +
-                '<td style="width:10%;padding:2px;" class="colAccion">' +
-                '<div style="padding-top: 30px;">' +
-                '</div>' +
-                '<span class="fa fa-minus eliminavoucher" aria-hidden="true" style="cursor:pointer;">' +
-                '</span>' +
-                '</td>' +
-                '</tr>'
-            );
+                    '<tr class="visa_newinput">' +
+                    '<td style="width:25%;padding:2px;" class="colValor">' +
+                    '<div class="form-group">' +
+                    '<label for="valor" class="control-label">$$</label>' +
+                    '<input type="text" onkeypress="return validateFloatKeyPress(this,event);" class="form-control monto_a_pagar" id="valorvisa" name="valorvisa" placeholder="$0.00" required>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td style="width:40%;padding:2px;" class="colVoucher">' +
+                    '<div class="form-group">' +
+                    '<label for="valor" class="control-label"># Ref</label>' +
+                    '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Referencia" required>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td style="width:25%;padding:2px;" class="colVoucher">' +
+                    '<div class="form-group">' +
+                    '<label for="valor" class="control-label"># Lote</label>' +
+                    '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Lote" required>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td style="width:10%;padding:2px;" class="colAccion">' +
+                    '<div style="padding-top: 30px;">' +
+                    '</div>' +
+                    '<span class="fa fa-minus eliminavoucher" aria-hidden="true" style="cursor:pointer;">' +
+                    '</span>' +
+                    '</td>' +
+                    '</tr>'
+                    );
             $(".tablaVisa tr:last").find(".colValor input").focus();
         });
 
-        $('.agregacheque').click(function() {
+        $('.agregacheque').click(function () {
 
             $(".contentCheque").append(
-                '<tr class="cheque_newinput">' +
-                '<td style="width:25%;padding:2px;" class="colValor">' +
-                '<div class="form-group">' +
-                '<label for="valor" class="control-label">$$</label>' +
-                '<input type="text" onkeypress="return validateFloatKeyPress(this,event);" class="form-control monto_a_pagar" id="valorvisa" name="valorvisa" placeholder="$0.00" required>' +
-                '</div>' +
-                '</td>' +
-                '<td style="width:65%;padding:2px;" class="colVoucher">' +
-                '<div class="form-group">' +
-                '<label for="valor" class="control-label">Comentario</label>' +
-                '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Comentario" required>' +
-                '</div>' +
-                '</td>' +
-                '<td style="width:10%;padding:2px;" class="colAccion">' +
-                '<div style="padding-top: 30px;">' +
-                '</div>' +
-                '<span class="fa fa-minus eliminavoucher" aria-hidden="true" style="cursor:pointer;">' +
-                '</span>' +
-                '</td>' +
-                '</tr>'
-            );
+                    '<tr class="cheque_newinput">' +
+                    '<td style="width:25%;padding:2px;" class="colValor">' +
+                    '<div class="form-group">' +
+                    '<label for="valor" class="control-label">$$</label>' +
+                    '<input type="text" onkeypress="return validateFloatKeyPress(this,event);" class="form-control monto_a_pagar" id="valorvisa" name="valorvisa" placeholder="$0.00" required>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td style="width:65%;padding:2px;" class="colVoucher">' +
+                    '<div class="form-group">' +
+                    '<label for="valor" class="control-label">Comentario</label>' +
+                    '<input type="text" class="form-control id_formadepago" id="vouchervisa" name="vouchervisa" placeholder="Comentario" required>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td style="width:10%;padding:2px;" class="colAccion">' +
+                    '<div style="padding-top: 30px;">' +
+                    '</div>' +
+                    '<span class="fa fa-minus eliminavoucher" aria-hidden="true" style="cursor:pointer;">' +
+                    '</span>' +
+                    '</td>' +
+                    '</tr>'
+                    );
 
             $(".tablaVisa tr:last").find(".colValor input").focus();
         });
 
     });
 
-    $(document).on('click', '.eliminavoucher', function() {
-        ($(this).parent().parent()).hide('slow', function() {
+    $(document).on('click', '.eliminavoucher', function () {
+        ($(this).parent().parent()).hide('slow', function () {
             $(this).remove();
             calcularVuelto();
         });
@@ -256,10 +256,10 @@
 
     function autocompleteCedula() {
         var options = {
-            url: function(phrase) {
+            url: function (phrase) {
                 return "assets/cliente/consultaClienteC.php";
             },
-            getValue: function(element) {
+            getValue: function (element) {
                 return element.cedulaCliente;
             },
             ajaxSettings: {
@@ -269,16 +269,16 @@
                     dataType: "json"
                 }
             },
-            preparePostData: function(data) {
+            preparePostData: function (data) {
                 data.cedula = $("#cedula_cliente").val();
                 return data;
             },
             requestDelay: 100,
             list: {
-                onClickEvent: function() {
+                onClickEvent: function () {
                     estableceClienteC($("#cedula_cliente").val());
                 },
-                onKeyEnterEvent: function() {
+                onKeyEnterEvent: function () {
                     estableceClienteC($("#cedula_cliente").val());
                 }
             }
@@ -297,7 +297,7 @@
             data: {
                 cedula: cedula,
             },
-            success: function(cliente) {
+            success: function (cliente) {
                 //asignacion de valores a cliente
                 $("#nombre_cliente").val(cliente.nombreCliente);
                 $("#id_cliente").val(cliente.idCliente);
@@ -316,11 +316,11 @@
                 infocliente(cliente.idCliente);
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -328,10 +328,10 @@
 
     function autocompleteCliente() {
         var options = {
-            url: function(phrase) {
+            url: function (phrase) {
                 return "assets/cliente/consultaClienteN.php";
             },
-            getValue: function(element) {
+            getValue: function (element) {
                 return element.nombreCliente;
             },
             ajaxSettings: {
@@ -341,16 +341,16 @@
                     dataType: "json"
                 }
             },
-            preparePostData: function(data) {
+            preparePostData: function (data) {
                 data.nombre = $("#nombre_cliente").val();
                 return data;
             },
             requestDelay: 100,
             list: {
-                onClickEvent: function() {
+                onClickEvent: function () {
                     estableceClienteN($("#nombre_cliente").val());
                 },
-                onKeyEnterEvent: function() {
+                onKeyEnterEvent: function () {
                     estableceClienteN($("#nombre_cliente").val());
                 }
             }
@@ -368,7 +368,7 @@
             data: {
                 nombre: nombre,
             },
-            success: function(cliente) {
+            success: function (cliente) {
                 //asignacion de valores a cliente
                 $("#cedula_cliente").val(cliente.cedulaCliente);
                 $("#id_cliente").val(cliente.idCliente);
@@ -386,11 +386,11 @@
                 $(".btnEliminaCliente").show();
                 infocliente(cliente.idCliente);
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -398,10 +398,10 @@
 
     function autocompleteTel() {
         var options = {
-            url: function(phrase) {
+            url: function (phrase) {
                 return "assets/cliente/consultaClienteT.php";
             },
-            getValue: function(element) {
+            getValue: function (element) {
                 return element.telefonoCliente;
             },
             ajaxSettings: {
@@ -411,16 +411,16 @@
                     dataType: "json"
                 }
             },
-            preparePostData: function(data) {
+            preparePostData: function (data) {
                 data.tel = $("#telefono_cliente").val();
                 return data;
             },
             requestDelay: 100,
             list: {
-                onClickEvent: function() {
+                onClickEvent: function () {
                     estableceClienteT($("#telefono_cliente").val());
                 },
-                onKeyEnterEvent: function() {
+                onKeyEnterEvent: function () {
                     estableceClienteT($("#telefono_cliente").val());
                 }
             }
@@ -438,7 +438,7 @@
             data: {
                 tel: tel,
             },
-            success: function(cliente) {
+            success: function (cliente) {
                 //asignacion de valores a cliente
                 $("#cedula_cliente").val(cliente.cedulaCliente);
                 $("#id_cliente").val(cliente.idCliente);
@@ -456,11 +456,11 @@
                 $(".btnEliminaCliente").show();
                 infocliente(cliente.idCliente);
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -472,10 +472,10 @@
         $.ajax({
             url: 'assets/factura/getMesaPedido.php',
             dataType: "json",
-            success: function(msg) {
-                numeromesa = msg.numeromesa;
-                if (msg.numeromesa != '999') {
-                    $(".numeroMesa").html("Mesa " + msg.numeromesa);
+            success: function (msg) {
+                numeromesa = msg.idmesa;
+                if (msg.idmesa != '') {
+                    $(".numeroMesa").html("" + msg.numeromesa);
                 } else {
                     $(".numeroMesa").html("Domicilio");
                 }
@@ -484,11 +484,11 @@
                 setCliente(msg.idpedido);
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -501,19 +501,19 @@
             data: {
                 idpedido: idpedido,
             },
-            success: function(html) {
+            success: function (html) {
                 $(".contenTablaPedido").html(html);
                 $(".tablaDescripcion tr:even").css("background-color", "rgba(169, 169, 169, 0.45)");
 
                 var subtotal = 0,
-                    iva = 0,
-                    totalapagar = 0;
+                        iva = 0,
+                        totalapagar = 0;
                 $.when(
-                    $(".contenTablaPedido .totalProducto").each(function(index) {
-                        console.log(index + ": " + $(this).text());
-                        subtotal = subtotal + parseFloat($(this).text());
-                    })
-                ).then(function() {
+                        $(".contenTablaPedido .totalProducto").each(function (index) {
+                    console.log(index + ": " + $(this).text());
+                    subtotal = subtotal + parseFloat($(this).text());
+                })
+                        ).then(function () {
                     subtotal = parseFloat(subtotal.toFixed(2));
                     iva = parseFloat((parseFloat(subtotal.toFixed(2)) * 0.12).toFixed(2));
                     totalapagar = parseFloat((subtotal + iva).toFixed(2));
@@ -524,11 +524,11 @@
                     $(".totalapagarFactura").html("$" + totalapagar.toFixed(2));
                 });
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -542,7 +542,7 @@
             data: {
                 idpedido: idpedido,
             },
-            success: function(cliente) {
+            success: function (cliente) {
 
                 console.log(cliente);
 
@@ -576,11 +576,11 @@
                 //                $(".totalapagarFactura").html("$" + totalapagar.toFixed(2));
                 //            });
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
@@ -593,7 +593,7 @@
         var totalapagar = $(".totalapagarFactura").html();
         var valortotalapagar = parseFloat(totalapagar.substring(1));
         var vueltoaentregar = 0;
-        $(".monto_a_pagar").each(function() {
+        $(".monto_a_pagar").each(function () {
             if ($(this).val().length > 0) {
                 montocaumulado += parseFloat($(this).val());
             }
@@ -612,7 +612,7 @@
     $('#payment_methods_table').on('keyup', '.monto_a_pagar', calcularVuelto);
 
     ////////////////////////////////////////////////////////////////////////////////CALCULAMOS EL DESCUENTO OTORGADO
-    $('#descuento_factura').on('keyup', function() {
+    $('#descuento_factura').on('keyup', function () {
         this.value = this.value.replace(/[^0-9\.]/g, '');
         var descuento = parseFloat($(this).val());
         var subtotal = $(".subtotalFactura").html();
@@ -655,7 +655,7 @@
     });
 
     ////////////////////////////////////////////////////////////////////////////////ACCIONES DEL BOTON DE PROCEDER AL PAGO
-    $(document).on('click', '#payment_checkout', function() {
+    $(document).on('click', '#payment_checkout', function () {
         var cliente = $.trim($("#email_cliente").val());
         var efectivo = $.trim($("#efectivo").val());
         ///////////////////////////////////////////////////////////////////////////VALIDAMOS QUE EL CLIENTE NO ESTE VACIO
@@ -663,7 +663,7 @@
             //////////////////////////////////////////////////////////////////////VALIDAMOS QUE LOS METODOS DE PAGO NO ESTEN VACIOS
             if ($("#checkbox_efectivo").prop('checked') == true || $("#checkbox_tdc").prop('checked') == true || $("#checkbox_cheque").prop('checked') == true) {
                 var validate_each = true;
-                $("#payment_methods_table input[type=text]").each(function() { /////////////VALIDAMOS QUE NO EXISTAN CAMPOS VACIOS EN LOS METODOS DE PAGO
+                $("#payment_methods_table input[type=text]").each(function () { /////////////VALIDAMOS QUE NO EXISTAN CAMPOS VACIOS EN LOS METODOS DE PAGO
                     if (this.value == '') {
                         var method = $(this).closest('.payment_method_single').find('[type=checkbox]').val();
                         if ($(this).closest('.payment_method_single').find('[type=checkbox]').is(':checked')) {
@@ -696,6 +696,21 @@
                             $('#factura_checkout .modal-dialog .modal-content .modal-header .modal-title').html('<i class="fa fa-credit-card"></i> Resumen de la factura</h4>');
                             $('#factura_checkout .modal-dialog .modal-content .modal-body').html("");
                             resumenfactura();
+                            var isDomi = $.trim($('.numeroMesa').text());
+                            if (isDomi == 'Domicilio') {
+                                setTimeout(function () {
+                                    $('.resumenListUl').append('<li class="list-group-item">'
+                                            + '<select class="form-control select" data-style="btn-primary" id="delivery_edit">'
+                                            + '     <option value="0">Tipo de entrega</option>'
+                                            + '     <option value="R">Entrega Directa</option>'
+                                            + '     <option value="G">Glovo</option>'
+                                            + '     <option value="U">Uber Eats</option>'
+                                            + '     <option value="D">Delivereo</option>'
+                                            + ' </select>'
+                                            + '</li>');
+                                    $('select').selectpicker('refresh');
+                                }, 1000);
+                            }
                             $('#factura_checkout').modal('toggle');
                         }
                     }
@@ -720,7 +735,7 @@
         $.ajax({
             url: 'assets/factura/getMesaPedido.php',
             dataType: "json",
-            success: function(msg) {
+            success: function (msg) {
                 var idpedido = msg.idpedido;
                 console.log(idpedido);
                 $.ajax({
@@ -729,15 +744,14 @@
                     data: {
                         idpedido: idpedido,
                     },
-                    success: function(html) {
+                    success: function (html) {
                         $("#factura_checkout .modal-dialog .modal-content .modal-body").html(html);
                         $("#resumen_nombrecliente").html("<span class='fa fa-user'></span> " + $("#nombre_cliente").val());
-                        if (msg.numeromesa != '999') {
-                            $(".resumen_numeromesa").html("<span class='fa fa-thumb-tack'></span> Mesa " + msg.numeromesa);
+                        if (msg.numeromesa != '') {
+                            $(".resumen_numeromesa").html("<span class='fa fa-thumb-tack'></span> " + msg.numeromesa);
                         } else {
                             $(".resumen_numeromesa").html("<span class='fa fa-thumb-tack'></span> Domicilio");
                         }
-                        $(".resumen_numeromesa").html("<span class='fa fa-thumb-tack'></span> Mesa " + msg.numeromesa);
                         $(".resumen_numerodepedido").html("Pedido # <span id='id_pedido'>" + msg.idpedido + "</span>");
                         $(".resumen_fecha").html("<span class='fas fa-clock'></span>" + $("#fecha_actual").val());
                         $(".resumen_subtotal").html($(".subtotalFactura").html());
@@ -750,7 +764,7 @@
                         }
                         $(".resumen_iva").html($(".ivaFactura").html());
                         var pagadocon = "";
-                        $("#payment_methods_table input[type=checkbox]").each(function() { /////////////VALIDAMOS QUE NO EXISTAN CAMPOS VACIOS EN LOS METODOS DE PAGO
+                        $("#payment_methods_table input[type=checkbox]").each(function () { /////////////VALIDAMOS QUE NO EXISTAN CAMPOS VACIOS EN LOS METODOS DE PAGO
                             if ($(this).is(':checked')) {
                                 var formadepago = $(this).val();
                                 pagadocon += formadepago + "|";
@@ -761,139 +775,168 @@
                         $(".resumen_totalapagar").html($(".totalapagarFactura").html());
                         $(".resumen_vuelto").html($("#monto_devuelto").val());
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log('Disculpe, existió un problema');
                         console.log(error);
                     },
-                    complete: function(xhr, status) {
+                    complete: function (xhr, status) {
                         console.log('Petición realizada');
                     }
                 });
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Petición realizada');
             }
         });
     }
 
     /////////////////////////////////////////////////////////////////////////////PROCEDEMOS A FACTURAR Y GUARDAR EN LA BASE DE DATOS
-    $(document).on('click', '#facturarpedido_btn', function() {
-        /////////////////////////////////////////////////////////////////////////ESCONDEMOS EL MODAL Y MOSTRAMOS LA VENTANA DE CARGA
-        $('#factura_checkout').modal('toggle');
-        $('#mb-loading').modal('toggle');
+    $(document).on('click', '#facturarpedido_btn', function () {
 
-        var idpedido, idcliente, subtotal, descuento, iva, formadepago, totalapagar, vuelto, efectivo, tdc, cheque, vouchertdc, nrocheque;
-        idpedido = $("#id_pedido").html();
-        idcliente = $("#id_cliente").val();
-        subtotal = $(".resumen_subtotal").html();
-        subtotal = subtotal.substring(1);
-        descuento = $(".resumen_descuento").html();
-        descuento = descuento.substring(1);
-        iva = $(".resumen_iva").html();
-        iva = iva.substring(1);
-        formadepago = $(".resumen_forma_pago").html();
-        totalapagar = $(".resumen_totalapagar").html();
-        totalapagar = totalapagar.substring(1);
-        vuelto = $(".resumen_vuelto").html();
-        vuelto = vuelto.slice(0, -3);
-
-        var efectivopagado = 0;
-        $(".monto_a_pagar").each(function() {
-            if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "EFECTIVO") {
-                    efectivopagado += parseFloat($(this).val());
+        setTimeout(function () {
+            var
+                    isDomi = $.trim($('.numeroMesa').text()),
+                    selDomi = $('#delivery_edit').val();
+            if (isDomi == 'Domicilio') {
+                if (selDomi == '0') {
+                    $(".customalert_text").html("Debe seleccionar un tipo de entrega");
+                    $(".customalert").animate({width: 'toggle'}, 600);
+                    return;
+                } else {
+                    if (selDomi == 'R') {
+                        selDomi = 'Retiro personal';
+                    }
+                    if (selDomi == 'G') {
+                        selDomi = 'Glovo';
+                    }
+                    if (selDomi == 'U') {
+                        selDomi = 'Uber Eats';
+                    }
+                    if (selDomi == 'D') {
+                        selDomi = 'Delivereo';
+                    }
                 }
+            } else {
+                selDomi = 'Mesa';
             }
-        });
-        efectivopagado = parseFloat(efectivopagado.toFixed(2));
-        efectivo = efectivopagado;
+            /////////////////////////////////////////////////////////////////////////ESCONDEMOS EL MODAL Y MOSTRAMOS LA VENTANA DE CARGA
+            $('#factura_checkout').modal('toggle');
+            $('#mb-loading').modal('toggle');
 
-        var tdcpagado = 0;
-        $(".monto_a_pagar").each(function() {
-            if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "VISA") {
-                    tdcpagado += parseFloat($(this).val());
+            var idpedido, idcliente, subtotal, descuento, iva, formadepago, totalapagar, vuelto, efectivo, tdc, cheque, vouchertdc, nrocheque;
+            idpedido = $("#id_pedido").html();
+            idcliente = $("#id_cliente").val();
+            subtotal = $(".resumen_subtotal").html();
+            subtotal = subtotal.substring(1);
+            descuento = $(".resumen_descuento").html();
+            descuento = descuento.substring(1);
+            iva = $(".resumen_iva").html();
+            iva = iva.substring(1);
+            formadepago = $(".resumen_forma_pago").html();
+            totalapagar = $(".resumen_totalapagar").html();
+            totalapagar = totalapagar.substring(1);
+            vuelto = $(".resumen_vuelto").html();
+            vuelto = vuelto.slice(0, -3);
+
+            var efectivopagado = 0;
+            $(".monto_a_pagar").each(function () {
+                if ($(this).val().length > 0) {
+                    if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "EFECTIVO") {
+                        efectivopagado += parseFloat($(this).val());
+                    }
                 }
-            }
-        });
-        tdcpagado = parseFloat(tdcpagado.toFixed(2));
-        tdc = tdcpagado;
+            });
+            efectivopagado = parseFloat(efectivopagado.toFixed(2));
+            efectivo = efectivopagado;
 
-        var chequepagado = 0;
-        $(".monto_a_pagar").each(function() {
-            if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "OTRO") {
-                    chequepagado += parseFloat($(this).val());
+            var tdcpagado = 0;
+            $(".monto_a_pagar").each(function () {
+                if ($(this).val().length > 0) {
+                    if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "VISA") {
+                        tdcpagado += parseFloat($(this).val());
+                    }
                 }
-            }
-        });
-        chequepagado = parseFloat(chequepagado.toFixed(2));
-        cheque = chequepagado;
+            });
+            tdcpagado = parseFloat(tdcpagado.toFixed(2));
+            tdc = tdcpagado;
 
-        var tdcvoucherpagado = "";
-        $(".id_formadepago").each(function() {
-            if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "VISA") {
-                    tdcvoucherpagado += $(this).val() + " | ";
+            var chequepagado = 0;
+            $(".monto_a_pagar").each(function () {
+                if ($(this).val().length > 0) {
+                    if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "OTRO") {
+                        chequepagado += parseFloat($(this).val());
+                    }
                 }
-            }
-        });
-        tdcvoucherpagado = tdcvoucherpagado.slice(0, -2);
-        vouchertdc = tdcvoucherpagado;
+            });
+            chequepagado = parseFloat(chequepagado.toFixed(2));
+            cheque = chequepagado;
 
-
-        var nrochequepagado = "";
-        $(".id_formadepago").each(function() {
-            if ($(this).val().length > 0) {
-                if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "OTRO") {
-                    nrochequepagado += $(this).val() + " | ";
+            var tdcvoucherpagado = "";
+            $(".id_formadepago").each(function () {
+                if ($(this).val().length > 0) {
+                    if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "VISA") {
+                        tdcvoucherpagado += $(this).val() + " | ";
+                    }
                 }
-            }
-        });
-        nrochequepagado = nrochequepagado.slice(0, -2);
-        nrocheque = nrochequepagado;
+            });
+            tdcvoucherpagado = tdcvoucherpagado.slice(0, -2);
+            vouchertdc = tdcvoucherpagado;
 
-        $.ajax({
-            url: 'assets/factura/cargarFactura.php',
-            type: 'POST',
-            data: {
-                idpedido: idpedido,
-                idcliente: idcliente,
-                subtotal: subtotal,
-                descuento: descuento,
-                iva: iva,
-                formadepago: formadepago,
-                vouchertdc: vouchertdc,
-                nrocheque: nrocheque,
-                totalapagar: totalapagar,
-                vuelto: vuelto,
-                efectivo: efectivo,
-                tdc: tdc,
-                cheque: cheque,
-            },
-            success: function(html) {
-                $('#pizza_loading').delay(1000).hide('slow');
-                setTimeout(function() {
-                    $('#mb-loading .mb-title').html('<span class="fa fa-check-circle"></span> Solicitud procesada!');
-                }, 1000);
-                $('#success_icon').delay(1500).fadeIn(500);
-                setTimeout(function() {
-                    window.location.href = "/?show=caja&verfactura=last";
-                }, 2000);
-            },
-            error: function(error) {
-                console.log('Disculpe, existió un problema');
-                console.log(error);
-            },
-            complete: function(xhr, status) {
-                console.log('Factura cargada a la DB');
-            }
-        });
+
+            var nrochequepagado = "";
+            $(".id_formadepago").each(function () {
+                if ($(this).val().length > 0) {
+                    if ($(this).closest('.payment_method_single').find('[type=checkbox]').val() == "OTRO") {
+                        nrochequepagado += $(this).val() + " | ";
+                    }
+                }
+            });
+            nrochequepagado = nrochequepagado.slice(0, -2);
+            nrocheque = nrochequepagado;
+
+            $.ajax({
+                url: 'assets/factura/cargarFactura.php',
+                type: 'POST',
+                data: {
+                    idpedido: idpedido,
+                    idcliente: idcliente,
+                    subtotal: subtotal,
+                    descuento: descuento,
+                    iva: iva,
+                    formadepago: formadepago,
+                    vouchertdc: vouchertdc,
+                    nrocheque: nrocheque,
+                    totalapagar: totalapagar,
+                    vuelto: vuelto,
+                    efectivo: efectivo,
+                    tdc: tdc,
+                    tipEnt: selDomi,
+                    cheque: cheque,
+                },
+                success: function (html) {
+                    $('#pizza_loading').delay(1000).hide('slow');
+                    setTimeout(function () {
+                        $('#mb-loading .mb-title').html('<span class="fa fa-check-circle"></span> Solicitud procesada!');
+                    }, 1000);
+                    $('#success_icon').delay(1500).fadeIn(500);
+                    setTimeout(function () {
+                        window.location.href = "/?show=caja&verfactura=last";
+                    }, 2000);
+                },
+                error: function (error) {
+                    console.log('Disculpe, existió un problema');
+                    console.log(error);
+                },
+                complete: function (xhr, status) {
+                    console.log('Factura cargada a la DB');
+                }
+            });
+        }, 1000);
     });
 
     ////////////////////////////////////////////////////////////////////////////////PREFACTURAR
@@ -960,106 +1003,106 @@
         var contadorTabla = 0;
 
         $.when(
-                $(".tablaDescripcion table tr").each(function() {
-                    if ($(this).find('td:eq(0)').length > 0) {
+                $(".tablaDescripcion table tr").each(function () {
+            if ($(this).find('td:eq(0)').length > 0) {
 
-                        output += " <tr><td> ";
-                        //PARA EL NOMBRE DEL PRODUCTO
-                        if (String($(this).find('td:eq(0) strong').html()).length != 0) {
-                            var producto = getCleanedString(String($(this).find('td:eq(0) strong').html()));
-                            if (producto.length == 20) {
-                                output += producto;
+                output += " <tr><td> ";
+                //PARA EL NOMBRE DEL PRODUCTO
+                if (String($(this).find('td:eq(0) strong').html()).length != 0) {
+                    var producto = getCleanedString(String($(this).find('td:eq(0) strong').html()));
+                    if (producto.length == 20) {
+                        output += producto;
 
-                            } else
-                            if ((producto.length < 20) && (producto.length > 0)) {
-                                var longitudRestante = 20 - producto.length;
-                                var text = "";
-                                for (var i = 0; i < longitudRestante; i++) {
-                                    text += " ";
-                                }
-                                output += producto + text;
-                            } else
-                            if (producto.length > 20) {
-                                output += producto.substring(0, 20);
-                            }
-                            output += " | ";
+                    } else
+                    if ((producto.length < 20) && (producto.length > 0)) {
+                        var longitudRestante = 20 - producto.length;
+                        var text = "";
+                        for (var i = 0; i < longitudRestante; i++) {
+                            text += " ";
                         }
-
-                        //PARA LA CANTIDAD
-                        if (String($(this).find('td:eq(2)').html()).length != 0) {
-                            var cantidad = String($(this).find('td:eq(2)').html());
-                            if (cantidad.length == 2) {
-                                output += cantidad;
-                            } else
-                            if ((cantidad.length < 2) && (cantidad.length >= 0)) {
-                                var longitudRestante = 2 - cantidad.length;
-                                var text = "";
-                                for (var i = 0; i < longitudRestante; i++) {
-                                    text += " ";
-                                }
-                                output += cantidad + text;
-                            }
-                            output += " | ";
-                        }
-
-                        //PARA EL VALOR UNITARIO
-                        if (String($(this).find('td:eq(1)').html()).length != 0) {
-                            var valorunitario = String($(this).find('td:eq(1)').html());
-                            if (valorunitario.length == 6) {
-                                output += valorunitario;
-                            } else
-                            if ((valorunitario.length < 6) && (valorunitario.length >= 0)) {
-                                var longitudRestante = 6 - valorunitario.length;
-                                var text = "";
-                                for (var i = 0; i < longitudRestante; i++) {
-                                    text += " ";
-                                }
-                                output += valorunitario + text;
-                            }
-                            output += " | ";
-                        }
-                        output += "$" + $(this).find('td:eq(3) span').html();
-                        output += " <br /> \n\ </td></tr>";
+                        output += producto + text;
+                    } else
+                    if (producto.length > 20) {
+                        output += producto.substring(0, 20);
                     }
-
-                    contadorTabla++;
-                })
-            )
-            .then(function() {
-
-                var contadorRestante = 20 - contadorTabla;
-
-                for (var i = 0; i <= contadorRestante; i++) {
-                    output += "<tr><td>.<br /></td></tr> \n\ ";
+                    output += " | ";
                 }
 
-                output += "<tr><td> ============================================ <br /></td></tr> \n\ ";
-                output += "<tr><td> .                        SUBTOTAL : " + $(".subtotalFactura").html() + " <br /></td></tr> \n\ ";
-                output += "<tr><td> .                        IVA % 12 : " + $(".ivaFactura").html() + " <br /></td></tr> \n\ ";
-                output += "<tr><td> .                        TOTAL    : " + $(".totalapagarFactura").html() + " <br /></td></tr> \n\ ";
-                output += "<tr><td> .                        SERVICIO : $0.00 <br /></td></tr> \n\ ";
-                output += "<tr><td> .                        TOTAL    : " + $(".totalapagarFactura").html() + " <br /></td></tr> \n\ ";
-                output += "<tr><td> MESA : " + numeromesa + "<br /></td></tr> \n\ ";
-                output += "<tr><td> =========== GRACIAS POR SU VISITA ========== <br /></td></tr> \n\ ";
-                output += "<tr><td> ============== www.dirulo.com ============== <br /></td></tr> \n\ ";
-                output += "<tr><td> Nombre: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> Direccion: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> Telefono: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> RUC / CI: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> Propina: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> Email: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> Cumpleanos: _____________________________ <br /></td></tr> \n\ ";
-                output += "<tr><td> ====== EXIJA SU COMPROBANTE ====== <br /></td></tr> \n\ ";
+                //PARA LA CANTIDAD
+                if (String($(this).find('td:eq(2)').html()).length != 0) {
+                    var cantidad = String($(this).find('td:eq(2)').html());
+                    if (cantidad.length == 2) {
+                        output += cantidad;
+                    } else
+                    if ((cantidad.length < 2) && (cantidad.length >= 0)) {
+                        var longitudRestante = 2 - cantidad.length;
+                        var text = "";
+                        for (var i = 0; i < longitudRestante; i++) {
+                            text += " ";
+                        }
+                        output += cantidad + text;
+                    }
+                    output += " | ";
+                }
 
-                $("#prefacturar tbody").append("" + output + "")
-                $('#prefacturar').css("display", "block");
-                $('#prefacturar').tableExport({
-                    type: 'pdf',
-                    escape: 'false'
+                //PARA EL VALOR UNITARIO
+                if (String($(this).find('td:eq(1)').html()).length != 0) {
+                    var valorunitario = String($(this).find('td:eq(1)').html());
+                    if (valorunitario.length == 6) {
+                        output += valorunitario;
+                    } else
+                    if ((valorunitario.length < 6) && (valorunitario.length >= 0)) {
+                        var longitudRestante = 6 - valorunitario.length;
+                        var text = "";
+                        for (var i = 0; i < longitudRestante; i++) {
+                            text += " ";
+                        }
+                        output += valorunitario + text;
+                    }
+                    output += " | ";
+                }
+                output += "$" + $(this).find('td:eq(3) span').html();
+                output += " <br /> \n\ </td></tr>";
+            }
+
+            contadorTabla++;
+        })
+                )
+                .then(function () {
+
+                    var contadorRestante = 20 - contadorTabla;
+
+                    for (var i = 0; i <= contadorRestante; i++) {
+                        output += "<tr><td>.<br /></td></tr> \n\ ";
+                    }
+
+                    output += "<tr><td> ============================================ <br /></td></tr> \n\ ";
+                    output += "<tr><td> .                        SUBTOTAL : " + $(".subtotalFactura").html() + " <br /></td></tr> \n\ ";
+                    output += "<tr><td> .                        IVA % 12 : " + $(".ivaFactura").html() + " <br /></td></tr> \n\ ";
+                    output += "<tr><td> .                        TOTAL    : " + $(".totalapagarFactura").html() + " <br /></td></tr> \n\ ";
+                    output += "<tr><td> .                        SERVICIO : $0.00 <br /></td></tr> \n\ ";
+                    output += "<tr><td> .                        TOTAL    : " + $(".totalapagarFactura").html() + " <br /></td></tr> \n\ ";
+                    output += "<tr><td> MESA : " + numeromesa + "<br /></td></tr> \n\ ";
+                    output += "<tr><td> =========== GRACIAS POR SU VISITA ========== <br /></td></tr> \n\ ";
+                    output += "<tr><td> ============== www.dirulo.com ============== <br /></td></tr> \n\ ";
+                    output += "<tr><td> Nombre: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> Direccion: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> Telefono: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> RUC / CI: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> Propina: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> Email: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> Cumpleanos: _____________________________ <br /></td></tr> \n\ ";
+                    output += "<tr><td> ====== EXIJA SU COMPROBANTE ====== <br /></td></tr> \n\ ";
+
+                    $("#prefacturar tbody").append("" + output + "")
+                    $('#prefacturar').css("display", "block");
+                    $('#prefacturar').tableExport({
+                        type: 'pdf',
+                        escape: 'false'
+                    });
+                    $('#prefacturar tbody').html("");
+
                 });
-                $('#prefacturar tbody').html("");
-
-            });
 
     }
 
@@ -1097,7 +1140,7 @@
             data: {
                 id: id,
             },
-            success: function(html) {
+            success: function (html) {
                 console.log(html);
                 if (html.top1 !== " | ") {
                     $(".top1").html(html.top1);
@@ -1165,25 +1208,25 @@
                     $(".comentario").html("Cliente no tiene comentarios");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Info del cliente recolectada');
             }
         });
     }
 
     ////////////////////////////////////////////////////////////////////////////////ACTUALIZAR COMENTARIOS DEL CLIENTE
-    $(document).on('click', '#coment_edit', function() {
+    $(document).on('click', '#coment_edit', function () {
         $(this).hide();
         $('#coment_save').show();
         $('.comentario').removeAttr("disabled");
         $('.comentario').html("");
     });
 
-    $(document).on('click', '#coment_save', function() {
+    $(document).on('click', '#coment_save', function () {
         var comment = $(".comentario").val();
         $.ajax({
             url: 'assets/factura/comentarios.php',
@@ -1192,7 +1235,7 @@
                 idcliente: idclientesel,
                 comment: comment,
             },
-            success: function(html) {
+            success: function (html) {
                 infocliente(idclientesel)
                 console.log(html);
                 $('.comentario').attr("disabled", "disabled");
@@ -1200,11 +1243,11 @@
                 $('#coment_edit').show();
                 $.notify('Comentario actualizado con exito ', "success");
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Disculpe, existió un problema');
                 console.log(error);
             },
-            complete: function(xhr, status) {
+            complete: function (xhr, status) {
                 console.log('Se actualizo el comentario exitosamente');
             }
         });
@@ -1214,9 +1257,9 @@
     //$(document).on('click', '#showmodal', function() {
     //    $('#mb-loading').modal('toggle');
     //});
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-        $('.btnRegistraCliente').click(function() {
+        $('.btnRegistraCliente').click(function () {
 
             if ($("form[name='guardar_cliente']").valid()) {
 
@@ -1231,7 +1274,7 @@
                         direccion: $("form[name='guardar_cliente'] #direccion").val()
                     },
                     type: 'POST',
-                    success: function(cliente) {
+                    success: function (cliente) {
                         if (cliente) {
                             $("#nuevoCliente").modal("hide");
                             $.notify("Cliente " + $("form[name='guardar_cliente'] #cedula").val() + " registrado exitosamente.", "success");
@@ -1240,11 +1283,11 @@
                             $.notify("El cliente con cédula/RUC " + $("form[name='guardar_cliente'] #cedula").val() + " ya se encuentra registrado.", "error");
                         }
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log('Disculpe, existió un problema');
                         console.log(error);
                     },
-                    complete: function(xhr, status) {
+                    complete: function (xhr, status) {
                         console.log('Petición realizada');
                     }
                 });
@@ -1252,11 +1295,11 @@
 
         });
 
-        $('#nuevoCliente').on('hidden.bs.modal', function() {
+        $('#nuevoCliente').on('hidden.bs.modal', function () {
             $("form[name='guardar_cliente']")[0].reset();
         });
 
-        $('.btnEditarCliente').click(function() {
+        $('.btnEditarCliente').click(function () {
             console.log("click");
             if ($("form[name='editar_cliente']").valid()) {
                 $.ajax({
@@ -1271,7 +1314,7 @@
                         direccion: $("form[name='editar_cliente'] #direccion").val()
                     },
                     type: 'POST',
-                    success: function(cliente) {
+                    success: function (cliente) {
                         if (cliente) {
                             $("#editaCliente").modal("hide");
                             $.notify("Cliente " + $("form[name='editar_cliente'] #cedula").val() + " editado exitosamente.", "success");
@@ -1281,11 +1324,11 @@
                             $("#direccion_cliente").val(cliente.direccionCliente);
                         }
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.log('Disculpe, existió un problema');
                         console.log(error);
                     },
-                    complete: function(xhr, status) {
+                    complete: function (xhr, status) {
                         console.log('Petición realizada');
                     }
                 });
@@ -1294,11 +1337,11 @@
 
         });
 
-        $('.btnEliminaCliente').click(function() {
+        $('.btnEliminaCliente').click(function () {
             $('.contenidoElimina').html("<center><h3>Desea realmente eliminar el cliente con cédula/RUC</h3><br><h2>" + $("form[name='editar_cliente'] #cedula").val() + "</h2></center>");
         });
 
-        $('.btnConfirmaEliminaCliente').click(function() {
+        $('.btnConfirmaEliminaCliente').click(function () {
             $.ajax({
                 // Verificacion de los datos introducidos
                 url: 'assets/cliente/eliminaCliente.php',
@@ -1307,7 +1350,7 @@
                     cedula: $("form[name='editar_cliente'] #cedula").val(),
                 },
                 type: 'POST',
-                success: function(respuesta) {
+                success: function (respuesta) {
                     if (respuesta) {
                         $("#editaCliente").modal("hide");
 
@@ -1329,11 +1372,11 @@
 
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log('Disculpe, existió un problema');
                     console.log(error);
                 },
-                complete: function(xhr, status) {
+                complete: function (xhr, status) {
                     console.log('Petición realizada');
                 }
             });
@@ -1344,7 +1387,7 @@
 
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $("form[name='guardar_cliente']").validate({
             rules: {
@@ -1462,8 +1505,10 @@
         if (o.createTextRange) {
             var r = document.selection.createRange().duplicate()
             r.moveEnd('character', o.value.length)
-            if (r.text == '') return o.value.length
+            if (r.text == '')
+                return o.value.length
             return o.value.lastIndexOf(r.text)
-        } else return o.selectionStart
+        } else
+            return o.selectionStart
     }
 </script>

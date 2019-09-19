@@ -176,32 +176,7 @@
         });
 
         function estableceEstablecimiento() {
-            $.ajax({
-                url: 'assets/user_config/user_config_controller.php',
-                type: 'GET',
-                data: {
-                    establecimiento: true,
-                },
-                success: function (respuesta) {
-
-                    $(".radioEstablecimiento .btn-primary").each(function (index, value) {
-                        $(this).removeClass("active");
-                        if ($(this).find("input[type='radio']").val() == respuesta) {
-                            $(this).addClass("active");
-                            $(this).find("input[type='radio']").prop("checked", true);
-                        }
-                    });
-
-                },
-                error: function (error) {
-                    console.log('Disculpe, existió un problema');
-                    console.log(error);
-                },
-                complete: function (xhr, status) {
-                    console.log('Petición realizada');
-                }
-            });
-
+            return true;
         }
 
         /* Para el cambio de contraseña */
@@ -359,5 +334,79 @@
                         }
                     }, 1000);
                 });
+    });
+    
+    $(document).on("click", ".changeSidebar", function (event) {
+        var self = this;
+        var status = '';
+        setTimeout(function () {
+            if ($(self).find('input').is(':checked')) {
+                status = '1';
+            } else {
+                status = '0';
+            }
+            var formData = new FormData();
+            formData.append('meth', 'sidebarUpdate');
+            formData.append('changeStatus', status);
+            formData.append('idUsuario', $(self).find('.idusuario_cont').html());
+            $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                success: function (data) {
+                    if (data.status == 'yes') {
+                        location.reload();
+                    } else {
+                        setTimeout(function () {
+                            $(".customalert_text").html("Hubo un error, intente de nuevo");
+                            $(".customalert").animate({width: 'toggle'}, 600);
+                            console.log(data);
+                        }, 2000);
+                    }
+                },
+                error: function (error) {
+                        $(".customalert_text").html("Error AJAX");
+                        $(".customalert").animate({width: 'toggle'}, 600);
+                        console.log(error);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        }, 2000);
+    });
+    
+    $(document).on("click", ".changeBoxed", function (event) {
+        var self = this;
+        var status = '';
+        setTimeout(function () {
+            if ($(self).find('input').is(':checked')) {
+                status = '1';
+            } else {
+                status = '0';
+            }
+            var formData = new FormData();
+            formData.append('meth', 'fullwidthUpdate');
+            formData.append('changeStatus', status);
+            formData.append('idUsuario', $(self).find('.idusuario_cont').html());
+            $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                success: function (data) {
+                    if (data.status == 'yes') {
+                        location.reload();
+                    } else {
+                        setTimeout(function () {
+                            $(".customalert_text").html("Hubo un error, intente de nuevo");
+                            $(".customalert").animate({width: 'toggle'}, 600);
+                            console.log(data);
+                        }, 2000);
+                    }
+                },
+                error: function (error) {
+                        $(".customalert_text").html("Error AJAX");
+                        $(".customalert").animate({width: 'toggle'}, 600);
+                        console.log(error);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        }, 2000);
     });
 </script>

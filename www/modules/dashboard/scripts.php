@@ -65,7 +65,7 @@
         ],
         xkey: 'y',
         ykeys: ['a', 'b', 'c'],
-        labels: ['Quito Sur', 'Quito Norte', 'Villaflora'],
+        labels: ['Principal', 'Sucursal 1', 'Sucursal 2'],
         resize: true,
         hideHover: true,
         xLabels: 'month',
@@ -167,7 +167,7 @@
     $('#mapadelivery_toggle_graph').clicktoggle(
             function () {
                 $('#map_small').css("height", "100%");
-                $('#map_small').css("width", "20%");
+                $('#map_small').css("width", "100%");
                 newLocation(-0.126805, -78.487901);
                 $('#delivery_table').toggle("slow");
             },

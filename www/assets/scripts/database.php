@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  *          ***********************************************************
  *          *******************||  DROOM SOFTWARE   ||*****************
@@ -41,5 +41,5 @@ define('DB_DATABASE', 'droom');
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 mysqli_set_charset($conn, "utf8");
 if ($conn->connect_error) {
-    echo "No se puede establecer la conexión con la Base de Datos: " . $conn->connect_error;
+    echo "No se puede estableawdawcer la conexión con la Base de Datos";
 } 

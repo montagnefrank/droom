@@ -38,7 +38,7 @@ if ($rows != 0) {
                     </div>';
         } else {
             $htmlPedidosCocina .= '<div class="task-item task-danger task-complete Pedido">                                    
-                        <div class="task-text ui-sortable-handle"><h2>awdaw' . $p["numeroMesa"] . '</h2></div>
+                        <div class="task-text ui-sortable-handle"><h2>' . $p["numeroMesa"] . '</h2></div>
                         <div class="task-footer">
                             <div class="pull-left" style="color:#65728c;"><i class="fa fa-list-alt" aria-hidden="true"></i> Pedido # ' . $p["idPedido"] . '</div>
                             <div class="pull-right" style="color:#65728c;"><i class="fa fa-exclamation" aria-hidden="true"></i></div> 

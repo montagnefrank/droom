@@ -32,8 +32,14 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
- session_start();
- $nameMesa = $_SESSION['nameMesa'];
+session_start();
+$nameMesa = $_SESSION['nameMesa'];
+$idPedido = $_SESSION['idpedido'];
+if ($idPedido && $idPedido != '') {
+    ?>
+    <script> var idpedido = '<?php echo $idPedido; ?>';</script>
+    <?php
+}
 ?>
 <script>
     //       ACTIVAMOS EL MENU LATERAL       //
@@ -100,7 +106,7 @@
                                             '   </button>' +
                                             '</div>'
                                 }
-                                if (n.tipoIngrediente == thisIdMenuCurrent) {
+                                if (n.tipoIngrediente == thisIdMenuCurrent || n.tipoIngrediente == 'G') {
                                     htmlAllIngs += '<div class="col-md-12 push5 handleThisIng newIng">' +
                                             '   <button class="col-md-12 btn btn-success">' +
                                             '       <i class="fas fa-pepper-hot"></i>  ' + n.nombreIngrediente +
@@ -305,6 +311,112 @@
         });
     });
 
+    //      EN CASO DE QUE SEA EDITAR PRODUCTO      //
+    if (idpedido != '') {
+        $('#changeCrumbs').html('Editar Pedido ' + idpedido);
+        console.log(idpedido);
+
+        var formData = new FormData();
+        formData.append('meth', 'getThisOrder');
+        formData.append('idPedido', idpedido);
+        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+            success: function (data) {
+                if (data.status == 'yes') {
+                    var
+                            htmlList = '',
+                            currentTotal = $('.totalPedidoBtn span').html();
+                    $.each(data.list, function (i, n) {
+                        var self = this,
+                                idProducto = n.idProducto,
+                                nombProducto = n.nombreProducto,
+                                ingNamesProducto = '',
+                                ingsProducto = n.ingsPedidoProducto,
+                                precioProducto = n.precioPedidoProducto,
+                                tamProducto = n.precioPedidoProducto,
+                                descPrd = n.observacionPedidoproducto,
+                                cantProducto = n.cantidadPedidoproducto,
+                                tamName = n.descripcionPedidoproducto + ' ( $' + (+n.precioPedidoProducto / +cantProducto).toFixed(2) + ')',
+                                tamNameSolo = n.descripcionPedidoproducto;
+                        $.each(n.allIngs, function (ii, nn) {
+                            ingNamesProducto += '<span class="label label-danger push5">+ ' + nn.nombreIngrediente + '</span>  ';
+                        });
+
+                        htmlList += '<a href="#" class="list-group-item">' +
+                                '       <div class="list-group-status status-online"></div>' +
+                                '       <img src="api/assets/img/productos/' + n.idProducto + '.jpg" class="pull-left" alt="' + n.nombreProducto + '"/>' +
+                                '       <span class="contacts-title">' + n.nombreProducto + '</span> <span class="label label-info push5">x ' + n.cantidadPedidoproducto + '</span>' +
+                                '       ' + ingNamesProducto + '' +
+                                '       <p>' + descPrd + ' </p>' +
+                                '       <div class="list-group-controls">' +
+                                '           <button class="btn btn-success">' + tamName + ' x ' + cantProducto + ' <i class="fas fa-money-bill-wave"></i>  ' + tamProducto + ' $</button>' +
+                                '           <button class="btn btn-danger deleteThisItemFromFullList"><span class="fa fa-times-circle"></span></button>' +
+                                '       </div>' +
+                                '       <div class="hidethis pedidoIdProd">' + idProducto + '</div>' +
+                                '       <div class="hidethis pedidoPrecioTotalProd">' + tamProducto + '</div>' +
+                                '       <div class="hidethis pedidoCantProd">' + cantProducto + '</div>' +
+                                '       <div class="hidethis pedidoComProd">' + descPrd + '</div>' +
+                                '       <div class="hidethis pedidoTamProd">' + tamNameSolo + '</div>' +
+                                '       <div class="hidethis pedidoIngsProd">' + ingsProducto + '</div>' +
+                                '   </a>';
+
+                        currentTotal = (+currentTotal + +tamProducto).toFixed(2);
+                    });
+                    console.log(htmlList);
+                    $('.totalPedidoBtn span').html(currentTotal);
+                    $('.listPanelContainer').append(htmlList);
+                    $(document).find('.listPanelCont').appendTo('.fullMenuContainer');
+                    $(document).find('.listPanelCont').delay(1600).velocity("transition.slideUpBigIn", 400);
+                    listhas = 1;
+
+                    $(document).find('.cargarPedidoBtn').remove();
+                    $('.totalPedidoBtn').parent().append('<button class="btn btn-success hidethis actualizaPedidoBtn pull-right"><i class="fas fa-refresh"></i> Actualizar </button>');
+                    $(document).find('.actualizaPedidoBtn').delay(2100).velocity("transition.slideUpBigIn", 400);
+                }
+                console.log(data);
+            },
+            error: function (error) {
+                pageLoadingFrame("hide");
+                $('.errormessage_mb').html('Error de red, revise su conexi&oacute;n');
+                $('#message-box-danger').toggle();
+                console.log(error);
+            }
+        });
+    }
+
+    //              Cargamos el Pedido a la DB       //
+    $(document).on("click", ".actualizaPedidoBtn", function (e) {
+        var pedidos = [], formData = new FormData();
+        $.each($('.listPanelContainer a'), function (i, n) {
+            var pedido = {}
+            pedido.idProducto = $(n).find('.pedidoIdProd').html();
+            pedido.descripcionPedidoproducto = $(n).find('.pedidoTamProd').html();
+            pedido.cantidadPedidoproducto = $(n).find('.pedidoCantProd').html();
+            pedido.observacionPedidoproducto = $(n).find('.pedidoComProd').html();
+            pedido.precioPedidoProducto = $(n).find('.pedidoPrecioTotalProd').html();
+            pedido.ingsPedidoProducto = $(n).find('.pedidoIngsProd').html();
+            pedidos.push(pedido);
+        });
+        pageLoadingFrame("show");
+        console.log(pedidos);
+        formData.append('meth', 'loadUpdatePedido');
+        formData.append('idPedido', idpedido);
+        formData.append('pedidos', JSON.stringify(pedidos));
+        $.ajax({url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+            success: function (data) {
+                if (data.status == 'yes') {
+                    window.location.href = "/?show=home";
+                }
+                console.log(data);
+            },
+            error: function (error) {
+                pageLoadingFrame("hide");
+                $('.errormessage_mb').html('Error de red, revise su conexi&oacute;n');
+                $('#message-box-danger').toggle();
+                console.log(error);
+            }
+        });
+    });
+
     //              CARGAMOS TODOS LOS PRODUCTOS ACTIVOS DEL MENU       //
     function getfullMenu() {
         var formData = new FormData(),
@@ -316,7 +428,7 @@
                     var htmlcontent = '<div class="col-md-6 menuPanelContainer hidethis">' +
                             '           <div class="panel panel-default nav-tabs-vertical menuPanel">' +
                             '               <div class="panel-heading">' +
-                            '                   <h3 class="panel-title"> <i class="fas fa-list-alt"></i> &nbsp;&nbsp;Seleccione los productos <span class="btn btn-info"><?php echo $nameMesa;  ?></span </h3>' +
+                            '                   <h3 class="panel-title"> <i class="fas fa-list-alt"></i> &nbsp;&nbsp;Seleccione los productos <span class="btn btn-info"><?php echo $nameMesa; ?></span </h3>' +
                             '                   <h3 class="panel-title pull-right"> <i class="fas fa-arrows-alt fa-2x expandItems" data-toggle="tooltip" data-placement="top" title="Expandir elementos"></i>&nbsp;&nbsp; <i class="fas fa-compress-arrows-alt fa-2x compItems" data-toggle="tooltip" data-placement="top" title="Contraer elementos"></i></h3>' +
                             '               </div>' +
                             '           <div class="tabs">' +

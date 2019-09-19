@@ -43,6 +43,7 @@ if (isset($_SESSION["usuario"])) {
     // VALIDAMOS SI TIENE PANEL ASIGNADO //
     if (isset($_GET['show'])) {
         $module = $_GET['show'];
+        $page = 'app';
     } else {
         session_destroy();
         $page = 'login';
@@ -50,5 +51,37 @@ if (isset($_SESSION["usuario"])) {
 } else {
     session_destroy();
     $page = 'login';
+}
+
+//          CONFIGURAMOS LA UI
+$sb = $_SESSION["usuario"]['sidebar'];
+$fw = $_SESSION["usuario"]['fullwidth'];
+
+if ($sb == '1') {
+    $sidebar = "page-navigation-toggled";
+    $checkedsb = 'checked';
+} else {
+    $sidebar = "";
+    $checkedsb = '';
+}
+
+if ($fw == '1') {
+    $fullwidth = "";
+    $checkedfw = 'checked';
+} else {
+    $fullwidth = "page-container-boxed";
+    $checkedfw = '';
+}
+
+//                  RANDOM VIDEO BACKGROUND
+$r = rand(1, 7);
+switch ($r) {
+    case 1:$video = "FaHTfgV7ii4";break;
+    case 2:$video = "95SNbn340TE";break;
+    case 3:$video = "5LE8mg8Khbo";break;
+    case 4:$video = "p2bCtDXwQQI";break;
+    case 5:$video = "0I4bUOYK3rA";break;
+    case 6:$video = "FIubfE2JkDE";break; 
+    case 8:$video = "96v_ZcPtE44";break; 
 }
 ?>

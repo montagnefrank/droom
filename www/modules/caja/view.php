@@ -40,7 +40,27 @@
 </ul>
 <!-- FIN BREADCRUMB -->
 
-<div class="content-frame">     
+<div class="content-frame">
+    <div class="row customalert hidethis">
+        <div class="col-md-12">
+            <div class="widget widget-primary widget-item-icon">
+                <div class="widget-item-left">
+                    <span class="fa fa-exclamation"></span>
+                </div>
+                <div class="widget-data">
+                    <div class="widget-title">Notificación</div>
+                    <div class="widget-subtitle">
+                        <div role="alert" class="customalert_text">
+                            Mensaje de error
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-controls">                                
+                    <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+                </div>                             
+            </div>
+        </div>
+    </div>     
     <!-- START CONTENT FRAME TOP -->
     <div class="content-frame-top">                        
         <div class="page-title">                    
@@ -56,11 +76,9 @@
             </div>
         </div>
         <div class="form-group">
-            <h4>Pedidos:</h4> 
-            <div class="list-group border-bottom" style="border-bottom: 1px solid #711b1b;border-radius: 4px;">
-                <a href="#" class="list-group-item"><span class="fa fa-circle text-primary"></span> Por cancelar</a>
-                <a href="#" class="list-group-item"><span class="fa fa-circle text-success"></span> Pagados</a>
-                <a href="#" class="list-group-item"><span class="fa fa-circle text-info"></span> En cocina</a>
+            <h4>Turno Actual:</h4> 
+            <div class="list-group border-bottom turnoBox" style="border-bottom: 1px solid #711b1b;border-radius: 4px;">
+
             </div>
         </div>
         <div class="widget widget-primary widget-item-icon">
@@ -68,7 +86,7 @@
                 <span class="fa fa-plus-square"></span>
             </div>                             
             <div class="widget-data-left">
-                <div class="widget-int num-count">Para llevar</div>
+                <div class="widget-int num-count">Domicilio</div>
                 <div class="widget-subtitle">
                     <button class="btn btn-info pull-right btnNuevoPedido"><i class="fas fa-plus"></i> Nuevo Pedido</button> 
                 </div>
@@ -160,6 +178,22 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer label-primary">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalPrevCaja" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header label-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color:white;text-align: center;"> </h4>
+            </div>
+            <div class="modal-body" style="text-align: center">
+
             </div>
             <div class="modal-footer label-primary">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cerrar</button>

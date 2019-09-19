@@ -108,7 +108,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-7">
-                            <h4>Metodos de pago</h4>
+                            <h4>M&eacute;todos de pago</h4>
                             <div class="paymant-table" id="payment_methods_table">
                                 <div class="col-md-12 payment_method_single" style="align-items: center;-webkit-box-align: center;display: flex;">
                                     <div class="col-md-1">
@@ -337,7 +337,26 @@
         </div>
     </div>
 </div>
-
+<div class="row customalert hidethis">
+    <div class="col-md-12">
+        <div class="widget widget-primary widget-item-icon">
+            <div class="widget-item-left">
+                <span class="fa fa-exclamation"></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-title">Notificación</div>
+                <div class="widget-subtitle">
+                    <div role="alert" class="customalert_text">
+                        Mensaje de error
+                    </div>
+                </div>
+            </div>
+            <div class="widget-controls">                                
+                <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+            </div>                             
+        </div>
+    </div>
+</div>   
 <!-- MODAL NUEVO CLIENTE -->
 <div id="nuevoCliente" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -493,7 +512,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <ul class="list-group border-bottom">
+                    <ul class="list-group border-bottom resumenListUl">
                         <li class="list-group-item">SUB TOTAL <span class="badge resumen_subtotal"></span></li>
                         <li class="list-group-item">DESCUENTO <span class="badge badge-danger resumen_sdescuento"></span></li>
                         <li class="list-group-item">IVA 12(%) <span class="badge badge-info resumen_iva"></span></li>

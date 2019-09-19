@@ -8,50 +8,24 @@ require ("../scripts/database.php");
 
 if (isset($_POST["addnewing"])) {
     $json = array();
-    $select = "SELECT codigoIngrediente FROM ingrediente WHERE codigoIngrediente = '" . $_POST['codigoIngrediente'] . "';";
-    $result = $conn->query($select) or die($conn->error);
-    $row_cnt = $result->num_rows;
-
-    if ($row_cnt > 0) {
-        $json['status'] = "error";
-        $json['msg'] = " Ya existe el ingrediente en sistema, por favor seleccione un codigo diferente.";
-        echo json_encode($json);
-    } else {
-        $query = "INSERT INTO ingrediente (nombreIngrediente,cantidad" . $_POST['establecimiento'] . ",codigoIngrediente,barcodeIngrediente,unidadIngrediente,tipoIngrediente,ccIngrediente,detalleIngrediente,bodegaIngrediente,minIngrediente,maxIngrediente,precioIngrediente,compraIngrediente,editadoIngredinete,estadoIngrediente) "
-                . " VALUES ('" . $_POST['nombreIngrediente'] . "','" . $_POST['cantidad'] . "','" . $_POST['codigoIngrediente'] . "','" . $_POST['barcodeIngrediente'] . "','" . $_POST['unidadIngrediente'] . "','" . $_POST['tipoIngrediente'] . "','" . $_POST['ccIngrediente'] . "','" . $_POST['detalleIngrediente'] . "','" . $_POST['bodegaIngrediente'] . "','" . $_POST['minIngrediente'] . "','" . $_POST['maxIngrediente'] . "','" . $_POST['precioIngrediente'] . "','" . $_POST['compraIngrediente'] . "','" . date('Y-m-d') . "','" . $_POST['estadoIngrediente'] . "')";
-//        echo $query;
-        $val_result = $conn->query($query) or die($conn->error);
-
-        if ($val_result) {
-            $json['status'] = "ok";
-            $json['msg'] = " Nuevo ingrediente agregado en sistema ";
-            echo json_encode($json);
-        } else {
-            $json['status'] = "error";
-            $json['msg'] = " Error al crear el ingrediente, consulte con su departamento de soporte. ";
-            echo json_encode($json);
-        }
-    }
+    
 }
 
 if (isset($_POST["editIng"])) {
     $json = array();
 
     $query = "UPDATE ingrediente SET nombreIngrediente ='" . $_POST['nombreIngrediente'] . "', "
-            . "cantidad" . $_POST['establecimiento'] . " = '" . $_POST['cantidad'] . "', "
+            . "cantidad1 = '" . $_POST['cantidad'] . "', "
             . "barcodeIngrediente = '" . $_POST['barcodeIngrediente'] . "', "
-            . "unidadIngrediente = '" . $_POST['unidadIngrediente'] . "', "
             . "tipoIngrediente = '" . $_POST['tipoIngrediente'] . "', "
-            . "ccIngrediente = '" . $_POST['ccIngrediente'] . "', "
             . "detalleIngrediente = '" . $_POST['detalleIngrediente'] . "', "
             . "bodegaIngrediente = '" . $_POST['bodegaIngrediente'] . "', "
             . "minIngrediente = '" . $_POST['minIngrediente'] . "', "
-            . "maxIngrediente = '" . $_POST['maxIngrediente'] . "', "
             . "precioIngrediente = '" . $_POST['precioIngrediente'] . "', "
             . "compraIngrediente = '" . $_POST['compraIngrediente'] . "', "
             . "editadoIngredinete = '" . date('Y-m-d') . "', "
             . "estadoIngrediente = '" . $_POST['estadoIngrediente'] . "' "
-            . "WHERE codigoIngrediente = '" . $_POST['codigoIngrediente'] . "'";
+            . "WHERE idIngrediente = '" . $_POST['idIngredient'] . "'";
     $val_result = $conn->query($query) or die($conn->error);
 
     if ($val_result) {
@@ -103,7 +77,6 @@ if (isset($_POST['getList'])) {
                 </td>
                 <td class='ing_codigo text-bold'>" . $row_ingredientes_list['codigoIngrediente'] . "</td>
                 <td class='ing_precio text-bold'>" . $row_ingredientes_list['precioIngrediente'] . "</td>
-                <td class='ing_unidad text-bold'>" . $row_ingredientes_list['unidadIngrediente'] . "</td>
                 <td class=' text-bold'><span class=\"label label-" . $labelEstatus . "\">" . $texto . "</span></td>
                 <td class='ing_fecha text-bold'>" . $row_ingredientes_list['editadoIngredinete'] . "</td>
                 <td class='ing_tipo text-bold'>" . $row_ingredientes_list['tipoIngrediente'] . "</td>
@@ -150,7 +123,6 @@ if (isset($_POST['getTrans'])) {
                 <td class=' text-bold'><span class=\"label label-" . $labelEstatus . "\">" . $texto . "</span></td>
                 <td class=' text-bold'>" . $row['dateTrans'] . "</td>
                 <td class=' text-bold'>" . $row['userTrans'] . "</td>
-                <td class=' text-bold'>" . $row['sucursalTrans'] . "</td>
             </tr>";
     }
 }
@@ -164,14 +136,14 @@ if (isset($_POST["editInventory"])) {
     foreach ($entradas as $element) {
 
         ////////////////////////////////////////////////////////////////////////LLAMAMOS AL VALOR ACTUAL DEL INVENTARIO
-        $select = "SELECT cantidad" . $_POST['location'] . " FROM ingrediente WHERE codigoIngrediente = '" . $element['codigo'] . "'";
+        $select = "SELECT cantidad1 FROM ingrediente WHERE codigoIngrediente = '" . $element['codigo'] . "'";
         $result = $conn->query($select);
         $row = $result->fetch_array(MYSQLI_NUM);
 
         ////////////////////////////////////////////////////////////////////////ACTUALIZAMOS AL NUEVO VALOR
         $prevstock = $row['0'];
         $newstock = $prevstock + $element['cantidad'];
-        $query = "UPDATE ingrediente SET cantidad" . $_POST['location'] . " = '" . $newstock . "' WHERE codigoIngrediente = '" . $element['codigo'] . "'";
+        $query = "UPDATE ingrediente SET cantidad1 = '" . $newstock . "' WHERE codigoIngrediente = '" . $element['codigo'] . "'";
         $val_result = $conn->query($query) or die($conn->error);
 //        $json['msg'] .= $select . $query;
         ////////////////////////////////////////////////////////////////////////AGREGAMOS EL REGISTRO EN HISTORICO
@@ -195,14 +167,14 @@ if (isset($_POST["editInventory"])) {
     foreach ($entradas as $element) {
 
         ////////////////////////////////////////////////////////////////////////LLAMAMOS AL VALOR ACTUAL DEL INVENTARIO
-        $select = "SELECT cantidad" . $_POST['location'] . " FROM ingrediente WHERE codigoIngrediente = '" . $element['codigo'] . "'";
+        $select = "SELECT cantidad1 FROM ingrediente WHERE codigoIngrediente = '" . $element['codigo'] . "'";
         $result = $conn->query($select);
         $row = $result->fetch_array(MYSQLI_NUM);
 
         ////////////////////////////////////////////////////////////////////////ACTUALIZAMOS AL NUEVO VALOR
         $prevstock = $row['0'];
         $newstock = $prevstock - $element['cantidad'];
-        $query = "UPDATE ingrediente SET cantidad" . $_POST['location'] . " = '" . $newstock . "' WHERE codigoIngrediente = '" . $element['codigo'] . "'";
+        $query = "UPDATE ingrediente SET cantidad1 = '" . $newstock . "' WHERE codigoIngrediente = '" . $element['codigo'] . "'";
         $val_result = $conn->query($query) or die($conn->error);
 //        $json['msg'] .= $select . $query;
         ////////////////////////////////////////////////////////////////////////AGREGAMOS EL REGISTRO EN HISTORICO

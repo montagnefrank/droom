@@ -2,11 +2,10 @@
 ############################################################################
 #############       VAGRANTFILE BY BURTONTECH DEV TEAM    ##################
 #############       Author: Bayman Burton                 ##################
-#############       Date: 2019-03-22                      ##################
-#############       Desc: Droom Software                  ##################
+#############       Date: 2018-05-20                      ##################
+#############       Desc: DROOM MASTER PROYECT            ##################
 ############################################################################
 ############################################################################
-
 
 #############       Vagrant Misc Params       ##################
 Vagrant.configure("2") do |config|
@@ -16,21 +15,21 @@ Vagrant.configure("2") do |config|
 
 #############       Define local address ##################
 #############       (you can define multiple address for multiple connections)     ##################
-#  config.vm.network "public_network", ip: "192.168.1.231"
-#  config.vm.network "public_network", ip: "192.168.100.231"
-  config.vm.network "public_network", ip: "10.0.0.231"
-# config.vm.network "public_network", ip: "192.168.3.219"
+  # config.vm.network "public_network", ip: "192.168.100.210"
+  config.vm.network "public_network", ip: "192.168.1.232"
+  # config.vm.network "public_network", ip: "192.168.3.219"
 
 #############       Shared folders for Host-Guest drag&drop        ##################
   config.vm.synced_folder "www", "/var/www/html"
+  # config.vm.synced_folder "etc/mysql", "/etc/mysql"
 
 #############       Forward Ports to Host's Localhost       ##################
-  config.vm.network "forwarded_port", guest: 22, host: 2243
-  config.vm.network "forwarded_port", guest: 80, host: 82
+  config.vm.network "forwarded_port", guest: 22, host: 2267
+  config.vm.network "forwarded_port", guest: 80, host: 8067
 
 #############       Important: Needs vagrant-hostsupdater plugin to work        ##################
   config.vm.define :web do |web_config|
-    web_config.vm.hostname = "droom.burt"
+    config.vm.hostname = "droom.burt"
   end
 
 #############       DEBUG PARAMETERS       ##################

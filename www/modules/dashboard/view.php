@@ -45,19 +45,19 @@
     <div class="col-md-3">                      
         <a href="#" class="tile tile-success tile-valign sidebar-toggle " id="villaflora_sidebar">$ <span class="ventdia_villaflora">0.00</span>
             <div class="informer informer-default dir-tr"><span class="fa fa-align-right"></span></div>
-            <div class="informer informer-default dir-bl">Restaurant Villaflora</div>
+            <div class="informer informer-default dir-bl">Restaurant Principal</div>
         </a>                                                    
     </div>
     <div class="col-md-3">                        
         <a href="#" class="tile tile-success tile-valign sidebar-toggle" id="quitonorte_sidebar">$ <span class="ventdia_quitonorte">0.00</span>
             <div class="informer informer-default dir-tr"><span class="fa fa-align-right"></span></div>
-            <div class="informer informer-default dir-bl">Restaurant Av. del Maestro</div>
+            <div class="informer informer-default dir-bl">Sucursal 1</div>
         </a>                                                    
     </div>
     <div class="col-md-3">                        
         <a href="#" class="tile tile-success tile-valign sidebar-toggle" id="quitosur_sidebar">$ <span class="ventdia_quitosur">0.00</span>
             <div class="informer informer-default dir-tr"><span class="fa fa-align-right"></span></div>
-            <div class="informer informer-default dir-bl">Restaurant Quito Sur</div>
+            <div class="informer informer-default dir-bl">Sucursal 2</div>
         </a>                                                    
     </div>
     <div class="col-md-3">
@@ -86,8 +86,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="panel-title-box">
-                    <h3>Entregas a domicilio</h3>
-                    <span id="ultimosmeses_resumen">Resumen geográfico de pedidos</span>
+                    <h3>Clientes</h3>
+                    <span id="ultimosmeses_resumen">Mapa de clientes registrados en sistema</span>
                 </div>
                 <ul class="panel-controls" style="margin-top: 2px;">
                     <li><a id="mapadelivery_toggle_graph" href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
@@ -97,63 +97,9 @@
             </div>
             <div class="panel-body" >
                 <div id="map_small" style="height:400px;"></div>
-                <div id="delivery_table" style="top: 16px;right: 16px;width: 75%; position: absolute; display: none;">
-                    <!-- START CONTENT FRAME BODY -->
-                    <div class="messages messages-img">
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/users/user.jpg" alt="Dmitry Ivaniuk">
-                            </div>                                
-                            <div class="text">
-                                <div class="heading">
-                                    <a href="#">Pedido #1234</a>
-                                    <span class="date">08:39</span>
-                                </div>                                    
-                                Pizza Dirulo, Gaseosa Pequeña (x5)
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/users/user.jpg" alt="Dmitry Ivaniuk">
-                            </div>                                
-                            <div class="text">
-                                <div class="heading">
-                                    <a href="#">Pedido #1234</a>
-                                    <span class="date">08:39</span>
-                                </div>                                    
-                                Pizza Dirulo, Gaseosa Pequeña (x5)
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/users/user.jpg" alt="Dmitry Ivaniuk">
-                            </div>                                
-                            <div class="text">
-                                <div class="heading">
-                                    <a href="#">Pedido #1234</a>
-                                    <span class="date">08:39</span>
-                                </div>                                    
-                                Pizza Dirulo, Gaseosa Pequeña (x5)
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="image">
-                                <img src="assets/images/users/user.jpg" alt="Dmitry Ivaniuk">
-                            </div>                                
-                            <div class="text">
-                                <div class="heading">
-                                    <a href="#">Pedido #1234</a>
-                                    <span class="date">08:39</span>
-                                </div>                                    
-                                Pizza Dirulo, Gaseosa Pequeña (x5)
-                            </div>
-                        </div>
-                    </div>     
-                    <!-- END CONTENT FRAME BODY -->  
-                </div>
             </div>
             <div class="panel-footer">
-                <h3><span class="fa fa-map-marker"></span> Entregas a domicilio</h3>
+                <h3><span class="fa fa-map-marker"></span> Mapa de Clientes</h3>
                 <p>Ciudad de Quito</p>
             </div>
         </div>
@@ -163,9 +109,9 @@
     <div class="col-md-4">              
         <div class="panel panel-default tabs">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active" ><a href="#tab8" data-toggle="tab">Villaflora</a></li>
-                <li ><a href="#tab9" data-toggle="tab">Av. del Maestro</a></li>
-                <li ><a href="#tab10" data-toggle="tab">Quito Sur</a></li>
+                <li class="active" ><a href="#tab8" data-toggle="tab">Principal</a></li>
+                <li ><a href="#tab9" data-toggle="tab">Sucursal 1</a></li>
+                <li ><a href="#tab10" data-toggle="tab">Sucursal 2</a></li>
             </ul>
             <div class="panel-body tab-content">
                 <div class="tab-pane active" id="tab8">
@@ -308,16 +254,16 @@
             </div>
             <div id="ingredientes_botonera_small" class="panel-footer text-center">                                                                                                                                                                                                           
                 <div class="btn-group">
-                    <button id="ingredientes_quitosur_btn" class="btn btn-primary">Quito Sur</button>
-                    <button id="ingredientes_villaflora_btn" class="btn btn-primary">Villaflora</button>                                                
-                    <button id="ingredientes_quitonorte_btn" class="btn btn-primary">Quito Norte</button>                                        
+                    <button id="ingredientes_quitosur_btn" class="btn btn-primary">Principal</button>
+                    <button id="ingredientes_villaflora_btn" class="btn btn-primary">Sucursal 1</button>                                                
+                    <button id="ingredientes_quitonorte_btn" class="btn btn-primary">Sucursal 2</button>                                        
                 </div>     
             </div>    
             <div id="ingredientes_botonera_big" class="panel-footer text-center" style="display: none;">                                                                                                                                                                                                           
                 <div class="btn-group">
-                    <button id="ingredientes_quitosur_btn_big" class="btn btn-primary">Quito Sur</button>
-                    <button id="ingredientes_villaflora_btn_big" class="btn btn-primary">Villaflora</button>                                                
-                    <button id="ingredientes_quitonorte_btn_big" class="btn btn-primary">Quito Norte</button>                                        
+                    <button id="ingredientes_quitosur_btn_big" class="btn btn-primary">Principal</button>
+                    <button id="ingredientes_villaflora_btn_big" class="btn btn-primary">Sucursal 1</button>                                                
+                    <button id="ingredientes_quitonorte_btn_big" class="btn btn-primary">Sucursal 2</button>                                        
                 </div>     
             </div>    
         </div>

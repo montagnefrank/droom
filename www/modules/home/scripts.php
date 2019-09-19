@@ -52,8 +52,8 @@
         var html = '';
         $(".menuItemBox").removeClass('tile-selected');
         $(this).addClass('tile-selected');
-        html += '<span class="hidethis idmesaSelected">'+$(this).parent().find('.idMesaContainer').html()+'</span>';
-        html += '<span class="namemesaSelected">'+$(this).text()+'</span>';
+        html += '<span class="hidethis idmesaSelected">' + $(this).parent().find('.idMesaContainer').html() + '</span>';
+        html += '<span class="namemesaSelected">' + $(this).text() + '</span>';
         $('.mesaSelected').html(html);
     });
 
@@ -86,8 +86,28 @@
     });
 
     //          EDITAR EL PEDIDO SELECCIONADO EN EL MODAL           //
-    $(".btnAnadirPedido").click(function () {
-        window.location.replace("/?show=anadirpedido#autoscroll");
+    $(".editThisOrder").click(function () {
+        var formData = new FormData();
+        formData.append('idpedido', $(".idPedidoContainer").html());
+        formData.append('idmesa', $(".idMesaContainer").html());
+        formData.append('numeromesa', $(".numeroMesaContainer").html());
+        formData.append('meth', 'asignaMesa');
+        $.ajax({
+            url: 'api/api.php',
+            type: 'POST',
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                window.location.replace("/?show=pedido");
+            },
+            error: function (error) {
+                console.log("Hubo un error de internet, intente de nuevo");
+                console.log(error);
+            }
+        });
     });
 
     //      AL HACER CLIC EN CADA PEDIDO DE LA TABLA        //
@@ -114,7 +134,10 @@
             data: formData,
             success: function (data) {
                 asignaPedido(idPedido);
-                $(".tituloEstadoPedido").html("<center>Pedido # " + idPedido + " en Mesa " + numeroMesa + "</center>");
+                $(".tituloEstadoPedido").html("<center>Pedido # " + idPedido + " en " + numeroMesa + "</center>");
+                $(".idPedidoContainer").html(idPedido);
+                $(".numeroMesaContainer").html(numeroMesa);
+                $(".idMesaContainer").html(idMesa);
             },
             error: function (error) {
                 console.log("Hubo un error de internet, intente de nuevo");

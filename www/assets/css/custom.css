@@ -763,14 +763,14 @@ button {
     width: 100%;
 }
 .tile.menuItemBox{
-    width: 70%;
+    width: 100%;
     font-size: 18px;
     padding: 59px;
     min-height: 190px;
-    background: url(/api/assets/img/mesas2.png) center #31b5e2;
+    background: url(/api/assets/img/mesas2.png) center #31b5e2 no-repeat;
 }
 .tile.menuItemBox:hover,.tile.menuItemBox.tile-selected {
-    background: url(/api/assets/img/mesas2.png) center #8cb052;
+    background: url(/api/assets/img/mesas2.png) center #8cb052 no-repeat;
 }
 .login-center img{
     width: 100%;
@@ -787,4 +787,29 @@ button {
 }
 .billsImg{
     width: 27px;
+}
+
+.video-background {
+    background: #000;
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 0;
+}
+
+.video-overlay {
+    position: fixed;
+    margin: 0 auto;
+    width: 150vw;
+    height: 150vh;
+    background-image: url(/assets/img/backgrounds/texture.png);
+}
+
+.video-foreground,
+.video-background iframe {
+    position: absolute;
+    top: -25%;
+    left: -25%;
+    width: 150%;
+    height: 150%;
+    pointer-events: none;
 }

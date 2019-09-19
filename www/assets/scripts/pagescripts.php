@@ -170,6 +170,18 @@
     });
 
 
+    $("li.menuItem").hover(function () {
+        if ($(this).hasClass("xn-openable")) {
+            $("li.xn-openable").removeClass("active");
+            $(this).addClass("active");
+        } else {
+            $("li.xn-openable").removeClass("active");
+        }
+    }, function () {
+        var self = this;
+        return true;
+    });
+
     /*
      *          *************************************************************************
      *          *******************||  FUNCIONES PUBLICAS DE LA APP   ||*****************
@@ -184,7 +196,7 @@
             success: function (data) {
                 console.log(data);
                 var htmlforlist = '';
-                var htmlcontent = '<div class="col-md-3 showProductPanelContainer hidethis">' +
+                var htmlcontent = '<div class="col-md-4 showProductPanelContainer hidethis">' +
                         '           <div class="panel panel-default showProductPanel">' +
                         '             <div class="panel-body profile itemMenuBg">' +
                         '                   <div class="profile-image">' +
@@ -280,76 +292,4 @@
 <?php
 
 require ("modules/" . $module . "/scripts.php");
-
-//
-//switch ($panel) {///////////////////////////////////////////////////////////////SELECTOR DE PANEL, DEPENDIENDO DEL PANEL HACE LAS LLAMADAS A LOS ARCHIVOS CORRESPONDINETES
-//    case "cocina.php":
-//        echo "<script type='text/javascript' src='assets/cocina/scriptcocina.js'></script>";
-//        break;
-//    case "procesos.php":
-//        require ("assets/procesos/model.php");
-//        break;
-//    case "anadirpedido.php":
-//        echo "<script type='text/javascript' src='assets/js/script_anadirpedido.js'></script>";
-//        echo "<script type='text/javascript' src='assets/anadirpedido/script_anadirpedido.js'></script>";
-//        break;
-//    case "dashboard.php":
-//        echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyA_s9AhhJurXNx1UHeK_6hm6CdSB8AR14c\"></script>";
-//        echo "<script type='text/javascript' src='assets/dashboard/dashboard.js'></script>";
-//        echo "<script type='text/javascript' src=\"assets/dashboard/echarts/dist/echarts.js\"></script>";
-//        require ("assets/dashboard/dashboardscripts.php");
-//        break;
-//    case "caja.php":
-//        echo "<script type='text/javascript' src='assets/caja/script_caja.js'></script>";
-//        require ("assets/caja/caja_scripts.php");
-//        break;
-//    case "factura.php":
-//        echo "<script type='text/javascript' src='assets/factura/script_factura.js'></script>";
-//        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
-//        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
-//        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
-//        break;
-//    case "domicilio.php":
-//        require ("assets/domicilio/dom_scripts.php");
-//        echo "<script type='text/javascript' src='assets/domicilio/dom_facturardom.js'></script>";
-//        break;
-//    case "nuevodomicilio.php":
-//        echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
-//        echo "<script type='text/javascript' src='assets/domicilio/dom_seleccionproducto.js'></script>";
-//        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
-//        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
-//        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
-//        break;
-//    case "parallevar.php":
-//        echo "<script type='text/javascript' src='assets/cliente/script_cliente.js'></script>";
-//        echo "<script type='text/javascript' src='assets/cliente/script_validacionCliente.js'></script>";
-//        echo "<script type='text/javascript' src='assets/js/script_validaMoney.js'></script>";
-//        echo "<script type='text/javascript' src='assets/js/script_menu_seleccion_productos.js'></script>";
-//        echo "<script type='text/javascript' src='assets/parallevar/script_seleccionproductos.js'></script>";
-//        break;
-//    case "reporte.php":
-//        echo '<script type="text/javascript" charset="utf8" src="assets/js/datatables/datatables.js"></script>';
-//        echo "<script type='text/javascript' src='assets/reporteventa/script_validacionReporte.js'></script>";
-//        echo "<script type='text/javascript' src='assets/reporteventa/script_reporteventa.js'></script>";
-//        break;
-//    case "user_config.php":
-//        echo '<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.js"></script>';
-//        echo '<script type="text/javascript" src="assets/user_config/script_user_config.js"></script>';
-//        break;
-//    case "entregas.php":
-//        echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyA_s9AhhJurXNx1UHeK_6hm6CdSB8AR14c\"></script>";
-//        echo "<script type='text/javascript' src='assets/entregas/ent_scripts.js'></script>";
-//        echo "<script type='text/javascript' src='assets/entregas/ent_scripts.php'></script>";
-//        require ("assets/entregas/ent_scripts.php");
-//        break;
-//    case "inventory.php":
-//        require ("assets/inventory/model.php");
-//        break;
-//    case "user.php":
-//        require ("assets/users/model.php");
-//        break;
-//    case "carta.php":
-//        require ("assets/carta/model.php");
-//        break;
-//}
 ?>

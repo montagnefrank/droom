@@ -67,7 +67,7 @@ if($_POST["idpedido"]){
                         </div>
                     </div>
                 </div><div class="col-md-4">
-                    <ul class="list-group border-bottom">
+                    <ul class="list-group border-bottom resumenListUl">
                         <li class="list-group-item">SUB TOTAL <span class="badge resumen_subtotal"></span></li>
                         <li class="list-group-item">DESCUENTO <span class="badge badge-danger resumen_descuento"></span></li>
                         <li class="list-group-item">IVA 12(%) <span class="badge badge-info resumen_iva"></span></li>

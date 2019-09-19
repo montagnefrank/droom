@@ -108,7 +108,7 @@
                     <div class="panel panel-default">                                
                         <div class="panel-body">
                             <div class="text-center" id="user_image">
-                                <img src="img/users/user.jpg" class="img-thumbnail"/>
+                                <img src="assets/img/users/user.jpg" class="img-thumbnail"/>
                             </div>                                    
                         </div>
                         <div class="panel-body form-group-separated">
@@ -165,9 +165,7 @@
                                 <div class="col-md-9 col-xs-7">
                                     <select id="newuser_est_select" class="form-control select" data-style="btn-success">
                                         <option value="0">Seleccione</option>
-                                        <option value="1">Quito Sur</option>
-                                        <option value="2">Villaflora</option>
-                                        <option value="3">Cotocollao</option>
+                                        <option value="1">Principal</option>
                                     </select>
                                 </div>
                             </div>                                        
@@ -250,9 +248,7 @@
                                 <div class="col-md-9 col-xs-7">
                                     <select id="edituser_est_select" class="form-control select" data-style="btn-success">
                                         <option value="0">Seleccione</option>
-                                        <option value="1">Quito Sur</option>
-                                        <option value="2">Villaflora</option>
-                                        <option value="3">Cotocollao</option>
+                                        <option value="1">Principal</option>
                                     </select>
                                 </div>
                             </div>                                        
