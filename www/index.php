@@ -37,7 +37,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-// DESPLEGAMOS TODA LA CONFIG   //
+/* DESPLEGAMOS TODA LA CONFIG   // */
 require ("assets/scripts/config.php");
 ?>
 <!DOCTYPE html>
@@ -53,7 +53,7 @@ require ("assets/scripts/config.php");
         <link rel="stylesheet" href="assets/css/reset.css">
         <link rel="stylesheet" href="assets/css/supersized.css">
         <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
-        <link rel="stylesheet" type="text/css" id="theme" href="assets/css/custom.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
         <?php
         if ($page == 'login') {
             echo '<link rel="stylesheet" href="assets/css/style.css">';
@@ -62,76 +62,26 @@ require ("assets/scripts/config.php");
     </head>
     <?php
     if ($page == 'login') {
+        echo '<body class="login">';
+        require ("assets/views/login.php");
+    } else {
+        echo '<body class="' . $fullwidth . ' ">' . $videoTag . '<div class="page-container  ' . $sidebar . '">';
+        require ("assets/views/sidebar.php");
         ?>
-        <body>
-            <div class="page-container login">
-                <div class="login-center">
-                    <img src="assets/img/logo_rec.png" />
-                    <form method="post">
-                        <input type="text" name="username" class="username" placeholder="Usuario" >
-                        <input type="password" name="password" class="password" placeholder="Contraseña" >
-                        <button type="submit">Iniciar Sesión</button>
-                        <div class="error"><span>+</span></div>
-                        <div class="notificacion" hidden></div>
-                    </form>
-                </div>
-            </div> 
-            <?php
-        } else {
-            echo '<body class="' . $fullwidth . ' ">' .
-            '       <div class="video-background">' .
-            '            <div class="video-foreground">' .
-            '                <iframe src="https://www.youtube.com/embed/' . $video . '?controls=0&showinfo=0&rel=0&mute=1&modestbranding=1&autoplay=1&loop=1&playlist=' . $video . '" frameborder="0" allowfullscreen></iframe>' .
-            '            </div>' .
-            '            <div class="video-overlay">' .
-            '            </div>' .
-            '       </div>';
-            echo '<div class="page-container  ' . $sidebar . '">';
-            require ("assets/views/sidebar.php");
-            ?>
-            <div class="page-content" style="height: 100%;">
-                <?php require ("assets/views/statusbar.php"); ?>          
-                <!--PANEL A MOSTRAR-->                      
-                <?php require ("modules/" . $module . "/view.php"); ?>                           
-            </div>
+        <div class="page-content" style="height: 100%;">
+            <?php require ("assets/views/statusbar.php"); ?>          
+            <!--PANEL A MOSTRAR-->                      
+            <?php require ("modules/" . $module . "/view.php"); ?>                           
         </div>
-        <!-- MENSAJE DE SALIDA-->
-        <div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
-            <div class="mb-container">
-                <div class="mb-middle">
-                    <div class="mb-title"><span class="fas fa-sign-out-alt"></span> Salir de la <strong>App</strong> ?</div>
-                    <div class="mb-content">
-                        <p>¿Est&aacute; seguro que desea salir?</p>                    
-                        <p>Presione No para continuar trabajando. Presione Si para salir.</p>
-                    </div>
-                    <div class="mb-footer">
-                        <div class="pull-right">
-                            <a href="#" class="btn btn-info btn-lg btnSalir">Si</a>
-                            <button class="btn btn-default btn-lg mb-control-close">No</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="notificacion" hidden></div>
-        <!-- FIN MENSAJE DE SALIDA-->
+    </div>
 
-        <!-- START SIDEBAR -->
-        <?php
-        if ($module == "dashboard") {
-            require ("assets/dashboard/rightbar.php");
-        }
-        ?>
-        <!-- END SIDEBAR -->        
-
-        <!-- PRELOADS -->
-        <audio id="audio-alert" src="assets/audio/alert.mp3" preload="auto"></audio>
-        <audio id="audio-fail" src="assets/audio/fail.mp3" preload="auto"></audio>
-        <!-- FIN PRELOADS --> 
-        <?php
+    <?php
+    if ($module == "dashboard") {
+        require ("assets/dashboard/rightbar.php");
     }
+}
 
-    require ("assets/scripts/pagescripts.php");
-    ?>
+require ("assets/scripts/pagescripts.php");
+?>
 </body>
 </html>

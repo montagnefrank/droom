@@ -32,63 +32,25 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
-
-//              UTILIDADES DE LA API            //
-require ("funcs.php");
-
-
-// VALIDAMOS SI EL USUARIO ESTA LOGUEADO //
-session_start();
-if (isset($_SESSION["usuario"])) {
-    // VALIDAMOS SI TIENE PANEL ASIGNADO //
-    if (isset($_GET['show'])) {
-        $module = $_GET['show'];
-        $page = 'app';
-    } else {
-        session_destroy();
-        $page = 'login';
-    }
-} else {
-    session_destroy();
-    $page = 'login';
-}
-
-//          CONFIGURAMOS LA UI
-$sb = $_SESSION["usuario"]['sidebar'];
-$fw = $_SESSION["usuario"]['fullwidth'];
-
-if ($sb == '1') {
-    $sidebar = "page-navigation-toggled";
-    $checkedsb = 'checked';
-} else {
-    $sidebar = "";
-    $checkedsb = '';
-}
-
-if ($fw == '1') {
-    $fullwidth = "";
-    $checkedfw = 'checked';
-} else {
-    $fullwidth = "page-container-boxed";
-    $checkedfw = '';
-}
-
-//                  RANDOM VIDEO BACKGROUND
-$r = rand(1, 7);
-switch ($r) {
-    case 1:$video = "FaHTfgV7ii4";break;
-    case 2:$video = "95SNbn340TE";break;
-    case 3:$video = "5LE8mg8Khbo";break;
-    case 4:$video = "p2bCtDXwQQI";break;
-    case 5:$video = "0I4bUOYK3rA";break;
-    case 6:$video = "FIubfE2JkDE";break; 
-    case 8:$video = "96v_ZcPtE44";break; 
-}
-$videoTag = '       <div class="video-background">' .
-        '            <div class="video-foreground">' .
-        '                <iframe src="https://www.youtube.com/embed/' . $video . '?controls=0&showinfo=0&rel=0&mute=1&modestbranding=1&autoplay=1&loop=1&playlist=' . $video . '" frameborder="0" allowfullscreen></iframe>' .
-        '            </div>' .
-        '            <div class="video-overlay">' .
-        '            </div>' .
-        '       </div>';
 ?>
+<div class="page-container login">
+    <div class="overlayLogin hidethis"></div>
+    <div class="login-center hidethis loginBox">
+        <img src="assets/img/logo_rec.png" />
+        <form method="post">
+            <input type="text" name="username" class="username" placeholder="Usuario" >
+            <input type="password" name="password" class="password" placeholder="Contraseña" >
+            <button type="submit">Iniciar Sesión</button>
+            <div class="error"><span>+</span></div>
+            <div class="notificacion" hidden></div>
+        </form>
+        <div class="login-footer">
+            <div class="pull-right">¿No tienes cuenta? <a href="registration.php"><b>¡Regístrate ahora!</b></a></div>
+            <div class="pull-right">&copy; 2019 DROOM - Burton Technology CIA, LTDA.</div>
+            <div class="pull-right">
+                <a href="#">Términos y condiciones</a> |
+                <a href="#">Contacto</a>
+            </div>
+        </div>
+    </div>
+</div> 

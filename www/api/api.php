@@ -38,7 +38,8 @@
 //  DEBUG EN PANTALLA   //
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
-//  HABILITAMOS EL ACCESO PUBLICO PARA REALIZAR LLAMADAS AJAX DESDE DOMINIOS PUBLICOS   //
+
+/*  HABILITAMOS EL ACCESO PUBLICO PARA REALIZAR LLAMADAS AJAX DESDE DOMINIOS PUBLICOS   // */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization, X-Auth-Token');

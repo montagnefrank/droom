@@ -400,7 +400,7 @@ li{
 
 
 @media only screen and (min-height: 600px){
-    #barralateral {
+    body:not(.page-container-boxed) #barralateral {
         height: 100vh!important;
     }    
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  *          ***********************************************************
  *          *******************||  DROOM SOFTWARE   ||*****************
@@ -34,6 +33,26 @@
  *          
  */
 ?>
+<!-- MENSAJE DE SALIDA-->
+<div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title"><span class="fas fa-sign-out-alt"></span> Salir de la <strong>App</strong> ?</div>
+            <div class="mb-content">
+                <p>¿Est&aacute; seguro que desea salir?</p>                    
+                <p>Presione No para continuar trabajando. Presione Si para salir.</p>
+            </div>
+            <div class="mb-footer">
+                <div class="pull-right">
+                    <a href="#" class="btn btn-info btn-lg btnSalir">Si</a>
+                    <button class="btn btn-default btn-lg mb-control-close">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="notificacion" hidden></div>
+<!-- FIN MENSAJE DE SALIDA-->
 <script type="text/javascript" src="assets/js/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jquery/jquery-ui.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/bootstrap/bootstrap.min.js"></script>  
@@ -146,6 +165,8 @@
             $(this).parent().find('.error').fadeOut('fast');
         });
 
+        $(document).find("div.page-container.login .overlayLogin").delay(500).velocity("transition.slideDownBigIn", 500);
+        $(document).find("div.page-container.login .loginBox").delay(1000).velocity("transition.slideRightBigIn", 500);
     });
 
 ////////////////////////CERRAMOS LA VENTNA DE NOTIFICACION CON CLIC EN CUALQUIER PARTE DE LA PAGINA
@@ -168,7 +189,6 @@
         var node = $(this);
         node.val(node.val().replace(/[^a-zA-Z\-\s]/g, ''));
     });
-
 
     $("li.menuItem").hover(function () {
         if ($(this).hasClass("xn-openable")) {
@@ -290,6 +310,5 @@
     }
 </script>
 <?php
-
 require ("modules/" . $module . "/scripts.php");
 ?>
