@@ -108,9 +108,9 @@
 <script>
     var listhas = 0;
     $(document).ready(function () {
-        $('.page-container.login form').submit(function (e) {
+        $('#loginForm').submit(function (e) {
             e.preventDefault();
-            var username = $(this).find('.username').val();
+            var username = $(this).find('.email').val();
             var password = $(this).find('.password').val();
 
             if (username == '') {
@@ -118,7 +118,7 @@
                     $(this).css('top', '27px');
                 });
                 $(this).find('.error').fadeIn('fast', function () {
-                    $(this).parent().find('.username').focus();
+                    $(this).parent().find('.email').focus();
                 });
 
                 return false;
@@ -137,20 +137,29 @@
             if (username != '' && password != '') {
 
                 var formData = new FormData();
-                formData.append('username', username);
+                formData.append('email', username);
                 formData.append('password', password);
                 formData.append('meth', 'login');
                 $.ajax({
                     url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
                     success: function (data) {
-
                         if (data.scriptResp == "noMatch") {
-                            $(".notificacion").html('<b style="font-size: 24px;">Error ! </b><p>Nombre de usuario y/o contraseñas incorrectos, intente nuevamente</p>');
-                            $(".notificacion").show('slow').delay(4000).hide('slow');
-                            $('.username').val('');
+                            $(".customalert_text").html("No pudimos validar sus datos, intente nuevamente");
+                            $(".customalert").velocity("transition.slideRightBigIn", 500);
                             $('.password').val('');
-                        } else {
-                            window.location.href = "/?show=home#autoscroll";
+                            console.log(data);
+                        }
+                        if (data.scriptResp == "match") {
+                            if (data.userIntel.statusUsuario == '0') {
+                                $(".customalert_text").html("Su usuario se encunetra suspendido, contacte a su asesor de cuenta");
+                                $(".customalert").velocity("transition.slideRightBigIn", 500);
+                            }
+                            if (data.userIntel.statusUsuario == 'NEW') {
+                                window.location.href = "/?show=newUser";
+                            }
+                            if (data.userIntel.statusUsuario == '1') {
+                                window.location.href = "/?show=home";
+                            }
                         }
                     },
                     error: function (error) {
@@ -161,17 +170,122 @@
             }
         });
 
-        $('.page-container form .username, .page-container form .password').keyup(function () {
+        $('#registerForm').submit(function (e) {
+            e.preventDefault();
+            var name = $(this).find('.names').val();
+            var phone = $(this).find('.phone').val();
+            var email = $(this).find('.email').val();
+            var regpassword = $(this).find('.regpassword').val();
+            var repassword = $(this).find('.repassword').val();
+
+            /// VALIDADORES ///
+            if (name == '') {
+                $(this).find('.error').fadeOut('fast', function () {
+                    $(this).css('top', '27px');
+                });
+                $(this).find('.error').fadeIn('fast', function () {
+                    $(this).parent().find('.names').focus();
+                });
+
+                return false;
+            }
+            if (phone == '') {
+                $(this).find('.error').fadeOut('fast', function () {
+                    $(this).css('top', '96px');
+                });
+                $(this).find('.error').fadeIn('fast', function () {
+                    $(this).parent().find('.phone').focus();
+                });
+
+                return false;
+            }
+            if (email == '') {
+                $(this).find('.error').fadeOut('fast', function () {
+                    $(this).css('top', '165px');
+                });
+                $(this).find('.error').fadeIn('fast', function () {
+                    $(this).parent().find('.email').focus();
+                });
+
+                return false;
+            }
+            if (regpassword == '') {
+                $(this).find('.error').fadeOut('fast', function () {
+                    $(this).css('top', '234px');
+                });
+                $(this).find('.error').fadeIn('fast', function () {
+                    $(this).parent().find('.regpassword').focus();
+                });
+
+                return false;
+            }
+            if (repassword == '') {
+                $(this).find('.error').fadeOut('fast', function () {
+                    $(this).css('top', '303px');
+                });
+                $(this).find('.error').fadeIn('fast', function () {
+                    $(this).parent().find('.repassword').focus();
+                });
+                return false;
+            }
+            if (regpassword.length < 7) {
+                $(".customalert_text").html("La contraseña debe tener un m&iacute;nimo de 8 caracteres");
+                $(".customalert").velocity("transition.slideRightBigIn", 500);
+                return false;
+            }
+            if (regpassword != repassword) {
+                $(".customalert_text").html("Las contraseñas no coinciden");
+                $(".customalert").velocity("transition.slideRightBigIn", 500);
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append('names', name);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('password', regpassword);
+            formData.append('meth', 'register');
+            $.ajax({
+                url: 'api/api.php', type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                success: function (data) {
+
+                    if (data.scriptResp == "emailExists") {
+                        $(".customalert_text").html("Esta cuenta de correo ya se encuentra registrada");
+                        $(".customalert").velocity("transition.slideRightBigIn", 500);
+                    }
+                    if (data.scriptResp == "regTrue") {
+                        window.location.href = "/?show=newUser";
+                    }
+                },
+                error: function (error) {
+                    console.log("Hubo un error de internet, intente de nuevo");
+                    console.log(error);
+                }
+            });
+        });
+
+        $('#loginForm .password, #loginForm .username').keyup(function () {
             $(this).parent().find('.error').fadeOut('fast');
         });
 
         $(document).find("div.page-container.login .overlayLogin").delay(500).velocity("transition.slideDownBigIn", 500);
-        $(document).find("div.page-container.login .loginBox").delay(1000).velocity("transition.slideRightBigIn", 500);
+        showLogin();
+
+        $(document).on("click", "#registerBoxBtn", function () {
+            showReg();
+        });
+
+        $(document).on("click", "#loginBoxBtn", function () {
+            showLogin();
+        });
+
     });
 
-////////////////////////CERRAMOS LA VENTNA DE NOTIFICACION CON CLIC EN CUALQUIER PARTE DE LA PAGINA
+    //                  CERRAMOS LA VENTNA DE NOTIFICACION CON CLIC EN CUALQUIER PARTE DE LA PANTALLA
     $(document).on("click", function () {
-        $(".customalert").animate({width: 'hide'}, 600);
+        if ($(".customalert").is(':visible')) {
+            $(".customalert").velocity("transition.slideRightBigOut", 500);
+        }
         $(".message-box").hide();
     });
 
@@ -207,6 +321,7 @@
      *          *******************||  FUNCIONES PUBLICAS DE LA APP   ||*****************
      *          *************************************************************************
      */
+
     //              DESPLEGAMOS LAS CARACTERISTICAS DEL PRODUCTO SELECCIONADO           //
     function displayProduct(idProduct, container) {
         var formData = new FormData();
@@ -307,6 +422,60 @@
                 console.log(error);
             }
         });
+    }
+
+    //                         ANIMAMOS LA VENTANA DE LOGIN PAR AAPARECER
+    function showLogin() {
+
+        $(document).find("div.page-container.login .registerBox").velocity("transition.slideRightBigOut", 500);
+        setTimeout(function () {
+            $(document).find("div.page-container.login > div.login-center.registerBox > form > button ,div.page-container.login .registerBox .ctaDiv").css('transition', '');
+            $(document).find("div.page-container.login > div.login-center.registerBox > form > button").css('transform', '');
+            $(document).find("div.page-container.login .registerBox .ctaDiv").velocity("transition.slideRightBigOut", 50);
+
+            $(document).find("div.page-container.login .loginBox").velocity("transition.slideRightBigIn", 500);
+            $(document).find("div.page-container.login .loginBox .ctaDiv").delay(500).velocity("transition.slideRightBigIn", {stagger: 400});
+            setTimeout(function () {
+                $(document).find("div.page-container.login .loginBox .ctaDiv").css('transition', 'transform 1s');
+                $(document).find("div.page-container.login > div.login-center.loginBox > form > button").css('transform', 'translateX(60px)');
+                setTimeout(function () {
+                    $(document).find("div.page-container.login .loginBox .ctaDiv1").css('transform', 'translateX(30px)');
+                    setTimeout(function () {
+                        $(document).find("div.page-container.login .loginBox .ctaDiv2").css('transform', 'translateX(30px)');
+                        setTimeout(function () {
+                            $(document).find("div.page-container.login .loginBox .ctaDiv3").css('transform', 'translateX(40px)');
+                        }, 200);
+                    }, 200);
+                }, 200);
+            }, 2000);
+        }, 500);
+    }
+
+    //                         ANIMAMOS LA VENTANA DE REGISTRO PAR AAPARECER
+    function showReg() {
+
+        $(document).find("div.page-container.login .loginBox").velocity("transition.slideRightBigOut", 500);
+        setTimeout(function () {
+            $(document).find("div.page-container.login > div.login-center.loginBox > form > button ,div.page-container.login .loginBox .ctaDiv").css('transition', '');
+            $(document).find("div.page-container.login > div.login-center.loginBox > form > button").css('transform', '');
+            $(document).find("div.page-container.login .loginBox .ctaDiv").velocity("transition.slideRightBigOut", 50);
+
+            $(document).find("div.page-container.login .registerBox").velocity("transition.slideRightBigIn", 500);
+            $(document).find("div.page-container.login .registerBox .ctaDiv").delay(500).velocity("transition.slideRightBigIn", {stagger: 400});
+            setTimeout(function () {
+                $(document).find("div.page-container.login .registerBox .ctaDiv").css('transition', 'transform 1s');
+                $(document).find("div.page-container.login > div.login-center.registerBox > form > button").css('transform', 'translateX(60px)');
+                setTimeout(function () {
+                    $(document).find("div.page-container.login .registerBox .ctaDiv1").css('transform', 'translateX(45px)');
+                    setTimeout(function () {
+                        $(document).find("div.page-container.login .registerBox .ctaDiv2").css('transform', 'translateX(30px)');
+                        setTimeout(function () {
+                            $(document).find("div.page-container.login .registerBox .ctaDiv3").css('transform', 'translateX(40px)');
+                        }, 200);
+                    }, 200);
+                }, 200);
+            }, 2000);
+        }, 500);
     }
 </script>
 <?php

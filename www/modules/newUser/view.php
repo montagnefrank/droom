@@ -1,3 +1,4 @@
+<?php
 /*
  *          ***********************************************************
  *          *******************||  DROOM SOFTWARE   ||*****************
@@ -31,4 +32,17 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
-
+?>
+<!-- BREADCRUMB -->
+<ul class="breadcrumb">
+    <!-- <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li> -->
+    <li>Inicio</li>
+    <li>Bienvenido al sistema </li>
+</ul>
+<!-- FIN BREADCRUMB -->
+<div class="page-title">                    
+    <h2><span class="fa fa-cog"></span> Bienvenido al sistema</h2>
+</div>
+<div class="page-content-wrap">  
+    
+</div>

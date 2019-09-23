@@ -33,24 +33,57 @@
  *          
  */
 ?>
+<div class="row customalert hidethis">
+    <div class="col-md-12">
+        <div class="widget widget-primary widget-item-icon">
+            <div class="widget-item-left">
+                <span class="fa fa-exclamation"></span>
+            </div>
+            <div class="widget-data">
+                <div class="widget-title">Notificación</div>
+                <div class="widget-subtitle">
+                    <div role="alert" class="customalert_text">
+                        Mensaje de error
+                    </div>
+                </div>
+            </div>
+            <div class="widget-controls">                                
+                <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+            </div>                             
+        </div>
+    </div>
+</div>
 <div class="page-container login">
     <div class="overlayLogin hidethis"></div>
     <div class="login-center hidethis loginBox">
         <img src="assets/img/logo_rec.png" />
-        <form method="post">
-            <input type="text" name="username" class="username" placeholder="Usuario" >
+        <form method="post" id="loginForm">
+            <input type="email" name="username" class="email" placeholder="Email" >
             <input type="password" name="password" class="password" placeholder="Contraseña" >
-            <button type="submit">Iniciar Sesión</button>
-            <div class="error"><span>+</span></div>
-            <div class="notificacion" hidden></div>
-        </form>
-        <div class="login-footer">
-            <div class="pull-right">¿No tienes cuenta? <a href="registration.php"><b>¡Regístrate ahora!</b></a></div>
-            <div class="pull-right">&copy; 2019 DROOM - Burton Technology CIA, LTDA.</div>
-            <div class="pull-right">
-                <a href="#">Términos y condiciones</a> |
-                <a href="#">Contacto</a>
+            <button type="submit" ><i class="fas fa-sign-in-alt"></i> Iniciar Sesión </button>
+            <div class="error" style="color: red;background: rgba(255, 0, 0, 0.25);"><span>+</span></div>
+            <div class="ctaDiv ctaDiv1">¿No tienes cuenta? <a href="#" id="registerBoxBtn"><strong>¡Regístrate ahora!</strong></a></div>
+            <div class="ctaDiv ctaDiv2">&copy; 2019 DROOM por <a href="https://burtonservers.com" >Burton Technology.</a></div>
+            <div class=" ctaDiv ctaDiv3">
+                <a href="https://burtonservers.com" id="termsBox">Términos y condiciones</a> | <a href="https://burtonservers.com" id="contactBox">Contacto</a>
             </div>
-        </div>
+        </form>
+    </div>
+    <div class="login-center hidethis registerBox">
+        <img src="assets/img/logo_rec.png" />
+        <form method="post" id="registerForm">
+            <input type="text" name="names" class="names" placeholder="Nombre completo" >
+            <input type="text" name="phone" class="phone" placeholder="N&uacute;mero de tel&eacute;fono" >
+            <input type="email" name="email" class="email" placeholder="Correo electr&oacute;nico" >
+            <input type="password" name="regpassword" class="regpassword" placeholder="Contraseña" >
+            <input type="password" name="repassword" class="repassword" placeholder="Confirmar Contraseña" >
+            <div class="error" style="color: red;background: rgba(255, 0, 0, 0.25);"><span>+</span></div>
+            <button type="submit" ><i class="fas fa-user-plus"></i> Registrar </button>
+            <div class="ctaDiv ctaDiv1">¿Ya eres cliente? <a href="#" id="loginBoxBtn"><strong>¡Inicia sesi&oacute;n!</strong></a></div>
+            <div class="ctaDiv ctaDiv2">&copy; 2019 DROOM por <a href="https://burtonservers.com" >Burton Technology.</a></div>
+            <div class="ctaDiv ctaDiv3">
+                <a href="https://burtonservers.com" id="termsBox">Términos y condiciones</a> | <a href="https://burtonservers.com" id="contactBox">Contacto</a>
+            </div>
+        </form>
     </div>
 </div> 

@@ -34,17 +34,15 @@
  *          
  */
 
-
 //  DEBUG EN PANTALLA   //
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-/*  HABILITAMOS EL ACCESO PUBLICO PARA REALIZAR LLAMADAS AJAX DESDE DOMINIOS PUBLICOS   // */
+/*  HABILITAMOS EL ACCESO PUBLICO PARA REALIZAR LLAMADAS AJAX DESDE CUALQUIER LUGAR  // */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization, X-Auth-Token');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS');
-
 header('Content-type: application/javascript; charset=utf-8');
 
 //   ES IMPORTANTE RESCATAR TODO EL OUTPUT  //
@@ -69,24 +67,25 @@ require("../assets/scripts/database.php");
 // INICIAMOS //
 date_default_timezone_set('America/Guayaquil');
 $json = array();
-if ($_POST) {
-    $method = broom('reg', $_POST['meth']);
+if ($_POST || $_GET) {
+    if ($_POST['meth']) {
+        $method = broom('reg', $_POST['meth']);
+    }
+    if ($_GET['meth']) {
+        $method = broom('reg', $_GET['meth']);
+    }
 
     //          USUARIO INICIA SESION           //
     if ($method == 'login') {
 
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        $password = hash('sha512', $_POST['password']);
 
-        $username = broom('reg', $_POST["username"]);
-        $password = $_POST["password"];
-
-        //        $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL);
-        //        $password = hash('sha512', $_POST['password']);
-        //        
         ////            CONSULTAMOS EL USUARIO EN LA BASE DE DATOS A VER SI EXISTE              ////
         $query = " SELECT * FROM usuario us "
-                . " INNER JOIN perfil p ON (us.idPerfil = p.idPerfil ) "
-                . " INNER JOIN establecimiento e ON (us.idEstablecimiento = e.idEstablecimiento ) "
-                . " WHERE nombreUsuario like '$username' ";
+                . " LEFT JOIN perfil p ON (us.idPerfil = p.idPerfil ) "
+                . " LEFT JOIN establecimiento e ON (us.idEstablecimiento = e.idEstablecimiento ) "
+                . " WHERE emailUsuario like '$email' ";
         $result = $conn->query($query);
         if (!$result) {
             $json['scriptResp'] = "userqueryFail";
@@ -103,7 +102,7 @@ if ($_POST) {
         ////          RETORNAMOS UN JSON AL AJAX PARA ALIMENTAR EL JAVASCRIPT          ////
         $json['userIntel'] = $row;
 
-        if (($rows != 0) && (strcmp($row["nombreUsuario"], $username) == 0) && ($row['passwordUsuario'] === $password)) {
+        if (($rows != 0) && (strcmp($row["emailUsuario"], $email) == 0) && ($row['passwordUsuario'] === $password)) {
 
             //   VERIFICAMOS SI TIENE IMAGEN CARGADA || CARGAMOS IMAGEN PREDETERMINADA        //
             $isavatar = "assets/img/users/" . $row["idUsuario"] . ".jpg";
@@ -136,8 +135,53 @@ if ($_POST) {
             $json['scriptResp'] = "noMatch";
             $json['passw'] = $_POST['password'];
             $json['passwo'] = $password;
-            $json['password'] = $row['passUsuario'];
+            $json['password'] = $row['passwordUsuario'];
             $json['q'] = $query;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+    }
+
+    //          USUARIO CREA CUENTA          //
+    if ($method == 'register') {
+
+        $names = broom('spa', $_POST["names"]);
+        $phone = broom('num', $_POST["phone"]);
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        $password = hash('sha512', $_POST['password']);
+
+        ////            CONSULTAMOS EL USUARIO EN LA BASE DE DATOS A VER SI EXISTE              ////
+        $query = " SELECT * FROM usuario us "
+                . " WHERE emailUsuario like '$email' ";
+        $result = $conn->query($query);
+        if (!$result) {
+            $json['scriptResp'] = "userqueryFail";
+            $json['q'] = $query;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        }
+        $rows = $result->num_rows;
+
+        if ($rows != 0) {
+            $json['scriptResp'] = "emailExists";
+            $json['q'] = $query;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $json['output'] = $output;
+            echo json_encode($json);
+            return;
+        } else {
+            $insert = " INSERT INTO usuario(nombresUsuario,fechaingresoUsuario,emailUsuario,phoneUsuario,passwordUsuario,statusUsuario) " .
+                    " VALUES ('".$names."','".date('Y-m-d')."','".$email."','".$phone."','".$password."','NEW') ";
+            $resultIns = $conn->query($insert) or die("{'scriptResp' : 'regFail', 'query' : '" . $insert . "'}");
+            
+            $json['scriptResp'] = "regTrue";
             $output = ob_get_contents();
             ob_end_clean();
             $json['output'] = $output;
@@ -2068,53 +2112,49 @@ if ($_POST) {
 
         $val_select = "UPDATE usuario SET sidebar = '" . $_POST['changeStatus'] . "' WHERE idUsuario = '" . $_POST['idUsuario'] . "'";
         $val_result = $conn->query($val_select) or die($conn->error);
-    
+
         if ($val_result) {
             session_start();
             $_SESSION["usuario"]['sidebar'] = $_POST['changeStatus'];
-            $msg_logo .= ' Se ha atualizado la configuraci&oacute;n de la interfaz exitosamente. ' . 
-            '<br><button class="pull-left btn btn-success" name="newtheme" type="submit" id="refreshThisPage" data-toggle="tooltip" data-placement="top" title="" data-original-title="Actualizar"><span class="fa fa-refresh"></span> Actualizar</button> ';
+            $msg_logo .= ' Se ha atualizado la configuraci&oacute;n de la interfaz exitosamente. ' .
+                    '<br><button class="pull-left btn btn-success" name="newtheme" type="submit" id="refreshThisPage" data-toggle="tooltip" data-placement="top" title="" data-original-title="Actualizar"><span class="fa fa-refresh"></span> Actualizar</button> ';
             echo $msg_logo;
             $json['status'] = 'yes';
         } else {
             echo " No pudimos actualizar la interfaz. Intente de nuevo ";
             $json['status'] = 'no';
         }
-        
+
         $output = ob_get_contents();
         ob_end_clean();
         $json['output'] = $output;
         echo json_encode($json);
     }
-    
-    
+
+
     //                  ACTUALIZAMOS LA PANTALLACOMPLETA      //
     if ($method == 'fullwidthUpdate') {
-    
+
         $val_select = "UPDATE usuario SET fullwidth = '" . $_POST['changeStatus'] . "' WHERE idUsuario = '" . $_POST['idUsuario'] . "'";
         $val_result = $conn->query($val_select) or die($conn->error);
-    
+
         if ($val_result) {
             session_start();
             $_SESSION["usuario"]['fullwidth'] = $_POST['changeStatus'];
-            $msg_logo .= ' Se ha atualizado la configuraci&oacute;n de la interfaz exitosamente.' . 
-            '<br><button class="pull-left btn btn-success" name="newtheme" type="submit" id="refreshThisPage" data-toggle="tooltip" data-placement="top" title="" data-original-title="Actualizar"><span class="fa fa-refresh"></span> Actualizar</button> ';
+            $msg_logo .= ' Se ha atualizado la configuraci&oacute;n de la interfaz exitosamente.' .
+                    '<br><button class="pull-left btn btn-success" name="newtheme" type="submit" id="refreshThisPage" data-toggle="tooltip" data-placement="top" title="" data-original-title="Actualizar"><span class="fa fa-refresh"></span> Actualizar</button> ';
             echo $msg_logo;
             $json['status'] = 'yes';
         } else {
             echo " No pudimos actualizar la interfaz. Intente de nuevo ";
             $json['status'] = 'no';
         }
-        
+
         $output = ob_get_contents();
         ob_end_clean();
         $json['output'] = $output;
         echo json_encode($json);
     }
-}
-
-if ($_GET) {
-    $method = broom('reg', $_GET['meth']);
 
     /////////////////////////////////////////////////////////
     //       GENERAMOS LOS REPORTES DE LA PLATAFORMA       //
@@ -2190,7 +2230,7 @@ if ($_GET) {
                 return;
             }
         }
-        
+
         ////////////////////    CORTE Z      ////////////////////
         if ($type == '2') {
 
@@ -2245,6 +2285,12 @@ if ($_GET) {
                 return;
             }
         }
+    }
+
+    //       DEBUG API       //
+    if ($method == 'debug') {
+        $password = hash('sha512', $_POST['password']);
+        var_dump($password);
     }
 }
 

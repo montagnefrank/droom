@@ -1,3 +1,4 @@
+<?php
 /*
  *          ***********************************************************
  *          *******************||  DROOM SOFTWARE   ||*****************
@@ -31,4 +32,9 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
-
+?>
+<script>
+    $(document).ready(function () {
+        
+    });
+</script>

@@ -35,28 +35,24 @@
 
 
 /****** PURIFICAMOS VARIABLES *******/
-function broom($type, $string)
-{
-    if ($type == "reg") {        /* FILTRAR a - Z Y ESPACIOS */
+function broom($type, $string) {
+    if ($type == "reg") { /* FILTRAR a - Z Y ESPACIOS */
         return preg_replace("/[^ \w]+/", "", $string);
     }
-    if ($type == "text") {        /* FILTRAR SOLO TEXTO PARA LECTURA SIN CARCTERES ESPECIALES */
-        $string = str_replace(
-            array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä', 'é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë', 'í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î', 'ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô', 'ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü', 'ñ', 'Ñ', 'ç', 'Ç'),
-            array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A', 'e', 'e', 'e', 'e', 'E', 'E', 'E', 'E', 'i', 'i', 'i', 'i', 'I', 'I', 'I', 'I', 'o', 'o', 'o', 'o', 'O', 'O', 'O', 'O', 'u', 'u', 'u', 'u', 'U', 'U', 'U', 'U', 'n', 'N', 'c', 'C'),
-            $string
-        );
-        return $string;
+    if ($type == "text") { /* FILTRAR SOLO TEXTO PARA LECTURA SIN CARCTERES ESPECIALES */
+        return preg_replace('#[^\p{L}\s-]#u', '', $string);
     }
-    if ($type == "num") {        /* FILTRAR TODO MENOS NUMEROS */
+    if ($type == "num") { /* FILTRAR TODO MENOS NUMEROS */
         return preg_replace('/\D/', '', $string);
     }
-    if ($type == "spa") {        /* FILTRAR TODO MENOS NUMEROS */
-        return preg_replace("#[^\p{L}\s-]#u", "", $string);
+    if ($type == "spa") { /* CONVERTIR A ESPAñL */
+        return preg_replace('#[^\p{L}\s-]#u', '', $string);
     }
-    if ($type == "voucher") {     /* FILTRAR VOUCHER DE RED ALERTA */
-        $clean = array("[", "\"", "]");
-        return explode(',', str_replace($clean, '', $string));
+    if ($type == "url") { /* TEXTO PARA URL */
+        return str_replace('+', '_', urlencode(preg_replace("/[^ \w]+/", "", $string)));
+    }
+    if ($type == "syntec") { /* PARA NOMBRES TECNOMEGA*/     
+        return preg_replace('/^[a-zA-Z\d]+$/', ' ', preg_replace('(&#8221;)', ' ', $string));
     }
 }
 

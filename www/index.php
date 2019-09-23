@@ -54,11 +54,6 @@ require ("assets/scripts/config.php");
         <link rel="stylesheet" href="assets/css/supersized.css">
         <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
-        <?php
-        if ($page == 'login') {
-            echo '<link rel="stylesheet" href="assets/css/style.css">';
-        }
-        ?>
     </head>
     <?php
     if ($page == 'login') {
