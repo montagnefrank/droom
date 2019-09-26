@@ -1,4 +1,5 @@
 <?php
+
 /*
  *          ***********************************************************
  *          *******************||  DROOM SOFTWARE   ||*****************
@@ -39,44 +40,23 @@
 
 /* DESPLEGAMOS TODA LA CONFIG   // */
 require ("assets/scripts/config.php");
-?>
-<!DOCTYPE html>
-<html lang="es">
-    <head>        
-        <title>DROOM - Sistema inteligente de control de Restaurantes</title>            
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" href="assets/node_modules/dragula/dist/dragula.min.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="assets/css/reset.css">
-        <link rel="stylesheet" href="assets/css/supersized.css">
-        <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
-        <link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
-    </head>
-    <?php
-    if ($page == 'login') {
-        echo '<body class="login">';
-        require ("assets/views/login.php");
-    } else {
-        echo '<body class="' . $fullwidth . ' ">' . $videoTag . '<div class="page-container  ' . $sidebar . '">';
-        require ("assets/views/sidebar.php");
-        ?>
-        <div class="page-content" style="height: 100%;">
-            <?php require ("assets/views/statusbar.php"); ?>          
-            <!--PANEL A MOSTRAR-->                      
-            <?php require ("modules/" . $module . "/view.php"); ?>                           
-        </div>
-    </div>
 
-    <?php
+// CONSTRUIMOS LA VISTA PRINCIPAL   //
+require ("assets/views/head.php");
+if ($page == 'login') {
+    echo '<body class="login">';
+    require ("assets/views/login.php");
+} else {
+    echo '<body class="' . $fullwidth . ' ">' . $videoTag . '<div class="page-container  ' . $sidebar . '">';
+    require ("assets/views/sidebar.php");
+    echo '<div class="page-content" style="height: 100%;">';
+    require ("assets/views/statusbar.php");
+    require ("modules/" . $module . "/view.php");
+    echo '</div> </div>';
     if ($module == "dashboard") {
         require ("assets/dashboard/rightbar.php");
     }
 }
-
 require ("assets/scripts/pagescripts.php");
+echo '</body> </html>';
 ?>
-</body>
-</html>

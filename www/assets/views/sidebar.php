@@ -32,12 +32,16 @@
  *          any modifications will be overwritten by newer versions in the future
  *          
  */
-
+if ($_SESSION["usuario"]["idPerfil"] == '8'){
+    $homeUrl = '/?show=newUser';
+} else {
+    $homeUrl = '/?show=home';
+}
 ?>
 <div class="page-sidebar mCustomScrollbar _mCS_1 mCS-autoHide  scroll">
     <ul class="x-navigation" id="barralateral">
         <li class="xn-logo">
-            <a href="/?show=home">Dirulo</a>
+            <a href="<?php echo $homeUrl; ?>"><?php echo __APPNAME__; ?></a>
             <a href="#" class="x-navigation-control"></a>
         </li>
         <li class="xn-profile">
@@ -98,8 +102,16 @@
             if ($perfil == "4") {
                 echo ' <li class="entregas"><a href="/?show=entregas"><span class="fa fa-truck"></span><span class="xn-text"> Entregas</span></a></li> ';
             }
-            if ($perfil == "5") {
-                echo ' ';
+            if ($perfil == "8") {
+                echo ' <li class="newpedido menuItem xn-openable">
+                    <a><i class="fas fa-hands-helping"></i><span class="xn-text"> Bienvenido</span></a>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-grin-alt fa-2x"></i> &nbsp;Tu cuenta se encuentra</a></li>
+                        <li><a href="#"><i class="fas fa-smile-beam fa-2x"></i> &nbsp; actualmente siendo revisada </a></li>
+                        <li><a href="#"><i class="fas fa-grin-beam fa-2x"></i> &nbsp; por nuestros especialistas</a></li>
+                        <li><a href="#"><i class="fas fa-smile-wink fa-2x"></i> Muy pronto te contactaremos!</a></li>
+                    </ul>
+                </li> ';
             }
             ?>
     </ul>

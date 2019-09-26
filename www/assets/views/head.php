@@ -33,18 +33,18 @@
  *          
  */
 ?>
-<script>
-    $(document).ready(function () {
-        $('.clientesFelices').each(function () {
-            $(this).prop('Counter', 0).animate({
-                Counter: $(this).text()
-            }, {
-                duration: 4000,
-                easing: 'easeOutExpo',
-                step: function (now) {
-                    $(this).text(Math.ceil(now * 1));
-                }
-            });
-        });
-    });
-</script>
+<!DOCTYPE html>
+<html lang="es">
+<head>        
+    <title><?php echo __APPNAME__ . ' - ' . __APPDESC__ ?></title>            
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="assets/node_modules/dragula/dist/dragula.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/supersized.css">
+    <link rel="stylesheet" type="text/css" id="theme" href="assets/css/theme-red.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
+</head>

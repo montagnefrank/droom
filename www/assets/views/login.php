@@ -63,9 +63,9 @@
             <button type="submit" ><i class="fas fa-sign-in-alt"></i> Iniciar Sesión </button>
             <div class="error" style="color: red;background: rgba(255, 0, 0, 0.25);"><span>+</span></div>
             <div class="ctaDiv ctaDiv1">¿No tienes cuenta? <a href="#" id="registerBoxBtn"><strong>¡Regístrate ahora!</strong></a></div>
-            <div class="ctaDiv ctaDiv2">&copy; 2019 DROOM por <a href="https://burtonservers.com" >Burton Technology.</a></div>
+            <div class="ctaDiv ctaDiv2">&copy; 2019 <?php echo __APPNAME__; ?> por <a href="<?php echo __AUTHORURL__; ?>" ><?php echo __AUTHORNAME__; ?>.</a></div>
             <div class=" ctaDiv ctaDiv3">
-                <a href="https://burtonservers.com" id="termsBox">Términos y condiciones</a> | <a href="https://burtonservers.com" id="contactBox">Contacto</a>
+                <a href="<?php echo __AUTHORURL__; ?>" id="termsBox">Términos y condiciones</a> | <a href="<?php echo __AUTHORURL__; ?>" id="contactBox">Contacto</a>
             </div>
         </form>
     </div>
@@ -80,9 +80,9 @@
             <div class="error" style="color: red;background: rgba(255, 0, 0, 0.25);"><span>+</span></div>
             <button type="submit" ><i class="fas fa-user-plus"></i> Registrar </button>
             <div class="ctaDiv ctaDiv1">¿Ya eres cliente? <a href="#" id="loginBoxBtn"><strong>¡Inicia sesi&oacute;n!</strong></a></div>
-            <div class="ctaDiv ctaDiv2">&copy; 2019 DROOM por <a href="https://burtonservers.com" >Burton Technology.</a></div>
+            <div class="ctaDiv ctaDiv2">&copy; 2019 <?php echo __APPNAME__; ?> por <a href="<?php echo __AUTHORURL__; ?>" ><?php echo __AUTHORNAME__; ?>.</a></div>
             <div class="ctaDiv ctaDiv3">
-                <a href="https://burtonservers.com" id="termsBox">Términos y condiciones</a> | <a href="https://burtonservers.com" id="contactBox">Contacto</a>
+                <a href="<?php echo __AUTHORURL__; ?>" id="termsBox">Términos y condiciones</a> | <a href="<?php echo __AUTHORURL__; ?>" id="contactBox">Contacto</a>
             </div>
         </form>
     </div>

@@ -40,7 +40,6 @@
     $(".menuItem").removeClass("active");
     $(".dashboard").addClass("active");
 
-
 //////////********************************************      AGREGAMOS LA NUEVA FUNCION PARA INTERCAMBIAR EL EVENETO DE LOS CLICS
     $.fn.clicktoggle = function (a, b) {
         return this.each(function () {
@@ -73,10 +72,6 @@
         lineColors: ['#3FBAE4', '#33414E', '#459e42'],
         gridLineColor: '#E5E5E5'
     });
-
-
-
-
 
     ///////////////////////////////////////////////QUITONORTE
     $('#quitonorte_sidebar').click(function () {

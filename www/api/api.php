@@ -177,8 +177,8 @@ if ($_POST || $_GET) {
             echo json_encode($json);
             return;
         } else {
-            $insert = " INSERT INTO usuario(nombresUsuario,fechaingresoUsuario,emailUsuario,phoneUsuario,passwordUsuario,statusUsuario) " .
-                    " VALUES ('".$names."','".date('Y-m-d')."','".$email."','".$phone."','".$password."','NEW') ";
+            $insert = " INSERT INTO usuario(nombresUsuario,fechaingresoUsuario,emailUsuario,phoneUsuario,passwordUsuario,statusUsuario,fullwidth,idPerfil) " .
+                    " VALUES ('".$names."','".date('Y-m-d')."','".$email."','".$phone."','".$password."','1','1','8') ";
             $resultIns = $conn->query($insert) or die("{'scriptResp' : 'regFail', 'query' : '" . $insert . "'}");
             
             $json['scriptResp'] = "regTrue";

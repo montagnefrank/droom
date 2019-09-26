@@ -55,7 +55,8 @@
 <!-- FIN MENSAJE DE SALIDA-->
 <script type="text/javascript" src="assets/js/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="assets/js/plugins/jquery/jquery-ui.min.js"></script>
-<script type="text/javascript" src="assets/js/plugins/bootstrap/bootstrap.min.js"></script>  
+<script type="text/javascript" src="assets/js/plugins/bootstrap/bootstrap.min.js"></script>    
+<script type="text/javascript" src="assets/js/plugins/tour/intro.min.js"></script>  
 <script type="text/javascript" src="assets/js/supersized.3.2.7.min.js"></script>
 <script type="text/javascript" src="assets/js/supersized-init.js"></script>
 <script type="text/javascript" src="assets/js/plugins/notify/notify.js"></script>
@@ -147,18 +148,21 @@
                             $(".customalert_text").html("No pudimos validar sus datos, intente nuevamente");
                             $(".customalert").velocity("transition.slideRightBigIn", 500);
                             $('.password').val('');
-                            console.log(data);
+                            //console.log(data);
                         }
                         if (data.scriptResp == "match") {
                             if (data.userIntel.statusUsuario == '0') {
                                 $(".customalert_text").html("Su usuario se encunetra suspendido, contacte a su asesor de cuenta");
                                 $(".customalert").velocity("transition.slideRightBigIn", 500);
-                            }
-                            if (data.userIntel.statusUsuario == 'NEW') {
-                                window.location.href = "/?show=newUser";
+                                return;
                             }
                             if (data.userIntel.statusUsuario == '1') {
-                                window.location.href = "/?show=home";
+                                if (data.userIntel.idPerfil == '8') {
+                                    window.location.href = "/?show=newUser";
+                                } else {
+                                    window.location.href = "/?show=home";
+                                    return;
+                                }
                             }
                         }
                     },
@@ -286,7 +290,9 @@
         if ($(".customalert").is(':visible')) {
             $(".customalert").velocity("transition.slideRightBigOut", 500);
         }
-        $(".message-box").hide();
+        if ($("#mb-signout").is(':visible')) {
+            $("#mb-signout").removeClass("open");
+        }
     });
 
     $('.numonly').bind('keyup blur', function () {

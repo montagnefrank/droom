@@ -33,9 +33,11 @@
  *          
  */
 
-//              UTILIDADES DE LA API            //
-require ("funcs.php");
-
+//              CONSTANTES DEL SISTEMA
+define('__APPNAME__', 'DROOM');
+define('__APPDESC__', 'Sistema inteligente de control de Restaurantes');
+define('__AUTHORNAME__', 'Burton Technology');
+define('__AUTHORURL__', 'https://burtonservers.com');
 
 // VALIDAMOS SI EL USUARIO ESTA LOGUEADO //
 session_start();

@@ -35,8 +35,8 @@
 ?>
 <!-- BREADCRUMB -->
 <ul class="breadcrumb">
-    <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li>
-    <li>Mesas </li>
+    <li>Inicio </li>
+    <li>Pedidos </li>
 </ul>
 <!-- FIN BREADCRUMB -->
 <div class="page-title">      
@@ -50,14 +50,14 @@
                     <div class="widget-int num-count">Nuevo Pedido</div>
                     <div class="widget-title">Para la mesa: <span class="mesaSelected">Seleccione</span> </div>
                     <div class="widget-subtitle">
-                        <button class="btn btn-info mostratMesasBtn"><i class="fas fa-eye"></i> Mostrar Mesas</button> 
-                        <button class="btn btn-info pull-right btnNuevoPedido"><i class="fas fa-plus"></i> Nuevo Pedido</button> 
+                        <button class="btn btn-info mostratMesasBtn" data-step="1" data-intro="Aqui puedes veer las mesas disponibles" data-position="bottom"><i class="fas fa-eye"></i> Mostrar Mesas</button> 
+                        <button class="btn btn-info pull-right btnNuevoPedido" data-step="2" data-intro="Luego puedes generar un nuevo pedido" data-position="bottom"><i class="fas fa-plus"></i> Nuevo Pedido</button> 
                     </div>
                 </div>                                     
             </div>
         </div>
         <div class="col-md-4 col-sm-4">
-            <div class="widget widget-success widget-item-icon">
+            <div class="widget widget-success widget-item-icon" data-step="3" data-intro="Puedes ver en tiempo real cuantas mesas quedan disponibles" data-position="bottom">
                 <div class="widget-item-right">
                     <a href="#" style="color: white;font-size: 50px;" >
                         <i class="fas fa-check-circle"></i>
@@ -71,7 +71,7 @@
             </div>  
         </div>
         <div class="col-md-4 col-sm-4">
-            <div class="widget widget-info widget-item-icon">
+            <div class="widget widget-info widget-item-icon" data-step="4" data-intro="Tambien puedes saber las mesas ocupadas" data-position="bottom">
                 <div class="widget-item-right">
                     <a href="#" style="color: white;font-size: 50px;" >
                         <i class="fas fa-exclamation-circle"></i>

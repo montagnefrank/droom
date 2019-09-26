@@ -37,12 +37,65 @@
 <ul class="breadcrumb">
     <!-- <li><a href="/?show=home"><?php echo $_SESSION["usuario"]['nombreEstablecimiento']; ?></a></li> -->
     <li>Inicio</li>
-    <li>Bienvenido al sistema </li>
+    <li>Nuevo Usuario</li>
 </ul>
 <!-- FIN BREADCRUMB -->
 <div class="page-title">                    
-    <h2><span class="fa fa-cog"></span> Bienvenido al sistema</h2>
+    <h2><span class="fa fa-birthday-cake"></span> Bienvenido al sistema</h2>
 </div>
-<div class="page-content-wrap">  
-    
+<div class="page-content-wrap">
+    <div class="col-md-3 xn-panel-dragging">
+
+        <!-- START WIDGET SLIDER -->
+        <div class="widget widget-info widget-carousel">
+            <div class="owl-carousel" id="owl-stats">
+                <div>                                    
+                    <div class="widget-title">Clientes atendidos</div>                                                                        
+                    <div class="widget-subtitle">esta semana</div>
+                    <div class="widget-int">325</div>
+                </div>
+                <div>                                    
+                    <div class="widget-title">Clientes Nuevos</div>
+                    <div class="widget-subtitle">&uacute;ltimos 7 d&iacute;as</div>
+                    <div class="widget-int">239</div>
+                </div>
+                <div>                                    
+                    <div class="widget-title">Recurrentes</div>
+                    <div class="widget-subtitle">Clientes que visitan de nuevo</div>
+                    <div class="widget-int">86</div>
+                </div>
+            </div>                            
+            <div class="widget-controls">                                
+                <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
+            </div>                             
+        </div>         
+        <!-- END WIDGET SLIDER -->
+
+    </div>
+    <div class="col-md-3 xn-panel-dragging">                      
+        <a href="#" class="tile tile-info tile-valign sidebar-toggle ">+ de <span class="clientesFelices">547</span>
+            <div class="informer informer-default dir-tr"><span class="fa fa-align-right"></span></div>
+            <div class="informer informer-default dir-bl">Clientes Onlie</div>
+        </a>                                                    
+    </div>
+    <div class="col-md-3 xn-panel-dragging">
+        <div class="widget widget-danger widget-padding-sm">
+            <div class="widget-big-int plugin-clock">00:00</div>                            
+            <div class="widget-subtitle plugin-date">Cargando...</div>
+            <div class="widget-controls">                                
+                <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remove Widget"><span class="fa fa-times"></span></a>
+            </div>                            
+            <div class="widget-buttons widget-c3">
+                <div class="col">
+                    <a href="#"><span class="fas fa-clock"></span></a>
+                </div>
+                <div class="col">
+                    <a href="#"><span class="fa fa-bell"></span></a>
+                </div>
+                <div class="col">
+                    <a href="#"><span class="fa fa-calendar"></span></a>
+                </div>
+            </div>                            
+        </div>                          
+    </div>
 </div>
