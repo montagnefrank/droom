@@ -40,7 +40,7 @@
             <div class="mb-title"><span class="fas fa-sign-out-alt"></span> Salir de la <strong>App</strong> ?</div>
             <div class="mb-content">
                 <p>¿Est&aacute; seguro que desea salir?</p>                    
-                <p>Presione No para continuar trabajando. Presione Si para salir.</p>
+                <p>Presione 'No' para continuar trabajando. Presione 'Si' para salir.</p>
             </div>
             <div class="mb-footer">
                 <div class="pull-right">
@@ -102,10 +102,8 @@
 <script type="text/javascript" src="assets/js/plugins/fileinput/fileinput.min.js"></script> 
 <script type='text/javascript' src='assets/js/modalMultiple.js'></script>
 <script type='text/javascript' src='assets/salir/script_salir.js'></script>
-<script type="text/javascript" src="//cdn.rawgit.com/icons8/bower-webicon/v0.10.7/jquery-webicon.min.js"></script>
 <script src='assets/js/velocity.min.js'></script>
 <script src='assets/js/velocity.ui.min.js'></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.js"></script>
 <script>
     var listhas = 0;
     $(document).ready(function () {
@@ -433,13 +431,13 @@
     //                         ANIMAMOS LA VENTANA DE LOGIN PAR AAPARECER
     function showLogin() {
 
-        $(document).find("div.page-container.login .registerBox").velocity("transition.slideRightBigOut", 500);
+        $(document).find("div.page-container.login .registerBox").velocity("transition.slideRightBigOut", 200);
         setTimeout(function () {
             $(document).find("div.page-container.login > div.login-center.registerBox > form > button ,div.page-container.login .registerBox .ctaDiv").css('transition', '');
             $(document).find("div.page-container.login > div.login-center.registerBox > form > button").css('transform', '');
             $(document).find("div.page-container.login .registerBox .ctaDiv").velocity("transition.slideRightBigOut", 50);
 
-            $(document).find("div.page-container.login .loginBox").velocity("transition.slideRightBigIn", 500);
+            $(document).find("div.page-container.login .loginBox").velocity("transition.slideLeftBigIn", 200);
             $(document).find("div.page-container.login .loginBox .ctaDiv").delay(500).velocity("transition.slideRightBigIn", {stagger: 400});
             setTimeout(function () {
                 $(document).find("div.page-container.login .loginBox .ctaDiv").css('transition', 'transform 1s');
@@ -454,19 +452,19 @@
                     }, 200);
                 }, 200);
             }, 2000);
-        }, 500);
+        }, 250);
     }
 
     //                         ANIMAMOS LA VENTANA DE REGISTRO PAR AAPARECER
     function showReg() {
 
-        $(document).find("div.page-container.login .loginBox").velocity("transition.slideRightBigOut", 500);
+        $(document).find("div.page-container.login .loginBox").velocity("transition.slideRightBigOut", 200);
         setTimeout(function () {
             $(document).find("div.page-container.login > div.login-center.loginBox > form > button ,div.page-container.login .loginBox .ctaDiv").css('transition', '');
             $(document).find("div.page-container.login > div.login-center.loginBox > form > button").css('transform', '');
             $(document).find("div.page-container.login .loginBox .ctaDiv").velocity("transition.slideRightBigOut", 50);
 
-            $(document).find("div.page-container.login .registerBox").velocity("transition.slideRightBigIn", 500);
+            $(document).find("div.page-container.login .registerBox").velocity("transition.slideLeftBigIn", 200);
             $(document).find("div.page-container.login .registerBox .ctaDiv").delay(500).velocity("transition.slideRightBigIn", {stagger: 400});
             setTimeout(function () {
                 $(document).find("div.page-container.login .registerBox .ctaDiv").css('transition', 'transform 1s');
@@ -481,7 +479,7 @@
                     }, 200);
                 }, 200);
             }, 2000);
-        }, 500);
+        }, 250);
     }
 </script>
 <?php

@@ -1037,3 +1037,8 @@ body.login a {
     color: #ffffff;
     text-shadow: 2px 2px #337ab7;
 } 
+
+.welcomeLogo{
+    position: absolute;
+    width: 300px!important;
+}

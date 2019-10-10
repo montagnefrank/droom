@@ -46,5 +46,46 @@
                 }
             });
         });
+
+        if ($(window).width() < 701) {
+            $('.welcomeBanner').attr('src', 'assets/img/welcomebannertall.jpg');
+            $('.welcomeLogo').attr('style', 'width: 100%!important;');
+        } else {
+            $('.welcomeBanner').attr('src', 'assets/img/welcomebanner.jpg');
+            $('.welcomeLogo').attr('style', '');
+        }
+
+        Morris.Donut({
+            element: 'dashboard-donut-1',
+            data: [
+                {label: "Disponibles", value: 27},
+                {label: "Ocupadas", value: 13}
+            ],
+            colors: ['#3FBAE4', '#ed4444'],
+            resize: true
+        });
+
+        $.fn.isOnScreen = function () {
+
+            var win = $(window);
+
+            var viewport = {
+                top: win.scrollTop(),
+                left: win.scrollLeft()
+            };
+            viewport.right = viewport.left + win.width();
+            viewport.bottom = viewport.top + win.height();
+
+            var bounds = this.offset();
+            bounds.right = bounds.left + this.outerWidth();
+            bounds.bottom = bounds.top + this.outerHeight();
+
+            return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
+
+        };
+
+        setInterval(function () {
+            console.log($('.panelVentasBox').isOnScreen());
+        }, 1000);
     });
 </script>

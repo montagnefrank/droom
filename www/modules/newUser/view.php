@@ -44,6 +44,57 @@
     <h2><span class="fa fa-birthday-cake"></span> Bienvenido al sistema</h2>
 </div>
 <div class="page-content-wrap">
+    <div class="col-md-9">
+        <div class="panel panel-default">  
+            <div class="panel-body panel-body-image">
+                <img src="assets/img/logo_rec.png" class="welcomeLogo" alt="Logo">
+                <img src="assets/img/welcomebannertall.jpg"  class="welcomeBanner"  alt="Landing Page banner">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 xn-panel-dragging">
+        <div class="widget widget-danger widget-padding-sm">
+            <div class="widget-big-int plugin-clock">00:00</div>                            
+            <div class="widget-subtitle plugin-date">Cargando...</div>
+            <div class="widget-controls">                                
+                <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remover"><span class="fa fa-times"></span></a>
+            </div>                            
+            <div class="widget-buttons widget-c3">
+                <div class="col">
+                    <a href="#"><span class="fas fa-clock"></span></a>
+                </div>
+                <div class="col">
+                    <a href="#"><span class="fa fa-bell"></span></a>
+                </div>
+                <div class="col">
+                    <a href="#"><span class="fa fa-calendar"></span></a>
+                </div>
+            </div>                            
+        </div>                          
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title-box">
+                    <h3>Resumen de mesas</h3>
+                    <span>Sucursal principal</span>
+                </div>
+                <ul class="panel-controls" style="margin-top: 2px;">
+                    <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                            <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                        </ul>                                        
+                    </li>                                        
+                </ul>
+            </div>
+            <div class="panel-body padding-0">
+                <div class="chart-holder" id="dashboard-donut-1" style="height: 200px;"></div>
+            </div>
+        </div>
+    </div>
     <div class="col-md-3 xn-panel-dragging">
 
         <!-- START WIDGET SLIDER -->
@@ -72,30 +123,10 @@
         <!-- END WIDGET SLIDER -->
 
     </div>
-    <div class="col-md-3 xn-panel-dragging">                      
-        <a href="#" class="tile tile-info tile-valign sidebar-toggle ">+ de <span class="clientesFelices">547</span>
+    <div class="col-md-3 xn-panel-dragging panelVentasBox">                      
+        <a href="#" class="tile tile-info tile-valign sidebar-toggle ">$ <span class="clientesFelices">547</span> $
             <div class="informer informer-default dir-tr"><span class="fa fa-align-right"></span></div>
-            <div class="informer informer-default dir-bl">Clientes Onlie</div>
+            <div class="informer informer-default dir-bl">Ventas del día</div>
         </a>                                                    
-    </div>
-    <div class="col-md-3 xn-panel-dragging">
-        <div class="widget widget-danger widget-padding-sm">
-            <div class="widget-big-int plugin-clock">00:00</div>                            
-            <div class="widget-subtitle plugin-date">Cargando...</div>
-            <div class="widget-controls">                                
-                <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="left" title="Remove Widget"><span class="fa fa-times"></span></a>
-            </div>                            
-            <div class="widget-buttons widget-c3">
-                <div class="col">
-                    <a href="#"><span class="fas fa-clock"></span></a>
-                </div>
-                <div class="col">
-                    <a href="#"><span class="fa fa-bell"></span></a>
-                </div>
-                <div class="col">
-                    <a href="#"><span class="fa fa-calendar"></span></a>
-                </div>
-            </div>                            
-        </div>                          
     </div>
 </div>
